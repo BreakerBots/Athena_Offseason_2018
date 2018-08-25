@@ -10,25 +10,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*Breakerbots Robotics Team 2018*/
 public class AutoSelector {
-
-	public enum Paths {
-		Baseline,
-		LL, LR,
-		CL, CR,
-		RL, RR;
-		
-		public CommandGroup getPath() {
-			//Convert String Name To Path
-			try {
-				Class.forName(toString())
-				.getConstructor(String.class)
-				.newInstance(null);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
 	
 	public enum Position {
 		kLeft, kCenter, kRight
@@ -43,7 +24,7 @@ public class AutoSelector {
 	
 	
 	public static CommandGroup getAuto() {
-		Paths auto = Paths.Baseline;
+		CommandGroup auto = new Baseline();
 
 		Thread gameDataThread = new Thread() {
 			public void run() {
@@ -86,14 +67,14 @@ public class AutoSelector {
 			if (!position.equals("null"))
 				switch (position) {
 					case "Left":
-						auto = (gameData.charAt(0) == 'L') ? Paths.LL : Paths.LR;
+						auto = (gameData.charAt(0) == 'L') ? new LL() : new LR();
 						break;
 					case "Center":
-						auto = (gameData.charAt(0) == 'L') ? Paths.CL : Paths.CR;
+						auto = (gameData.charAt(0) == 'L') ? new CL() : new CR();
 	
 						break;
 					case "Right":
-						auto = (gameData.charAt(0) == 'L') ? Paths.RL : Paths.RR;
+						auto = (gameData.charAt(0) == 'L') ? new RL() : new RR();
 						break;
 				};
 		}
@@ -101,8 +82,8 @@ public class AutoSelector {
 			System.out.println("AUTO: Failed Game Data. At => " + DriverStation.getInstance().getMatchTime());
 		}
 		
-		System.out.println("AUTO: Running path => " + auto);
+		System.out.println("AUTO: Running path => " + auto.getName());
 		
-		return auto.getPath();
+		return auto;
 	}
 }

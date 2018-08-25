@@ -1,13 +1,14 @@
 package com.frc5104.main.subsystems;
 
+import com.frc5104.main.Devices;
+import com.frc5104.utilities.ControllerHandler;
+import com.frc5104.utilities.HMI;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /*Breakerbots Robotics Team 2018*/
 public class Shifters {
 
-	public static final int FORWARD_ID = 2;
-	public static final int REVERSE_ID = 3;
-	
 	static Shifters instance = null;
 	
 	public static Shifters getInstance() {
@@ -17,7 +18,7 @@ public class Shifters {
 		return instance;
 	}//getInstance
 	
-	DoubleSolenoid gearShifters = new DoubleSolenoid(FORWARD_ID, REVERSE_ID);
+	DoubleSolenoid gearShifters = Devices.Shifting.sol;
 
 	public boolean inHighGear() {
 		return gearShifters.get() == DoubleSolenoid.Value.kForward;
@@ -49,4 +50,10 @@ public class Shifters {
 			shiftLow();
 	}//shiftHigh
 	
+	public void teleUpdate() {
+		if (ControllerHandler.getInstance().getAxis(HMI.kDriveShift) > 0.6)
+			shiftHigh();
+		else
+			shiftLow();
+	}
 }//Shifters

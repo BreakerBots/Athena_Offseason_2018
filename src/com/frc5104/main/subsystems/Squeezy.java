@@ -2,11 +2,13 @@ package com.frc5104.main.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.frc5104.main.Devices;
 import com.frc5104.utilities.ControllerHandler;
 import com.frc5104.utilities.HMI;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /*Breakerbots Robotics Team 2018*/
 public class Squeezy {
@@ -27,10 +29,6 @@ public class Squeezy {
 			counter++;
 		}
 	}//PriorityCounter
-	
-	public static final int MAIN_ID = 21;
-	public static final int LEFT_ID = 22;
-	public static final int RIGHT_ID = 23;
 	
 	static final int kHasCubePosition = -68000;
 	
@@ -75,16 +73,18 @@ public class Squeezy {
 	ControllerHandler controller = ControllerHandler.getInstance();
 	
 	//Talon IDs fall are contained in [20,30)
-	TalonSRX squeezer  = new TalonSRX(MAIN_ID);
-	TalonSRX leftSpin  = new TalonSRX(LEFT_ID);
-	TalonSRX rightSpin = new TalonSRX(RIGHT_ID);
+	TalonSRX squeezer  = Devices.Squeezy.squeeze;
+	TalonSRX leftSpin  = Devices.Squeezy.leftSpin;
+	TalonSRX rightSpin = Devices.Squeezy.rightSpin;
 	
 	//Eject Timing
 	long ejectTime = System.currentTimeMillis();
 	
 	//DoubleSolenoid lifter = new DoubleSolenoid(0,1);
-	
 	SqueezySensors sensors = SqueezySensors.getInstance();
+	
+	//Fold
+	DoubleSolenoid fold = Devices.Squeezy.fold;
 
 	private Squeezy () {
 		//Make sure that the motor output and encoder counts are in sync
@@ -95,6 +95,29 @@ public class Squeezy {
 		updateState();
 		update();
 	}//Squeezy
+	
+	public void foldUp() {
+		fold.set(DoubleSolenoid.Value.kReverse);
+	}
+	public boolean foldedUp() {
+		return fold.get() == DoubleSolenoid.Value.kReverse;
+	}
+	public void foldDown() {
+		fold.set(DoubleSolenoid.Value.kForward);
+	}
+	public boolean foldedDown() {
+		return fold.get() == DoubleSolenoid.Value.kForward;
+	}
+	public void processFold() {
+		if (controller.getPressed(HMI.kSqueezyDown)) {
+			System.out.println("TELE: Squeezy down");
+			foldDown();
+		}
+		if (controller.getPressed(HMI.kSqueezyUp)) {
+			System.out.println("TELE: Squeezy up");
+			foldUp();
+		}
+	}
 	
 	TimedButton grabbedSensor = new TimedButton();
 	boolean leftUnjam = true;
@@ -207,14 +230,11 @@ public class Squeezy {
 	}//poll
 	
 	public void update() {
-		update(false);
-	}//update no squeezy up
-	public void update(boolean squeezyIsUp) {
 		switch (state) {
 		case EMPTY:
 			raise();
 			spinStop();
-			if (squeezyIsUp)
+			if (foldedUp())
 				close();
 			else
 				leave();
@@ -229,7 +249,7 @@ public class Squeezy {
 		case INTAKE:
 			lower();
 			spinIn();
-			if (squeezyIsUp)
+			if (foldedUp())
 				close();
 			else
 				open();
@@ -252,7 +272,7 @@ public class Squeezy {
 		case UNJAM:
 			lower();
 			spinStop();
-			if (squeezyIsUp)
+			if (foldedUp())
 				close();
 			else
 				open();
@@ -261,7 +281,7 @@ public class Squeezy {
 		case MANUAL_OPEN:
 			lower();
 			spinIn();
-			if (!squeezyIsUp)
+			if (foldedDown())
 				open();
 			else
 				close();

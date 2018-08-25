@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.frc5104.main.Devices;
 import com.frc5104.utilities.ControllerHandler;
 import com.frc5104.utilities.Deadband;
 import com.frc5104.utilities.HMI;
@@ -19,10 +20,6 @@ public class Elevator {
 	
 	public static final int SOFT_STOP_BOTTOM = 0;
 	public static final int SOFT_STOP_TOP = -16150;
-	
-	public static final boolean TWO_TALONS = true;
-	public static final int TALON1_ID = 31;
-	public static final int TALON2_ID = 32;
 	
 	public enum Stage {
 		kBottom(0),
@@ -49,8 +46,8 @@ public class Elevator {
 	}//getInstance
 
 	private ControllerHandler controller = ControllerHandler.getInstance();
-	private TalonSRX talon1 = new TalonSRX(TALON1_ID),
-					 talon2;
+	private TalonSRX talon1 = Devices.Elevator.a;
+	private TalonSRX talon2 = Devices.Elevator.b;
 	private NetworkTable table = null;
 	
 	public enum Control {
@@ -67,11 +64,6 @@ public class Elevator {
 	public int prevEnc = -1;
 	
 	private Elevator () {
-		if (TWO_TALONS) {
-			talon2 = new TalonSRX(TALON2_ID);
-			talon2.set(ControlMode.Follower, TALON1_ID);
-		}
-		
 		talon1.configReverseSoftLimitEnable(false, 10);
 		talon1.configReverseSoftLimitThreshold(SOFT_STOP_TOP, 10);
 
@@ -300,11 +292,9 @@ public class Elevator {
 		setDouble("motor/voltage", talon1.getMotorOutputVoltage());
 		setDouble("motor/current", talon1.getOutputCurrent());
 		
-		if (TWO_TALONS) {
-			setDouble("motor2/effort", talon2.getMotorOutputPercent());
-			setDouble("motor2/voltage", talon2.getMotorOutputVoltage());
-			setDouble("motor2/current", talon2.getOutputCurrent());
-		}
+		setDouble("motor2/effort", talon2.getMotorOutputPercent());
+		setDouble("motor2/voltage", talon2.getMotorOutputVoltage());
+		setDouble("motor2/current", talon2.getOutputCurrent());
 		
 		setDouble("pid/position", talon1.getSelectedSensorPosition(0));
 		setDouble("pid/velocity", talon1.getSelectedSensorVelocity(0));
