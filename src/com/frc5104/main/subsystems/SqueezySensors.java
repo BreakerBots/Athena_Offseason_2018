@@ -4,6 +4,7 @@ import com.frc5104.utilities.FilteredUltraSonic;
 
 import edu.wpi.first.wpilibj.Joystick;
 
+/*Breakerbots Robotics Team 2018*/
 public class SqueezySensors {
 
 	static SqueezySensors instance = null;

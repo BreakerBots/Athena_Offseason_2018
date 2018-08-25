@@ -5,6 +5,7 @@ import com.frc5104.main.subsystems.Squeezy.SqueezyState;
 
 import edu.wpi.first.wpilibj.command.Command;
 
+/*Breakerbots Robotics Team 2018*/
 public class EjectSqueezy extends Command {
 
 	Squeezy squeezy;

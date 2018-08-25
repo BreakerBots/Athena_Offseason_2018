@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
+/*Breakerbots Robotics Team 2018*/
 public class RaiseSqueezy extends Command {
 
 	DoubleSolenoid squeezy;

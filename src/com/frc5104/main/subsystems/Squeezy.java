@@ -8,6 +8,7 @@ import com.frc5104.utilities.HMI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+/*Breakerbots Robotics Team 2018*/
 public class Squeezy {
 	
 	private class PriorityCounter {
@@ -196,7 +197,7 @@ public class Squeezy {
 		}
 		
 		if (controller.getPressed(HMI.kSqueezyEject)) {
-			System.out.println("EJECTING!!!");
+			System.out.println("MAIN: EJECTING!!!");
 			ejectTime = System.currentTimeMillis();
 			state = SqueezyState.EJECT;
 		}
@@ -348,15 +349,12 @@ public class Squeezy {
 	}//setSpinners	
 	private void spinIn() {
 		setSpinners(kIntakeEffort);
-//		System.out.printf("Spin Effort: %1.1f\t",kIntakeEffort);
 	}//spinIn
 	private void spinOut() {
 		setSpinners(kEjectEffort);
-//		System.out.printf("Spin Effort: %1.1f\t",kEjectEffort);
 	}//spinOut
 	private void spinStop() {
 		setSpinners(0);
-//		System.out.printf("Spin Effort: %1.1f\t", 0.0);
 	}//setSpinnerState
 	private void spinPinch() {
 		setSpinners(kPinchEffort);
@@ -367,15 +365,12 @@ public class Squeezy {
 	
 	private void open() {
 		squeezer.set(ControlMode.PercentOutput, kOpenEffort);
-//		System.out.printf("Squeezer Effort: %1.1f\t",kOpenEffort);
 	}//open
 	private void close() {
 		squeezer.set(ControlMode.PercentOutput, kCloseEffort);
-//		System.out.printf("Squeezer Effort: %1.1f\t",kCloseEffort);
 	}//close
 	private void shootSqueeze() {
 		squeezer.set(ControlMode.PercentOutput, kShootSqueezeEffort);
-//		System.out.printf("Squeezer Effort: %1.1f\t",kCloseEffort);
 	}//close
 	private void hold() {
 		squeezer.set(ControlMode.PercentOutput, kHoldEffort);
@@ -387,11 +382,9 @@ public class Squeezy {
 	private void raise() {
 		//if (squeezer.getSelectedSensorPosition(0) < -10000)
 			//lifter.set(DoubleSolenoid.Value.kReverse);
-//		System.out.printf("Lifter Value: %s\t", DoubleSolenoid.Value.kForward.toString());
 	}//raise
 	private void lower() {
 		//lifter.set(DoubleSolenoid.Value.kForward);
-//		System.out.printf("Lifter Value: %s\t", DoubleSolenoid.Value.kReverse.toString());
 	}//lower
 	
 	public void initTable(NetworkTable inst) {

@@ -1,5 +1,6 @@
 package com.frc5104.utilities;
 
+/*Breakerbots Robotics Team 2018*/
 public class Deadband {
 
 	static final Deadband default_01 = new Deadband(0.1);

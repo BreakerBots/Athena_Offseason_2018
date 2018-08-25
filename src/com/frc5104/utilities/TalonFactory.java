@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+/*Breakerbots Robotics Team 2018*/
 public class TalonFactory {
 	TalonSRX talons[];
 	
@@ -19,7 +20,7 @@ public class TalonFactory {
 	}//TalonFactory
 	
 	public void init() {
-		System.out.printf("Configured Talon:");
+		System.out.printf("Main: Factory Reset Talons/Seth Proofed");
 		for (TalonSRX taloni:talons) {
 			fixTalon(taloni);
 			System.out.printf(" %d", taloni.getDeviceID());

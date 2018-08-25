@@ -1,13 +1,10 @@
 package com.frc5104.autocommands;
 
-import com.frc5104.main.Robot;
-import com.frc5104.main.subsystems.Squeezy;
-import com.frc5104.main.subsystems.Squeezy.SqueezyState;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
+/*Breakerbots Robotics Team 2018*/
 public class DropSqueezy extends Command {
 
 	DoubleSolenoid squeezy;

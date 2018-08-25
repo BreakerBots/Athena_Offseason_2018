@@ -2,13 +2,10 @@ package com.frc5104.main.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.frc5104.utilities.ControllerHandler;
+import com.frc5104.utilities.ControllerHandler.Control;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+/*Breakerbots Robotics Team 2018*/
 public class Drive {
 
 	static Drive m_instance = null;
@@ -18,33 +15,52 @@ public class Drive {
 			m_instance = new Drive();
 		}
 		return m_instance;
-	}//getInstance
+	}
 
-	WPI_TalonSRX talonLeftMain = new WPI_TalonSRX(11),
-			 talonRightMain = new WPI_TalonSRX(13),
-			 talonLeftFollower = new WPI_TalonSRX(12),
-			 talonRightFollower = new WPI_TalonSRX(14);
+	TalonSRX talonL1 = new TalonSRX(11);
+	TalonSRX talonL2 = new TalonSRX(12);
+	TalonSRX talonR1 = new TalonSRX(13);
+	TalonSRX talonR2 = new TalonSRX(14);
 	
-//	SpeedControllerGroup leftDrive = new SpeedControllerGroup(talonLeftMain, talonLeftFollower),
-//						rightDrive = new SpeedControllerGroup(talonRightMain, talonRightFollower);
-	
-	DifferentialDrive drive = new DifferentialDrive(talonLeftMain, talonRightMain);	
-
-	private Drive() {
-		drive.setDeadband(0);
-//		drive.setExpiration(0.1);
-		
-		talonLeftFollower.set(ControlMode.Follower, 11);
-		talonRightFollower.set(ControlMode.Follower, 13);
-		
+	public void init() {
+		//Talon Setup
+		talonL1.setSelectedSensorPosition(0, 0, 10);
+		talonR1.setSelectedSensorPosition(0, 0, 10);
+		talonL2.set(ControlMode.Follower, talonL1.getDeviceID());
+		talonR2.set(ControlMode.Follower, talonR1.getDeviceID());
+		talonL1.set(ControlMode.PercentOutput, 0);
+		talonL1.setInverted(false);
+		talonL2.setInverted(false);
+		talonR1.set(ControlMode.PercentOutput, 0);
+		talonR1.setInverted(true);
+		talonR2.setInverted(true);
 	}
 	
-	public void arcadeDrive(double moveVal, double rotateVal) {
-		drive.arcadeDrive(moveVal, rotateVal);
-	}//arcadeDrive
 	
-	public void postValuesToNetworkTable() {
-
-	}//postValuesToNetworkTable
+	//Driving
+	public void update() {
+		ControllerHandler controller = ControllerHandler.getInstance();
+		talonL1.set(ControlMode.PercentOutput, controller.getAxis(Control.LY) - controller.getAxis(Control.LX));
+		talonR1.set(ControlMode.PercentOutput, controller.getAxis(Control.LY) + controller.getAxis(Control.LX));
+	}
 	
-}//Drive
+	public void set(double l, double r) {
+		talonL1.set(ControlMode.PercentOutput, l);
+		talonR1.set(ControlMode.PercentOutput, r);
+	}
+	
+	
+	//Encoders
+	public void resetEncoders(int timeoutMs) {
+		talonL1.setSelectedSensorPosition(0, 0, timeoutMs);
+		talonR1.setSelectedSensorPosition(0, 0, timeoutMs);
+	}
+	
+	public int getLeftEncoder() {
+		return talonL1.getSelectedSensorPosition(0);
+	}
+	
+	public int getRightEncoder() {
+		return talonR1.getSelectedSensorPosition(0);
+	}
+}

@@ -11,6 +11,7 @@ import com.frc5104.utilities.HMI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
+/*Breakerbots Robotics Team 2018*/
 public class Elevator {
 
 	public static final double kMaxDownPidEffort = 0.4;

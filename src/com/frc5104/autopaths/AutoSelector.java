@@ -1,6 +1,6 @@
 package com.frc5104.autopaths;
 
-import com.frc5104.main.subsystems.Elevator.Stage;
+import java.lang.reflect.InvocationTargetException;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -8,52 +8,27 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/*Breakerbots Robotics Team 2018*/
 public class AutoSelector {
 
-	public enum AutonomousPaths {
-		Baseline(),
+	public enum Paths {
+		Baseline,
+		LL, LR,
+		CL, CR,
+		RL, RR;
 		
-		CenterToLeft(),
-		CenterToRight(),
-		
-		LeftToLeft(),
-		
-		RightToRight(),
-		RightToRightScale(kScaleEject);
-		
-		double ejectEffort;
-		
-//		private AutonomousPaths(double ejectEffort, Elevator.Stage elevatorStage) {
-//			elevatorStage
-//		}
-		private AutonomousPaths(double ejectEffort) {
-			this.ejectEffort = ejectEffort;
-		}
-		private AutonomousPaths() {
-			this(kSwitchEject);
-		}
-		
-		public CommandGroup getPath(boolean eject) {
-			
-			CommandGroup autoPath;
-
-			if (name() == AutonomousPaths.RightToRightScale.name()) {
-				System.out.println("Running Right To Right Scale!!!!");
-				autoPath = new RecordingElevatorSqueezy(toString(), squeezySolenoid, ejectEffort, Stage.kLowerScale);
-			} else {
-			
-				if (eject) {
-					autoPath = new DropSqueezyRecording(toString(), squeezySolenoid, ejectEffort);
-				} else {
-					autoPath = new Recording(toString());
-				}
+		public CommandGroup getPath() {
+			//Convert String Name To Path
+			try {
+				Class.forName(toString())
+				.getConstructor(String.class)
+				.newInstance(null);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			
-			return autoPath;
-		}//getPath
-	}//AutonomusPaths
-	
-	public static int kWaitForGameDataMillis = 3000;
+			return null;
+		}
+	}
 	
 	public enum Position {
 		kLeft, kCenter, kRight
@@ -65,112 +40,69 @@ public class AutoSelector {
 	
 	public static volatile String gameData = null;
 	public static Position robotPosition;
-	//Choose to go for the same side scale over the opposite side switch
-	public static boolean userDecision;
 	
-	public static CommandGroup getAuto(DoubleSolenoid squeezySol) {
-		squeezySolenoid = squeezySol;
-		
-		CommandGroup auto = AutonomousPaths.Baseline.getPath(false);
+	
+	public static CommandGroup getAuto() {
+		Paths auto = Paths.Baseline;
 
 		Thread gameDataThread = new Thread() {
 			public void run() {
+				//Loop to get Game Data
 				while (!Thread.interrupted()) {
+					//Get the data
 					gameData = DriverStation.getInstance().getGameSpecificMessage();
-					if (gameData != null) {
-						System.out.println("GameData: "+gameData);
-					} else {
-						System.out.println("No Game Data");
-					}
-					if (gameData != null) {
-						System.out.println("Got Game Data: "+gameData);
-						System.out.println("At: "+DriverStation.getInstance().getMatchTime());
+					
+					if (gameData != null)
 						break;
-					}
+					
+					//Wait 100ms to continue loop
 					try {
 						Thread.sleep(100);
-					} catch (InterruptedException e) {
+					} 
+					catch (InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
 			}
-		};
-		gameDataThread.start();
+		}; 
 		
+		//Run this thread for a max of 3000ms
 		try {
+			gameDataThread.start();
 			gameDataThread.join(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
 		if (gameData != null) {
-			System.out.println("Provided Game Data: "+gameData);
+			System.out.println("AUTO: Recieved Game Data => " + gameData + ". At => " + DriverStation.getInstance().getMatchTime());
 			String position;
-			
-			position = NetworkTableInstance.getDefault().getTable("Autonomous").getEntry("AutoPos").getString("null");
+			position = NetworkTableInstance.
+					getDefault().
+					getTable("Autonomous").
+					getEntry("AutoPos").
+					getString("null");
 
-			if (position.equals("null"))
-				position = SmartDashboard.getString("autoposition", "null");
-
-			if (!position.equals("null")) {
+			if (!position.equals("null"))
 				switch (position) {
-				case "Left":
-					if (gameData.charAt(0) == 'L') {
-						System.out.println("Left to Left!");
-						auto = AutonomousPaths.LeftToLeft.getPath(true);
-					} else if (gameData.charAt(1) == 'L') {
-						System.out.println("Left to Left Scale!");
-//						auto = AutonomousPaths.LeftToLeftScale.getPath(true);
-					}
-						
-					break;
-				case "Center":
-					if (gameData.charAt(0) == 'L') {
-						System.out.println("Center To Left!");
-						auto = AutonomousPaths.CenterToLeft.getPath(true);
-					} else if (gameData.charAt(0) == 'R') {
-						System.out.println("Center To Right!");
-						auto = AutonomousPaths.CenterToRight.getPath(true);
-					}
-					break;
-				case "Right":
-					if (gameData.charAt(0) == 'R') {
-						System.out.println("Right to Right Switch!");
-						auto = AutonomousPaths.RightToRight.getPath(true);
-					}
-//					else if (gameData.charAt(1) == 'R') {
-//						System.out.println("Right To Right Scale!");
-//						auto = AutonomousPaths.RightToRightScale.getPath(true);
-//					}
-					break;
-				case "RightToRightScale":
-					if (gameData.charAt(1) == 'R') {
-						System.out.println("Right to Right Scale!");
-						auto = AutonomousPaths.RightToRightScale.getPath(true);
-					} else if (gameData.charAt(0) == 'R') {
-						System.out.println("Right to Right Switch!");
-						auto = AutonomousPaths.RightToRight.getPath(true);
-					}
-					break;
-				}
-			}
-		} else { //else return default auto (new Baseline()) 
-			System.out.println("No Game Data Provided!");
+					case "Left":
+						auto = (gameData.charAt(0) == 'L') ? Paths.LL : Paths.LR;
+						break;
+					case "Center":
+						auto = (gameData.charAt(0) == 'L') ? Paths.CL : Paths.CR;
+	
+						break;
+					case "Right":
+						auto = (gameData.charAt(0) == 'L') ? Paths.RL : Paths.RR;
+						break;
+				};
+		}
+		else {
+			System.out.println("AUTO: Failed Game Data. At => " + DriverStation.getInstance().getMatchTime());
 		}
 		
-		//Left Position
-//		if (gameData.charAt(0) == 'L')
-//			auto = AutonomousPaths.LeftToLeft_NoElevator.getPath(true);
-//		else
-//			auto = AutonomousPaths.LeftToLeft_NoElevator.getPath(false);
-
-		//Center position
-//		if (gameData.charAt(0) == 'L')
-//			auto = AutonomousPaths.CenterToLeft_NoElevator.getPath(true);
-//		else 
-//			auto = AutonomousPaths.CenterToRight_NoElevator.getPath(true);
-
-		return auto;
-	}//CommandGroup
-
-}//AutoSelector
+		System.out.println("AUTO: Running path => " + auto);
+		
+		return auto.getPath();
+	}
+}
