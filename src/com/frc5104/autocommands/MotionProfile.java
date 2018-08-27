@@ -4,11 +4,11 @@ import com.frc5104.main.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.command.Command;
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.Waypoint;
-import jaci.pathfinder.followers.EncoderFollower;
-import jaci.pathfinder.modifiers.TankModifier;
+import com.frc5104.pathfinder.Pathfinder;
+import com.frc5104.pathfinder.Trajectory;
+import com.frc5104.pathfinder.Waypoint;
+import com.frc5104.pathfinder.followers.EncoderFollower;
+import com.frc5104.pathfinder.modifiers.TankModifier;
 
 /*Breakerbots Robotics Team 2018*/
 public class MotionProfile extends Command {

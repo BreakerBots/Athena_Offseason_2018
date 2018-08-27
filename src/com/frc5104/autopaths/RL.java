@@ -3,7 +3,7 @@ package com.frc5104.autopaths;
 import com.frc5104.autocommands.*;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
-import jaci.pathfinder.Waypoint;
+import com.frc5104.pathfinder.Waypoint;
 
 public class RL extends CommandGroup {
 	public RL() {
