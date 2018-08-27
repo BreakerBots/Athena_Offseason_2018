@@ -1,9 +1,7 @@
 package com.frc5104.autopaths;
 
 import com.frc5104.autocommands.BreakerCommandGroup;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /*Breakerbots Robotics Team 2018*/
@@ -13,12 +11,7 @@ public class AutoSelector {
 		kLeft, kCenter, kRight
 	}
 	
-	public static final double kSwitchEject = 0.6;
-	public static final double kScaleEject = 1;
-	public static DoubleSolenoid squeezySolenoid;
-	
 	public static volatile String gameData = null;
-	public static Position robotPosition;
 	
 	public static enum Paths {
 		Baseline(new Baseline()),
