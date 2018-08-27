@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.command.Command;
 
 /*Breakerbots Robotics Team 2018*/
-public class DropSqueezy extends Command {
+public class DropSqueezy implements BreakerCommand {
 
 	DoubleSolenoid squeezy;
 	long start;
@@ -14,22 +14,20 @@ public class DropSqueezy extends Command {
     	squeezy = squeezySol;
     }
 
-    protected void initialize() {
+    public void initialize() {
     	squeezy.set(Value.kForward);
     	start = System.currentTimeMillis();
     }
 
-    protected void execute() {
+    public void execute() {
+    
     }
 
-    protected boolean isFinished() {
+    public boolean isFinished() {
     	return System.currentTimeMillis()-start>1000;
     }
 
-    protected void end() {
-    }
-
-    protected void interrupted() {
-    
+    public void end() {
+   
     }
 }

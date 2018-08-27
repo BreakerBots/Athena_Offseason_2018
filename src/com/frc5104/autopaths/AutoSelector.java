@@ -1,12 +1,10 @@
 package com.frc5104.autopaths;
 
-import java.lang.reflect.InvocationTargetException;
+import com.frc5104.autocommands.BreakerCommandGroup;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*Breakerbots Robotics Team 2018*/
 public class AutoSelector {
@@ -22,9 +20,26 @@ public class AutoSelector {
 	public static volatile String gameData = null;
 	public static Position robotPosition;
 	
+	public static enum Paths {
+		Baseline(new Baseline()),
+		LL(new LL()), 
+		LR(new LR()),
+		CL(new CL()),
+		CR(new CR()),
+		RL(new RL()),
+		RR(new RR());
+		
+		BreakerCommandGroup path;
+		Paths (BreakerCommandGroup path){
+			this.path = path;
+		}
+		public BreakerCommandGroup getPath() {
+			return this.path;
+		}
+	}
 	
-	public static CommandGroup getAuto() {
-		CommandGroup auto = new Baseline();
+	public static BreakerCommandGroup getAuto() {
+		BreakerCommandGroup auto = Paths.Baseline.getPath();
 
 		Thread gameDataThread = new Thread() {
 			public void run() {
@@ -67,14 +82,14 @@ public class AutoSelector {
 			if (!position.equals("null"))
 				switch (position) {
 					case "Left":
-						auto = (gameData.charAt(0) == 'L') ? new LL() : new LR();
+						auto = (gameData.charAt(0) == 'L') ? Paths.LL.getPath() : Paths.LR.getPath();
 						break;
 					case "Center":
-						auto = (gameData.charAt(0) == 'L') ? new CL() : new CR();
+						auto = (gameData.charAt(0) == 'L') ? Paths.CL.getPath() : Paths.CR.getPath();
 	
 						break;
 					case "Right":
-						auto = (gameData.charAt(0) == 'L') ? new RL() : new RR();
+						auto = (gameData.charAt(0) == 'L') ? Paths.RL.getPath() : Paths.RR.getPath();
 						break;
 				};
 		}
@@ -82,7 +97,7 @@ public class AutoSelector {
 			System.out.println("AUTO: Failed Game Data. At => " + DriverStation.getInstance().getMatchTime());
 		}
 		
-		System.out.println("AUTO: Running path => " + auto.getName());
+		System.out.println("AUTO: Running path => " + auto.getClass().getName());
 		
 		return auto;
 	}

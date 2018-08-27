@@ -1,18 +1,12 @@
 package com.frc5104.main;
 
-import com.frc5104.autopaths.AutoSelector;
-import com.frc5104.main.subsystems.Climber;
-import com.frc5104.main.subsystems.Drive;
-import com.frc5104.main.subsystems.Elevator;
-import com.frc5104.main.subsystems.Shifters;
-import com.frc5104.main.subsystems.Squeezy;
+import com.frc5104.autocommands.BreakerCommandScheduler;
+import com.frc5104.autopaths.*;
+import com.frc5104.main.subsystems.*;
 import com.frc5104.main.subsystems.Squeezy.SqueezyState;
-import com.frc5104.main.subsystems.SqueezySensors;
 import com.frc5104.utilities.ControllerHandler;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 
 /*Breakerbots Robotics Team 2018*/
@@ -37,28 +31,37 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		System.out.println("MAIN: Running Code");
 		
-		squeezy.initTable(null);
+		//squeezy.initTable(null);
 		
-		elevator.initTable(null);
+		//elevator.initTable(null);
 		
 		climber.init();
 
-		CameraServer.getInstance().startAutomaticCapture();
+		drive.init();
+		
+		//CameraServer.getInstance().startAutomaticCapture();
+		
+		System.out.println("MAIN: Initialized Code");
 	}
 	
 	
 	
 	//  ----------------------------------------  Autonomous  ----------------------------------------  \\
 	public void autonomousInit() {
-		squeezy.forceState(SqueezyState.HOLDING);
-		squeezy.foldUp();
+		double curTime = (double)(System.currentTimeMillis());
 		
-		Scheduler.getInstance().removeAll();
-		Scheduler.getInstance().add(AutoSelector.getAuto());
+		//BreakerCommandScheduler.getInstance().set(AutoSelector.getAuto());
+		BreakerCommandScheduler.getInstance().set(AutoSelector.Paths.Baseline.getPath());
+		
+		System.out.println("Total time: " + (((double)(System.currentTimeMillis()) - curTime) / 1000) + "s");
+		
+		//squeezy.forceState(SqueezyState.HOLDING);
+		squeezy.forceState(SqueezyState.EMPTY);
+		squeezy.foldUp();
 	}
 	public void autonomousPeriodic() {
-		Scheduler.getInstance().run();
-		squeezy.update();
+		BreakerCommandScheduler.getInstance().update();
+		//squeezy.update();
 	}
 	
 	
@@ -89,8 +92,8 @@ public class Robot extends IterativeRobot {
 	//  ----------------------------------------  Main Loop  ----------------------------------------  \\	
 	public void robotPeriodic() {
 		squeezySensors.updateSensors();
-		squeezy.postData();
+		//squeezy.postData();
 		
-		elevator.updateTables();
+		//elevator.updateTables();
 	}
 }
