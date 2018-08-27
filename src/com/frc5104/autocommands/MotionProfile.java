@@ -9,20 +9,13 @@ import java.io.ObjectOutputStream;
 import com.frc5104.main.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj.command.Command;
+
+import com.frc5104.pathfinder.EncoderFollower;
 import com.frc5104.pathfinder.Pathfinder;
+import com.frc5104.pathfinder.TankModifier;
 import com.frc5104.pathfinder.Trajectory;
 import com.frc5104.pathfinder.Waypoint;
-import com.frc5104.pathfinder.followers.EncoderFollower;
-import com.frc5104.pathfinder.modifiers.TankModifier;
-=======
-import jaci.pathfinder.Pathfinder;
-import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.Waypoint;
-import jaci.pathfinder.followers.EncoderFollower;
-import jaci.pathfinder.modifiers.TankModifier;
->>>>>>> 18fad26ef3f74c5e45a7d2bd93113eec6619f508
 
 /*Breakerbots Robotics Team 2018*/
 public class MotionProfile implements BreakerCommand {

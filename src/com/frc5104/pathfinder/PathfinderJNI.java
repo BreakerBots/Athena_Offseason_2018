@@ -1,7 +1,5 @@
 package com.frc5104.pathfinder;
 
-import com.frc5104.pathfinder.modifiers.SwerveModifier;
-
 public class PathfinderJNI {
 
     static boolean libLoaded = false;

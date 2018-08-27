@@ -1,7 +1,4 @@
-package com.frc5104.pathfinder.modifiers;
-
-import com.frc5104.pathfinder.PathfinderJNI;
-import com.frc5104.pathfinder.Trajectory;
+package com.frc5104.pathfinder;
 
 /**
  * The Tank Modifier will take in a Source Trajectory and a Wheelbase Width and spit out a Trajectory for each

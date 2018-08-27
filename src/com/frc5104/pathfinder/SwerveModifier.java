@@ -1,7 +1,4 @@
-package com.frc5104.pathfinder.modifiers;
-
-import com.frc5104.pathfinder.PathfinderJNI;
-import com.frc5104.pathfinder.Trajectory;
+package com.frc5104.pathfinder;
 
 /**
  * The Swerve Modifier will take in a Source Trajectory and spit out 4 trajectories, 1 for each wheel on the drive.
