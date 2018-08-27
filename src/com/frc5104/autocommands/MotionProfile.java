@@ -1,9 +1,14 @@
 package com.frc5104.autocommands;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import com.frc5104.main.subsystems.Drive;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.command.Command;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
@@ -11,13 +16,13 @@ import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
 /*Breakerbots Robotics Team 2018*/
-public class MotionProfile extends Command {
+public class MotionProfile implements BreakerCommand {
 
 	//Tuning Varibles
 	double _PIDA[] = { 5.0, 0.0, 0.0, 0 }; // Tuning Variables for the Robot
-	double _maxVelocity = /*6.5*//*4.9*/2.2; // The Max Velocity of Your Robot
-	double _maxAcceleration = /*6.5*//*0.5*/3.0; // The Max Acc of Your Robot
-	double _maxJerk = /*196.8*/100; // The Max Jerk of Your Robot
+	static double _maxVelocity = /*6.5*//*4.9*/2.2; // The Max Velocity of Your Robot
+	static double _maxAcceleration = /*6.5*//*0.5*/3.0; // The Max Acc of Your Robot
+	static double _maxJerk = /*196.8*/100; // The Max Jerk of Your Robot
 	double _angleMult = 0.8; /*Keep from 0.6 - 0.8 MULTIPLYING*/
 	
 	//Robot Varibles (In Metric)
@@ -27,19 +32,68 @@ public class MotionProfile extends Command {
 	double _wheelBaseWidth = /*0.5588*/26.15; //The Distance from the Left and Right Wheels in Meters
 	
 	//Motion Profiling Objects
-	Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.05, _maxVelocity, _maxAcceleration, _maxJerk);
-	Trajectory trajectory;
+	static Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.05, _maxVelocity, _maxAcceleration, _maxJerk);
+	static Trajectory trajectory;
 	TankModifier modifier;
 	EncoderFollower left;
 	EncoderFollower right;
 	
 	ADXRS450_Gyro Gyro = new ADXRS450_Gyro();
 	
+	public static Trajectory getTrajectory(Waypoint[] points) {
+		//Parse trajectory name
+		String s = "";
+    	for (Waypoint p : points) {
+    		s += (Double.toString(p.x) + "/" + Double.toString(p.y) + "/" + Double.toString(p.angle));
+    	}
+    	s = "_" + s.hashCode();
+    	
+    	//Read file
+    	Trajectory t = readFile(s);
+    	
+    	//If the file does not exist, generate a path and save
+    	if (t == null) {
+    		System.out.println("AUTO: Generating Path");
+    		t = Pathfinder.generate(points, config);
+    		writeFile(s, t);
+    	}
+    	return t;
+	}
+	
+	//Finds, reads, and returns the trajectory saved with name
+	public static Trajectory readFile(String name) {
+		try {
+			System.out.println("Reading /home/lvuser/MotionProfilingCache/" + name);
+			File file = new File("/home/lvuser/MotionProfilingCache/" + name);
+			FileInputStream fis = new FileInputStream(file);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Trajectory t = (Trajectory) ois.readObject();
+			return t;
+		}
+		catch (Exception e) {
+			System.out.println(e);
+			return null;
+		}
+	}
+	
+	//Writes the path to a new file
+	public static void writeFile(String name, Trajectory t) {
+		try {
+			FileOutputStream fos = new FileOutputStream("/home/lvuser/MotionProfilingCache/" + name);
+		    ObjectOutputStream oos = new ObjectOutputStream(fos);
+		    oos.writeObject(t);
+		    oos.close();
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+		
     public MotionProfile(Waypoint[] points) {
-    	trajectory = Pathfinder.generate(points, config);
+    	trajectory = getTrajectory(points);
     }
 
-    protected void initialize() {
+    public void initialize() {
     	System.out.println("AUTO: Running Path");
     	Gyro.reset();
 		
@@ -66,7 +120,7 @@ public class MotionProfile extends Command {
 		}
     }
 
-    protected void execute() {
+    public void execute() {
     	//Check Teleop Periodic For Reference on What Needs To Be Flipped
 		int leftEncoder = Drive.getInstance().getLeftEncoder();
 		int rightEncoder = Drive.getInstance().getRightEncoder();
@@ -95,18 +149,14 @@ public class MotionProfile extends Command {
 		);
     }
 
-    protected boolean isFinished() {
+    public boolean isFinished() {
     	return left.isFinished() && right.isFinished();
     }
-
-    protected void end() {
-
-    }
-
-    protected void interrupted() {
-
-    }
     
+    public void end() {
+    	
+    }
+
     public double clamp(double a, double min, double max) {
     	return a < min ? min : (a > max ? max : a);
     }

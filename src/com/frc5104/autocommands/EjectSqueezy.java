@@ -6,7 +6,7 @@ import com.frc5104.main.subsystems.Squeezy.SqueezyState;
 import edu.wpi.first.wpilibj.command.Command;
 
 /*Breakerbots Robotics Team 2018*/
-public class EjectSqueezy extends Command {
+public class EjectSqueezy implements BreakerCommand {
 
 	Squeezy squeezy;
 	double ejectEffort;
@@ -17,31 +17,27 @@ public class EjectSqueezy extends Command {
     	ejectEffort = squeezyEffort;
     }
 
-    protected void initialize() {
+    public void initialize() {
     	squeezy.forceState(Squeezy.SqueezyState.EJECT);
     	
     	previousEffort = Squeezy.kEjectEffort;
     	Squeezy.kEjectEffort = ejectEffort;
     }
 
-    protected void execute() {
+    public void execute() {
     	squeezy.update();
     	squeezy.updateState();
     }
 
-    protected boolean isFinished() {
+    public boolean isFinished() {
     	
         return squeezy.isInState(SqueezyState.EMPTY) ||
         		squeezy.isInState(SqueezyState.UNJAM) ||
         		squeezy.isInState(SqueezyState.INTAKE);
     }
 
-    protected void end() {
+    public void end() {
     	squeezy.forceState(SqueezyState.EMPTY);
     	Squeezy.kEjectEffort = previousEffort;
-    }
-
-    protected void interrupted() {
-    
     }
 }

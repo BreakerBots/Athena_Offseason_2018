@@ -72,7 +72,6 @@ public class Squeezy {
 	SqueezyState state = SqueezyState.HOLDING;
 	ControllerHandler controller = ControllerHandler.getInstance();
 	
-	//Talon IDs fall are contained in [20,30)
 	TalonSRX squeezer  = Devices.Squeezy.squeeze;
 	TalonSRX leftSpin  = Devices.Squeezy.leftSpin;
 	TalonSRX rightSpin = Devices.Squeezy.rightSpin;

@@ -3,7 +3,7 @@ package com.frc5104.autocommands;
 import edu.wpi.first.wpilibj.command.Command;
 
 /*Breakerbots Robotics Team 2018*/
-public class Delay extends Command {
+public class Delay implements BreakerCommand {
 	long startTime;
 	int delay;
 
@@ -11,23 +11,19 @@ public class Delay extends Command {
         delay = milliseconds;
     }
 
-    protected void initialize() {
+    public void initialize() {
     	startTime = System.currentTimeMillis();
     }
 
-    protected void execute() {
+    public void execute() {
     	System.out.println("AUTO: Delay");
     }
 
-    protected boolean isFinished() {
+    public boolean isFinished() {
     	return (System.currentTimeMillis() >= startTime + delay);
     }
-
-    protected void end() {
     
-    }
-
-    protected void interrupted() {
-    
+    public void end() {
+    	
     }
 }

@@ -15,7 +15,6 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 /*Breakerbots Robotics Team 2018*/
 public class Elevator {
 
-	public static final double kMaxDownPidEffort = 0.4;
 	public static final double kDownScalar = 0.5;
 	
 	public static final int SOFT_STOP_BOTTOM = 0;
@@ -51,9 +50,8 @@ public class Elevator {
 	private NetworkTable table = null;
 	
 	public enum Control {
-		kPosition, kEffort, kCalibrate //Calibrate drives the elevator down slowly (0.1)
-										//until the fwd (lower) limit switch is closed.
-										//This ensures that kBottom = 0;
+		kEffort, 
+		kCalibrate //Reset the encoder by driving downwards until limit switch is hit
 	}
 	private boolean calibrated = false;
 	Control controlMode = Control.kCalibrate;
@@ -70,130 +68,35 @@ public class Elevator {
 		talon1.configForwardSoftLimitEnable(false, 10);
 		talon1.configForwardSoftLimitThreshold(SOFT_STOP_BOTTOM, 10);
 		
-		talon1.config_kP(0, 0.3, 10);
-		talon1.config_kI(0, 0.001, 10);
-		talon1.config_IntegralZone(0, 2000, 10);
-		
-		talon1.configNominalOutputForward(kMaxDownPidEffort, 10);
-		
 		currentStage = Stage.kBottom;
-//		calibrateBottom();
-		setEffort(0);
-	}//Elevator
-	
-	public void setEffort(double effort) {
-		controlMode = Control.kEffort;
-		this.effort = effort;
-		
-		update();
-	}//setEffort
-	
-	public Stage getStage() {
-		return currentStage;
 	}
 	
-	public void goTo(Stage stage) {
-		if (calibrated) {
-			if (controlMode != Control.kPosition)
-				talon1.setIntegralAccumulator(0, 0, 10);
-			controlMode = Control.kPosition;
-		} else {
-			calibrateBottom();
-		}
-		this.currentStage = stage;
-		
-		update();
-	}//setPosition
-	
-	public void goUp() {
-		//If we're trying to hold a position already, go to the next highest one
-		int newStage = currentStage.ordinal();
-		if (controlMode == Control.kPosition) {
-			newStage++;
-		} else if (controlMode == Control.kEffort) {
-			int currentPos = getEncoderPosition();
-			newStage = 0;
-			while (newStage < Stage.values().length) {
-				if (currentPos > Stage.values()[newStage].position)
-					break;
-				else
-					newStage++;
-			}
-		}
-		
-		if (newStage >= Stage.values().length)
-			newStage = Stage.values().length - 1;
-		else if (newStage < 0)
-			newStage = 0;
-		
-		goTo(Stage.values()[newStage]);
-	}//moveUp
-	
-	public void goDown() {
-		//If we're trying to hold a position already, go to the next lower one
-		int newStage = currentStage.ordinal();
-		if (controlMode == Control.kPosition) {
-			newStage--;
-		} else if (controlMode == Control.kEffort) {
-			int currentPos = getEncoderPosition();
-			newStage = Stage.values().length - 1;
-			while (newStage >= 0) {
-				if (currentPos < Stage.values()[newStage].position)
-					break;
-				else
-					newStage--;
-			}
-		}
-		
-		if (newStage >= Stage.values().length)
-			newStage = Stage.values().length - 1;
-		else if (newStage < 0)
-			newStage = 0;
-		
-		goTo(Stage.values()[newStage]);
-	}//moveDown
-	
 	public void userControl() {
-		double userInput = controller.getAxis(HMI.kElevatorUpDown);
-		userInput = userDeadband.get(userInput);
-		
-		boolean effortControlled = controlMode == Elevator.Control.kEffort;
-		boolean overrideOthers = 0.00001 <= Math.abs(userInput);
-		
-		if (effortControlled || overrideOthers)
-			setEffort(userInput);
-		
-		update();
-//		vibrateIfApproaching();
-	}//userControl
-
-	public void update() {
-//		System.out.println("CurrentStage: "+currentStage.name());
-		if (controlMode == Control.kEffort) {
-			double output = effort;
+		//if (controlMode == Elevator.Control.kEffort) {
+			double output = userDeadband.get(controller.getAxis(HMI.kElevatorUpDown));
 			if (output > 0) output *= kDownScalar;
 			talon1.set(ControlMode.PercentOutput, output);
-		} else if (controlMode == Control.kPosition) {
-			talon1.set(ControlMode.Position, currentStage.getCounts());
-//			System.out.println("Elevator Effort: "+talon1.getMotorOutputPercent());
-		} else if (controlMode == Control.kCalibrate) {
+		//}
+		
+		//update();
+		vibrateIfApproaching();
+	}
+
+	public void update() {
+		System.out.println(Control.kCalibrate + " " + talon1.getSensorCollection().isFwdLimitSwitchClosed());
+		if (controlMode == Control.kCalibrate) {
 			talon1.set(ControlMode.PercentOutput, 0.1);
 			if (talon1.getSensorCollection().isFwdLimitSwitchClosed()) {
 				//Reset Talon Encoder Position & Soft Limit
 				talon1.setSelectedSensorPosition(0, 0, 10);
 				
 				calibrated = true;
-				controlMode = Control.kPosition;
+				controlMode = Control.kEffort;
 				clearIaccum();
 				update();
 			}
 		}
 	}//update
-	
-	public void calibrateBottom() {
-		controlMode = Control.kCalibrate;
-		update();
-	}//calibrateBottom
 	
 	public void vibrateIfApproaching() {
 		if (!calibrated) return;

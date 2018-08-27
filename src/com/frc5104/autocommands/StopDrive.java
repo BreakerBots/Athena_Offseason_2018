@@ -5,29 +5,25 @@ import com.frc5104.main.subsystems.Drive;
 import edu.wpi.first.wpilibj.command.Command;
 
 /*Breakerbots Robotics Team 2018*/
-public class StopDrive extends Command {
+public class StopDrive implements BreakerCommand {
 
     public StopDrive() {
     	
     }
 
-    protected void initialize() {
+    public void initialize() {
     	System.out.println("AUTO: Stopping Drive");
     }
 
-    protected void execute() {
+    public void execute() {
     	Drive.getInstance().set(0, 0);
     }
 
-    protected boolean isFinished() {
+    public boolean isFinished() {
     	return false;
     }
-
-    protected void end() {
-
-    }
-
-    protected void interrupted() {
-
+    
+    public void end() {
+    	
     }
 }

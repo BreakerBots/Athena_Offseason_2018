@@ -52,7 +52,6 @@ public class TalonFactory {
 		talon.configPeakCurrentLimit(0, 0);
 		talon.configContinuousCurrentLimit(0, 0);
 		talon.setNeutralMode(NeutralMode.Brake);
-		talon.setSelectedSensorPosition(0, 0, 10);
 		
 		talon.set(ControlMode.PercentOutput, 0);
 		
@@ -101,9 +100,8 @@ public class TalonFactory {
 		talon.configPeakCurrentLimit(0, 0);
 		talon.configContinuousCurrentLimit(0, 0);
 		talon.setNeutralMode(NeutralMode.Brake);
-		talon.setSelectedSensorPosition(0, 0, 10);
 		
-		talon.set(ControlMode.PercentOutput, followerId);
+		talon.set(ControlMode.Follower, followerId);
 		
 		return talon;
 	}
