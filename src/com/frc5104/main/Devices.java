@@ -3,6 +3,7 @@ package com.frc5104.main;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.utilities.TalonFactory;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -16,6 +17,7 @@ public class Devices {
 		public static TalonSRX L2 = TalonFactory.getTalon(12);
 		public static TalonSRX R1 = TalonFactory.getTalon(13);
 		public static TalonSRX R2 = TalonFactory.getTalon(14);
+		public static ADXRS450_Gyro Gyro = new ADXRS450_Gyro();
 	}
 	
 	//Squeezy

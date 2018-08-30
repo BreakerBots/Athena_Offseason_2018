@@ -18,9 +18,19 @@ public class BreakerCommandScheduler {
 	
 	public void set(BreakerCommandGroup commandGroup) {
 		double curTime = (double)(System.currentTimeMillis());
+		
+		//Save the new Command Group
 		r = commandGroup;
+		
+		//Reset Command Group Filter Index
 		i = 0;
+		
+		//Make the Command Init Commands and Add To Array
 		r.init();
+		
+		//Say that the first command hasn't been Initiated
+		s = false;
+		
 		System.out.println("Finished set: " + ((double)(System.currentTimeMillis()) - curTime));
 	}
 	

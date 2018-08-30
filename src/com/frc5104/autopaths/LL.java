@@ -2,8 +2,7 @@ package com.frc5104.autopaths;
 
 import com.frc5104.autocommands.*;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import com.frc5104.pathfinder.Waypoint;
+import jaci.pathfinder.Waypoint;
 
 public class LL extends BreakerCommandGroup {
 	Waypoint[] points = {

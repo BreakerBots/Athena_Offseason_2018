@@ -7,7 +7,6 @@ import com.frc5104.main.subsystems.Squeezy.SqueezyState;
 import com.frc5104.utilities.ControllerHandler;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.command.Scheduler;
 
 /*Breakerbots Robotics Team 2018*/
 public class Robot extends IterativeRobot {

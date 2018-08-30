@@ -6,16 +6,14 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import com.frc5104.main.Devices;
 import com.frc5104.main.subsystems.Drive;
 
-import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.command.Command;
-
-import com.frc5104.pathfinder.EncoderFollower;
-import com.frc5104.pathfinder.Pathfinder;
-import com.frc5104.pathfinder.TankModifier;
-import com.frc5104.pathfinder.Trajectory;
-import com.frc5104.pathfinder.Waypoint;
+import jaci.pathfinder.Pathfinder;
+import jaci.pathfinder.Trajectory;
+import jaci.pathfinder.Waypoint;
+import jaci.pathfinder.followers.EncoderFollower;
+import jaci.pathfinder.modifiers.TankModifier;
 
 /*Breakerbots Robotics Team 2018*/
 public class MotionProfile implements BreakerCommand {
@@ -40,14 +38,14 @@ public class MotionProfile implements BreakerCommand {
 	EncoderFollower left;
 	EncoderFollower right;
 	
-	ADXRS450_Gyro Gyro = new ADXRS450_Gyro();
-	
 	public static Trajectory getTrajectory(Waypoint[] points) {
 		//Parse trajectory name
 		String s = "";
     	for (Waypoint p : points) {
     		s += (Double.toString(p.x) + "/" + Double.toString(p.y) + "/" + Double.toString(p.angle));
+    		System.out.print(Double.toString(p.x) + "/" + Double.toString(p.y) + "/" + Double.toString(p.angle));
     	}
+    	System.out.println("");
     	s = "_" + s.hashCode();
     	
     	//Read file
@@ -55,8 +53,8 @@ public class MotionProfile implements BreakerCommand {
     	
     	//If the file does not exist, generate a path and save
     	if (t == null) {
-    		System.out.println("AUTO: Generating Path");
-    		t = Pathfinder.generate(points, config);
+    		System.out.println("AUTO: No Cache Found => Generating Path");
+    		t = (Trajectory) Pathfinder.generate(points, config);
     		writeFile(s, t);
     	}
     	return t;
@@ -69,11 +67,11 @@ public class MotionProfile implements BreakerCommand {
 			File file = new File("/home/lvuser/MotionProfilingCache/" + name);
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			Trajectory t = (Trajectory) ois.readObject();
+			Trajectory t = ((SerialTrajectory) ois.readObject()).getTrajectory();
 			return t;
 		}
 		catch (Exception e) {
-			System.out.println(e);
+			System.out.println("No Cache Found, or error: " + e);
 			return null;
 		}
 	}
@@ -83,7 +81,7 @@ public class MotionProfile implements BreakerCommand {
 		try {
 			FileOutputStream fos = new FileOutputStream("/home/lvuser/MotionProfilingCache/" + name);
 		    ObjectOutputStream oos = new ObjectOutputStream(fos);
-		    oos.writeObject(t);
+		    oos.writeObject(new SerialTrajectory(t));
 		    oos.close();
 		}
 		catch (Exception e) {
@@ -97,7 +95,7 @@ public class MotionProfile implements BreakerCommand {
 
     public void initialize() {
     	System.out.println("AUTO: Running Path");
-    	Gyro.reset();
+    	Devices.Drive.Gyro.reset();
 		
 		//Modify The Tank To The Wheel Base Width, The Distance Between The Left and Right Wheels
 		modifier = new TankModifier(trajectory);
@@ -126,7 +124,7 @@ public class MotionProfile implements BreakerCommand {
     	//Check Teleop Periodic For Reference on What Needs To Be Flipped
 		int leftEncoder = Drive.getInstance().getLeftEncoder();
 		int rightEncoder = Drive.getInstance().getRightEncoder();
-		double angle = -Gyro.getAngle() / Math.cos(Pathfinder.d2r(65));
+		double angle = -Devices.Drive.Gyro.getAngle() / Math.cos(Pathfinder.d2r(65));
 		
 		//Calculate Left and Right Speed for Wheels
 		double l = left.calculate(-leftEncoder);
