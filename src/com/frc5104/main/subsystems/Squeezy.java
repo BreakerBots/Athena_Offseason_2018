@@ -2,15 +2,21 @@ package com.frc5104.main.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
+import com.frc5104.main.HMI;
 import com.frc5104.utilities.ControllerHandler;
-import com.frc5104.utilities.HMI;
+import com.frc5104.utilities.console;
+import com.frc5104.utilities.console.Type;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * Squeezy Sanchez (A Decent but also sucky intake mechanism)
+ */
 public class Squeezy {
 	
 	private class PriorityCounter {
@@ -30,19 +36,19 @@ public class Squeezy {
 		}
 	}//PriorityCounter
 	
-	static final int kHasCubePosition = -68000;
+	static final int kHasCubePosition = Constants.Squeezy.HasCubePosition;
 	
 	//For Opening/Closing Arms
-	static final double kHoldEffort = -0.25;
-	static final double kShootSqueezeEffort = -0.05;
-	static final double kCloseEffort = -0.30;
-	static final double kOpenEffort  = 0.25;
+	static final double kHoldEffort = Constants.Squeezy.HoldEffort;
+	static final double kShootSqueezeEffort = Constants.Squeezy.ShootSqueezeEffort;
+	static final double kCloseEffort = Constants.Squeezy.CloseEffort;
+	static final double kOpenEffort  = Constants.Squeezy.OpenEffort;
 	
 	//For Spinning Wheels
-	static final double kRightSpinMultiplier = 1.1;
-	static final double kIntakeEffort = -/*0.4*//*3-12-18 0.2*/0.2;
-	static final double kPinchEffort = -0.2;
-	public static double kEjectEffort = 0.6;
+	static final double kRightSpinMultiplier = Constants.Squeezy.RightSpinMultiplier;
+	static final double kIntakeEffort = Constants.Squeezy.IntakeEffort;
+	static final double kPinchEffort = Constants.Squeezy.PinchEffort;
+	public static double kEjectEffort = Constants.Squeezy.EjectEffort;
 	
 	public enum SqueezyState {
 		EMPTY, EJECT,
@@ -109,11 +115,11 @@ public class Squeezy {
 	}
 	public void processFold() {
 		if (controller.getPressed(HMI.kSqueezyDown)) {
-			System.out.println("TELE: Squeezy down");
+			console.log("Squeezy down", Type.INTAKE);
 			foldDown();
 		}
 		if (controller.getPressed(HMI.kSqueezyUp)) {
-			System.out.println("TELE: Squeezy up");
+			console.log("Squeezy up", Type.INTAKE);
 			foldUp();
 		}
 	}
@@ -219,7 +225,7 @@ public class Squeezy {
 		}
 		
 		if (controller.getPressed(HMI.kSqueezyEject)) {
-			System.out.println("MAIN: EJECTING!!!");
+			console.log("Ejecting", Type.INTAKE);
 			ejectTime = System.currentTimeMillis();
 			state = SqueezyState.EJECT;
 		}

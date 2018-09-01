@@ -11,11 +11,7 @@ public class Baseline extends BreakerCommandGroup {
 	};
 		
 	public void init() {
-		double curTime = (double)(System.currentTimeMillis());
-
 		add(new MotionProfile(points));
 		add(new StopDrive());
- 		
-		System.out.println("MP Gen Took: " + (((double)(System.currentTimeMillis()) - curTime) / 1000) + "s");
 	}
 }

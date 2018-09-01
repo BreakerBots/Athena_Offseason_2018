@@ -3,6 +3,8 @@ package com.frc5104.main.subsystems;
 /*Breakerbots Robotics Team 2018*/
 public class TimedButton {
 
+	//Basically a faked button... I just didn't want to refractor squeezy (this is literally only used once in the robot program)
+	
 	long startTime;
 	boolean pressed;
 	

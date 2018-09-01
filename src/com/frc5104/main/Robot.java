@@ -3,8 +3,11 @@ package com.frc5104.main;
 import com.frc5104.autocommands.BreakerCommandScheduler;
 import com.frc5104.autopaths.*;
 import com.frc5104.main.subsystems.*;
+import com.frc5104.main.subsystems.Drive.shifters.Gear;
 import com.frc5104.main.subsystems.Squeezy.SqueezyState;
 import com.frc5104.utilities.ControllerHandler;
+import com.frc5104.utilities.console;
+import com.frc5104.utilities.console.Type;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
@@ -13,7 +16,6 @@ public class Robot extends IterativeRobot {
 	
 	//  ----------------------------------------  Subsystems  ----------------------------------------  \\
 	Drive drive = Drive.getInstance();
-	Shifters shifters = Shifters.getInstance();
 	
 	Squeezy squeezy = Squeezy.getInstance();
 	SqueezySensors squeezySensors = SqueezySensors.getInstance();
@@ -28,7 +30,8 @@ public class Robot extends IterativeRobot {
 	
 	//  ----------------------------------------  Main Init  ----------------------------------------  \\
 	public void robotInit() {
-		System.out.println("MAIN: Running Code");
+		console.sets.create("RobotInit");
+		console.log("Initializing Code", Type.MAIN);
 		
 		//squeezy.initTable(null);
 		
@@ -40,19 +43,17 @@ public class Robot extends IterativeRobot {
 		
 		//CameraServer.getInstance().startAutomaticCapture();
 		
-		System.out.println("MAIN: Initialized Code");
+		console.sets.log("Initialization took", Type.MAIN, "RobotInit", "");
 	}
 	
 	
 	
 	//  ----------------------------------------  Autonomous  ----------------------------------------  \\
 	public void autonomousInit() {
-		double curTime = (double)(System.currentTimeMillis());
+		Drive.shifters.set(Gear.Low);
 		
 		//BreakerCommandScheduler.getInstance().set(AutoSelector.getAuto());
 		BreakerCommandScheduler.getInstance().set(AutoSelector.Paths.Baseline.getPath());
-		
-		System.out.println("Total time: " + (((double)(System.currentTimeMillis()) - curTime) / 1000) + "s");
 		
 		//squeezy.forceState(SqueezyState.HOLDING);
 		squeezy.forceState(SqueezyState.EMPTY);
@@ -67,8 +68,7 @@ public class Robot extends IterativeRobot {
 	
 	//  ----------------------------------------  Teleop  ----------------------------------------  \\
 	public void teleopInit() {
-		if (shifters != null)
-			shifters.shiftLow();
+		Drive.shifters.set(Gear.Low);
 	}
 	public void teleopPeriodic() {
 		controller.update();
@@ -76,8 +76,6 @@ public class Robot extends IterativeRobot {
 		drive.update();
 		
 		//climber.update();
-		
-		shifters.teleUpdate();
 		
 		elevator.userControl();
 		

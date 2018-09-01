@@ -1,11 +1,13 @@
 package com.frc5104.main.subsystems;
 
 import com.frc5104.main.Devices;
+import com.frc5104.main.HMI;
 import com.frc5104.utilities.ControllerHandler;
+import com.frc5104.utilities.console;
+import com.frc5104.utilities.console.Type;
 
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
-import com.frc5104.utilities.HMI;
 
 /*Breakerbots Robotics Team 2018*/
 public class Climber {
@@ -31,7 +33,7 @@ public class Climber {
 	//Driving
 	public void update() {
 		if (controller.getHeldEvent(HMI.kPtoHoldAndHookPressButton, 0.4)) { 
-			System.out.println("TELE: Switching PTO!");
+			console.log("Switching PTO", Type.TELEOP);
 			Devices.Climbing.ptoSol.set(!ptoSol.get());
 			if (ptoSol.get())
 				controller.rumbleSoftFor(0.5, 0.2);

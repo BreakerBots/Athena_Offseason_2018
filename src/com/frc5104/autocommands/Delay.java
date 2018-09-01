@@ -1,5 +1,8 @@
 package com.frc5104.autocommands;
 
+import com.frc5104.utilities.console;
+import com.frc5104.utilities.console.Type;
+
 /*Breakerbots Robotics Team 2018*/
 public class Delay implements BreakerCommand {
 	long startTime;
@@ -14,7 +17,7 @@ public class Delay implements BreakerCommand {
     }
 
     public void execute() {
-    	System.out.println("AUTO: Delay");
+    	console.log("Delaying", Type.AUTO);
     }
 
     public boolean isFinished() {

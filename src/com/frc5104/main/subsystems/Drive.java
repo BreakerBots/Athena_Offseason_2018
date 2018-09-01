@@ -3,28 +3,30 @@ package com.frc5104.main.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.main.Devices;
+import com.frc5104.main.HMI;
 import com.frc5104.utilities.ControllerHandler;
+import com.frc5104.utilities.console;
+import com.frc5104.utilities.console.Type;
 import com.frc5104.utilities.ControllerHandler.Control;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /*Breakerbots Robotics Team 2018*/
 public class Drive {
+	static Drive m_instance = null; 
+	public static Drive getInstance() { if (m_instance == null) { m_instance = new Drive(); } return m_instance; }
 
-	static Drive m_instance = null;
-	
-	public static Drive getInstance() {
-		if (m_instance == null) {
-			m_instance = new Drive();
-		}
-		return m_instance;
-	}
+	//Device References
+	private static TalonSRX L1 = Devices.Drive.L1;
+	private static TalonSRX L2 = Devices.Drive.L2;
+	private static TalonSRX R1 = Devices.Drive.R1;
+	private static TalonSRX R2 = Devices.Drive.R2;
+	private static DoubleSolenoid gearShifters = Devices.Shifting.sol;
 
-	TalonSRX L1 = Devices.Drive.L1;
-	TalonSRX L2 = Devices.Drive.L2;
-	TalonSRX R1 = Devices.Drive.R1;
-	TalonSRX R2 = Devices.Drive.R2;
-	
+	/**
+	 * Initialize Driving (Setup Talons)
+	 */
 	public void init() {
-		// Setup
 		L1.setSelectedSensorPosition(0, 0, 10);
 		R1.setSelectedSensorPosition(0, 0, 10);
 		L2.set(ControlMode.Follower, L1.getDeviceID());
@@ -37,14 +39,25 @@ public class Drive {
 		R2.setInverted(true);
 	}
 	
-	
-	//Driving
+	/**
+	 * The Teleop Loop update
+	 */
 	public void update() {
 		ControllerHandler controller = ControllerHandler.getInstance();
 		L1.set(ControlMode.PercentOutput, controller.getAxis(Control.LY) - controller.getAxis(Control.LX));
 		R1.set(ControlMode.PercentOutput, controller.getAxis(Control.LY) + controller.getAxis(Control.LX));
+	
+		if (ControllerHandler.getInstance().getAxis(HMI.kDriveShift) > 0.6)
+			shifters.set(true);
+		else
+			shifters.set(false);
 	}
 	
+	/**
+	 * Sets the speed of the motors
+	 * @param l The left speed
+	 * @param r The right speed
+	 */
 	public void set(double l, double r) {
 		L1.set(ControlMode.PercentOutput, l);
 		R1.set(ControlMode.PercentOutput, r);
@@ -52,16 +65,54 @@ public class Drive {
 	
 	
 	//Encoders
-	public void resetEncoders(int timeoutMs) {
-		L1.setSelectedSensorPosition(0, 0, timeoutMs);
-		R1.setSelectedSensorPosition(0, 0, timeoutMs);
+	public static class encoders {
+		/**
+		 * Resets both the encoders to zero
+		 */
+		public static void reset(int timeoutMs) {
+			L1.setSelectedSensorPosition(0, 0, timeoutMs);
+			R1.setSelectedSensorPosition(0, 0, timeoutMs);
+		}
+		
+		/**
+		 * @return The Left encoder's value
+		 */
+		public static int getLeft() {
+			return L1.getSelectedSensorPosition(0);
+		}
+		
+		/**
+		 * @return The Right encoder's value
+		 */
+		public static int getRight() {
+			return R1.getSelectedSensorPosition(0);
+		}
 	}
 	
-	public int getLeftEncoder() {
-		return L1.getSelectedSensorPosition(0);
-	}
-	
-	public int getRightEncoder() {
-		return R1.getSelectedSensorPosition(0);
+	//Shifters
+	public static class shifters {
+		public static Gear get() {
+			return inHighGear() ? Gear.High : Gear.Low;
+		}
+		
+		public static boolean inHighGear() {
+			return gearShifters.get() == DoubleSolenoid.Value.kForward;
+		}
+		
+		/**
+		 * @param high True: Set to High Gear, False: Set to Low Gear
+		 */
+		public static void set(boolean high) {
+			console.log(high ? "Shifting High" : "Shifting Low", Type.DRIVE);
+			gearShifters.set(high ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+		}
+		
+		public static enum Gear { 
+			Low, 
+			High 
+		}
+		public static void set(Gear gear) {
+			set(gear == Gear.Low);
+		}
 	}
 }

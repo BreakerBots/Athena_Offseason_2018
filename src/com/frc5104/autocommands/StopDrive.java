@@ -1,8 +1,8 @@
 package com.frc5104.autocommands;
 
 import com.frc5104.main.subsystems.Drive;
-
-import edu.wpi.first.wpilibj.command.Command;
+import com.frc5104.utilities.console;
+import com.frc5104.utilities.console.Type;
 
 /*Breakerbots Robotics Team 2018*/
 public class StopDrive implements BreakerCommand {
@@ -12,7 +12,7 @@ public class StopDrive implements BreakerCommand {
     }
 
     public void initialize() {
-    	System.out.println("AUTO: Stopping Drive");
+    	console.log("Stopping Drive", Type.AUTO);
     }
 
     public void execute() {

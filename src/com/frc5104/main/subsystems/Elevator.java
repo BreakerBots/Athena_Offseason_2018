@@ -4,21 +4,21 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
+import com.frc5104.main.HMI;
 import com.frc5104.utilities.ControllerHandler;
 import com.frc5104.utilities.Deadband;
-import com.frc5104.utilities.HMI;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /*Breakerbots Robotics Team 2018*/
 public class Elevator {
 
-	public static final double kDownScalar = 0.5;
+	public static final double kDownScalar = Constants.Elevator.DownScalar;
 	
-	public static final int SOFT_STOP_BOTTOM = 0;
-	public static final int SOFT_STOP_TOP = -16150;
+	public static final int SOFT_STOP_BOTTOM = Constants.Elevator.SOFT_STOP_BOTTOM;
+	public static final int SOFT_STOP_TOP = Constants.Elevator.SOFT_STOP_TOP;
 	
 	public enum Stage {
 		kBottom(0),
@@ -83,7 +83,6 @@ public class Elevator {
 	}
 
 	public void update() {
-		System.out.println(Control.kCalibrate + " " + talon1.getSensorCollection().isFwdLimitSwitchClosed());
 		if (controlMode == Control.kCalibrate) {
 			talon1.set(ControlMode.PercentOutput, 0.1);
 			if (talon1.getSensorCollection().isFwdLimitSwitchClosed()) {

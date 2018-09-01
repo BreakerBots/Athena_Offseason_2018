@@ -1,6 +1,9 @@
 package com.frc5104.autopaths;
 
 import com.frc5104.autocommands.BreakerCommandGroup;
+import com.frc5104.utilities.console;
+import com.frc5104.utilities.console.Type;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -64,7 +67,7 @@ public class AutoSelector {
 		}
 		
 		if (gameData != null) {
-			System.out.println("AUTO: Recieved Game Data => " + gameData + ". At => " + DriverStation.getInstance().getMatchTime());
+			console.log("Recieved Game Data => " + gameData + ". At => " + DriverStation.getInstance().getMatchTime(), Type.AUTO);
 			String position;
 			position = NetworkTableInstance.
 					getDefault().
@@ -87,10 +90,10 @@ public class AutoSelector {
 				};
 		}
 		else {
-			System.out.println("AUTO: Failed Game Data. At => " + DriverStation.getInstance().getMatchTime());
+			console.log("Failed Game Data. At => " + DriverStation.getInstance().getMatchTime(), Type.AUTO);
 		}
 		
-		System.out.println("AUTO: Running path => " + auto.getClass().getName());
+		console.log("Chose Autonomous Route => " + auto.getClass().getName(), Type.AUTO);
 		
 		return auto;
 	}

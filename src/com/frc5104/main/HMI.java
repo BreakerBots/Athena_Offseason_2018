@@ -1,9 +1,6 @@
-package com.frc5104.utilities;
+package com.frc5104.main;
 
 import com.frc5104.utilities.ControllerHandler.Control;
-
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 
 /*Breakerbots Robotics Team 2018*/
 public class HMI {
@@ -21,7 +18,7 @@ public class HMI {
 	//Elevator
 	public static final Control kPtoHoldAndHookPressButton = Control.Y; //hold for 0.4 sec
 	public static final Control kElevatorUpDown = Control.RY;
-	public static final Control kOpenHookHolder = /*Control.A -- Changed ToY*/ Control.Y;
+	public static final Control kOpenHookHolder = /*Control.A -- Changed To Y*/ Control.Y;
 	
 	//Squeezy
 	public static final Control kSqueezyUp = Control.N;

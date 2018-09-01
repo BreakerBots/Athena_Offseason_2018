@@ -1,8 +1,10 @@
 package com.frc5104.autocommands;
 
+import com.frc5104.utilities.console;
+import com.frc5104.utilities.console.Type;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.command.Command;
 
 /*Breakerbots Robotics Team 2018*/
 public class DropSqueezy implements BreakerCommand {
@@ -15,6 +17,7 @@ public class DropSqueezy implements BreakerCommand {
     }
 
     public void initialize() {
+    	console.log("Dropping Squeezy", Type.AUTO);
     	squeezy.set(Value.kForward);
     	start = System.currentTimeMillis();
     }
