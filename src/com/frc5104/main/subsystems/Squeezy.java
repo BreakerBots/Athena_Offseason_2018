@@ -18,33 +18,15 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
  * Squeezy Sanchez (A Decent but also sucky intake mechanism)
  */
 public class Squeezy {
+	static Squeezy m_instance;
+	public static Squeezy getInstance() { if (m_instance == null) { m_instance = new Squeezy(); } return m_instance; }
 	
-	private class PriorityCounter {
-		private int counter = 0;
-		
-		public boolean getLow() {
-			return counter % 75 == 0;
-		}
-		public boolean getMedium() {
-			return counter % 50 == 0;
-		}
-		public boolean getHigh() {
-			return counter % 20 == 0;
-		}
-		public void count() {
-			counter++;
-		}
-	}//PriorityCounter
-	
+	//Constants References
 	static final int kHasCubePosition = Constants.Squeezy.HasCubePosition;
-	
-	//For Opening/Closing Arms
 	static final double kHoldEffort = Constants.Squeezy.HoldEffort;
 	static final double kShootSqueezeEffort = Constants.Squeezy.ShootSqueezeEffort;
 	static final double kCloseEffort = Constants.Squeezy.CloseEffort;
 	static final double kOpenEffort  = Constants.Squeezy.OpenEffort;
-	
-	//For Spinning Wheels
 	static final double kRightSpinMultiplier = Constants.Squeezy.RightSpinMultiplier;
 	static final double kIntakeEffort = Constants.Squeezy.IntakeEffort;
 	static final double kPinchEffort = Constants.Squeezy.PinchEffort;
@@ -59,15 +41,6 @@ public class Squeezy {
 		
 	}
 	boolean manualStateDiagram = false;
-	
-	static Squeezy m_instance;
-	
-	public static Squeezy getInstance() {
-		if (m_instance == null) {
-			m_instance = new Squeezy();
-		}
-		return m_instance;
-	}//getInstance
 	
 	NetworkTable table = null;
 	
@@ -482,4 +455,20 @@ public class Squeezy {
 		table.getEntry(key).setBoolean(value);
 	}//setBoolean
 
+	private class PriorityCounter {
+		private int counter = 0;
+		
+		public boolean getLow() {
+			return counter % 75 == 0;
+		}
+		public boolean getMedium() {
+			return counter % 50 == 0;
+		}
+		public boolean getHigh() {
+			return counter % 20 == 0;
+		}
+		public void count() {
+			counter++;
+		}
+	}//PriorityCounter
 }//Squeezy

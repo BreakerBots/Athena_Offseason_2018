@@ -10,12 +10,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 /*Breakerbots Robotics Team 2018*/
 public class AutoSelector {
 	
-	public enum Position {
-		kLeft, kCenter, kRight
-	}
-	
 	public static volatile String gameData = null;
 	
+	//Having the paths predeclared lets them process waypoints in robot idle
 	public static enum Paths {
 		Baseline(new Baseline()),
 		LL(new LL()), 
@@ -35,6 +32,7 @@ public class AutoSelector {
 	}
 	
 	public static BreakerCommandGroup getAuto() {
+		//Default Path is Baseline
 		BreakerCommandGroup auto = Paths.Baseline.getPath();
 
 		Thread gameDataThread = new Thread() {
@@ -66,8 +64,11 @@ public class AutoSelector {
 			e.printStackTrace();
 		}
 		
+		//I Recived Game Data
 		if (gameData != null) {
 			console.log("Recieved Game Data => " + gameData + ". At => " + DriverStation.getInstance().getMatchTime(), Type.AUTO);
+			
+			//Get our Robot Position on the Field
 			String position;
 			position = NetworkTableInstance.
 					getDefault().
@@ -75,7 +76,7 @@ public class AutoSelector {
 					getEntry("AutoPos").
 					getString("null");
 
-			if (!position.equals("null"))
+			if (!position.equals("null")) {
 				switch (position) {
 					case "Left":
 						auto = (gameData.charAt(0) == 'L') ? Paths.LL.getPath() : Paths.LR.getPath();
@@ -87,12 +88,18 @@ public class AutoSelector {
 					case "Right":
 						auto = (gameData.charAt(0) == 'L') ? Paths.RL.getPath() : Paths.RR.getPath();
 						break;
+					default:
+						//Let it just flow through to default at baselines
+						break;
 				};
+			}
 		}
+		//Got No Game Data => Defaults to Run Baseline
 		else {
 			console.log("Failed Game Data. At => " + DriverStation.getInstance().getMatchTime(), Type.AUTO);
 		}
 		
+		//Print out the Path were Running
 		console.log("Chose Autonomous Route => " + auto.getClass().getName(), Type.AUTO);
 		
 		return auto;

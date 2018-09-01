@@ -14,36 +14,15 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 /*Breakerbots Robotics Team 2018*/
 public class Elevator {
-
-	public static final double kDownScalar = Constants.Elevator.DownScalar;
+	static Elevator m_instance = null;
+	public static Elevator getInstance() { if (m_instance == null) m_instance = new Elevator(); return m_instance; }
 	
+	//Constants References
+	public static final double kDownScalar = Constants.Elevator.DownScalar;
 	public static final int SOFT_STOP_BOTTOM = Constants.Elevator.SOFT_STOP_BOTTOM;
 	public static final int SOFT_STOP_TOP = Constants.Elevator.SOFT_STOP_TOP;
 	
-	public enum Stage {
-		kBottom(0),
-//		kPortal(-3000),
-		kSwitch(-5000),
-		kLowerScale(-13500),
-		kTop(-13770);
-		
-		int position;
-		Stage (int position){
-			this.position = position;
-		}
-		public int getCounts() {
-			return this.position;
-		}
-	}//Stage
-	
-	static Elevator m_instance = null;
-	
-	public static Elevator getInstance() {
-		if (m_instance == null)
-			m_instance = new Elevator();
-		return m_instance;
-	}//getInstance
-
+	//Device References
 	private ControllerHandler controller = ControllerHandler.getInstance();
 	private TalonSRX talon1 = Devices.Elevator.a;
 	private TalonSRX talon2 = Devices.Elevator.b;
@@ -60,6 +39,22 @@ public class Elevator {
 	public Deadband userDeadband = new Deadband(0.2);
 	public double effort = 0;
 	public int prevEnc = -1;
+	
+	public enum Stage {
+		kBottom(0),
+		//kPortal(-3000),
+		kSwitch(-5000),
+		kLowerScale(-13500),
+		kTop(-13770);
+		
+		int position;
+		Stage (int position){
+			this.position = position;
+		}
+		public int getCounts() {
+			return this.position;
+		}
+	}
 	
 	private Elevator () {
 		talon1.configReverseSoftLimitEnable(false, 10);

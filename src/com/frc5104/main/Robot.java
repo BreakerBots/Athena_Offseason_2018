@@ -50,6 +50,7 @@ public class Robot extends IterativeRobot {
 	
 	//  ----------------------------------------  Autonomous  ----------------------------------------  \\
 	public void autonomousInit() {
+		console.log("Initalizing Autonomous", Type.AUTO);
 		Drive.shifters.set(Gear.Low);
 		
 		//BreakerCommandScheduler.getInstance().set(AutoSelector.getAuto());
@@ -68,6 +69,7 @@ public class Robot extends IterativeRobot {
 	
 	//  ----------------------------------------  Teleop  ----------------------------------------  \\
 	public void teleopInit() {
+		console.log("Initializing Teleop", Type.TELEOP);
 		Drive.shifters.set(Gear.Low);
 	}
 	public void teleopPeriodic() {

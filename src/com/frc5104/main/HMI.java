@@ -5,33 +5,28 @@ import com.frc5104.utilities.ControllerHandler.Control;
 /*Breakerbots Robotics Team 2018*/
 public class HMI {
 
-	//Recording
-	public static final Control kStartRecording = Control.MENU;
-	public static final Control kStopRecording = Control.MENU;
-	public static final Control kPlayback = Control.LIST;
-	
 	//Drive
-	public static final Control kDriveX = Control.LX;
-	public static final Control kDriveY = Control.LY;
-	public static final Control kDriveShift = Control.RT;
+	public static final Control kDriveX = Control.LX;		//Left  Stick
+	public static final Control kDriveY = Control.LY;		//Right Stick
+	public static final Control kDriveShift = Control.RT;	//Right Trigger
 	
 	//Elevator
-	public static final Control kPtoHoldAndHookPressButton = Control.Y; //hold for 0.4 sec
-	public static final Control kElevatorUpDown = Control.RY;
-	public static final Control kOpenHookHolder = /*Control.A -- Changed To Y*/ Control.Y;
+	public static final Control kElevatorUpDown = Control.RY; //Right Stick
+
+	//Climbing
+	public static final Control kPtoHoldAndHookPressButton = Control.Y; //0.4 Sec Hold
+	public static final Control kOpenHookHolder = /*Control.A*/Control.Y;
 	
-	//Squeezy
-	public static final Control kSqueezyUp = Control.N;
-	public static final Control kSqueezyDown = Control.S;
+	//Squeezy Manual
+	public static final Control kSqueezyUp = Control.N;		//Up    on D-Pad
+	public static final Control kSqueezyDown = Control.S;	//Down  on D-Pad
+	public static final Control kSqueezyOpen = Control.W;	//Left  on D-Pad
+	public static final Control kSqueezyClose = Control.E;	//Right on D-Pad
 	
-	public static final Control kSqueezyOpen = Control.W;
-	public static final Control kSqueezyClose = Control.E;
-	
-	public static final Control kSqueezyEject = Control.LB;
-	public static final Control kSqueezyNeutral = Control.B;
-	public static final Control kSqueezyIntake = Control.X;
-	public static final Control kSqueezyKnock = Control.LT;
-	
-	public static final Control kElevatorDown = Control.A;
-	public static final Control kElevatorUp = Control.RB;
+	//Squeezy Automatic
+	public static final Control kSqueezyEject = Control.LB;	//Eject Mode
+	public static final Control kSqueezyNeutral = Control.B;//Neutral Mode (Stop Wheels from Spinning)
+	public static final Control kSqueezyIntake = Control.X;	//Intake Mode (Spin Wheels and Move In)
+	public static final Control kSqueezyKnock = Control.LT; //?
+
 }
