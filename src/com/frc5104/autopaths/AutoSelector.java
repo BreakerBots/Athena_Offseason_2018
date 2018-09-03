@@ -78,14 +78,14 @@ public class AutoSelector {
 
 			if (!position.equals("null")) {
 				switch (position) {
-					case "Left":
+					case "L":
 						auto = (gameData.charAt(0) == 'L') ? Paths.LL.getPath() : Paths.LR.getPath();
 						break;
-					case "Center":
+					case "C":
 						auto = (gameData.charAt(0) == 'L') ? Paths.CL.getPath() : Paths.CR.getPath();
 	
 						break;
-					case "Right":
+					case "R":
 						auto = (gameData.charAt(0) == 'L') ? Paths.RL.getPath() : Paths.RR.getPath();
 						break;
 					default:
