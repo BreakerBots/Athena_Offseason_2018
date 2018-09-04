@@ -1,9 +1,15 @@
 package com.frc5104.utilities;
 
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import edu.wpi.first.wpilibj.DriverStation;
+
 /*Breakerbots Robotics Team 2018*/
 public class console {
 	
-	//Normal Logging
+	//  ----------------------------------------  Normal Logging  ----------------------------------------  \\
 	public static enum Type { 
 		TELEOP(color.CYAN_BOLD), 
 		AUTO(color.PURPLE_BOLD), 
@@ -16,11 +22,10 @@ public class console {
 		WARN(color.YELLOW_BOLD_BRIGHT);
 		
 		String mod;
-		Type (String mod){
+		Type (String mod) {
 			this.mod = mod;
 		}
 	}
-	
 	/**
 	 * Prints out text to the console under the category "OTHER"
 	 * @param a The text to print out
@@ -32,7 +37,9 @@ public class console {
 	 * @param t The desired category
 	 */
 	public static void log(String a, Type t) {
-		System.out.println(t.mod + t.toString() + ": " + color.RESET + a);
+		String f = t.mod + t.toString() + ": " + color.RESET + a;
+		System.out.println(f);
+		log += f + "\n";
 	}
 	/**
 	 * Prints out text to the console under the category "ERROR"
@@ -50,7 +57,9 @@ public class console {
 	 */
 	public static void warn(String a) { log(a, Type.WARN); }
 	
-	//Timing Groups/Sets
+	
+	
+	//  ----------------------------------------  Timing Groups/Sets  ----------------------------------------  \\
 	public static class sets {
 		public static final int MaxSets = 10;
 		public static String sn[] = new String[MaxSets];
@@ -123,11 +132,13 @@ public class console {
 		 * @param timeSpacer What to add to the message before the time.
 		 */
 		public static void log(String a, Type t, String timingGroupName, String timeSpacer) {
-			System.out.println(t.toString() + ": " + a + " " + timeSpacer + " " + getTime(timingGroupName) + "s");
+			console.log(a + " " + timeSpacer + " " + getTime(timingGroupName) + "s", t);
 		}
 	}
 
-	//Text Decoration and Colors
+	
+	
+	//  ----------------------------------------  Text Decoration and Colors  ----------------------------------------  \\
 	public static class color {
 	    // Reset
 	    public static final String RESET = "\033[0m";  // Text Reset
@@ -202,4 +213,53 @@ public class console {
 	    public static final String CYAN_BACKGROUND_BRIGHT = "\033[0;106m";  // CYAN
 	    public static final String WHITE_BACKGROUND_BRIGHT = "\033[0;107m";   // WHITE
 	}
+
+	
+	
+	//  ----------------------------------------  File Logging  ----------------------------------------  \\
+	private static String log = "";
+	private static boolean isLogging = false;
+	public static void startLog() {
+		if (!isLogging) {
+			isLogging = true;
+			log = "";
+		}
+	}
+	
+	public static void endLog() {
+		try {
+			if (isLogging) {
+				isLogging = false;
+				
+				//File Path
+				String filePath = "/home/lvuser/";
+				if (DriverStation.getInstance().isFMSAttached())
+					filePath += "MatchLog/";
+				else
+					filePath += "GeneralLog/";
+				
+				//File Name
+				String fileName = DateTimeFormatter.ofPattern("MM-dd-yyyy_HH-mm").format(LocalDateTime.now()) + ".txt";
+				
+				console.log("Saving Log File as: " + filePath + fileName);
+				
+				//Save File
+				PrintWriter writer = new PrintWriter(filePath + fileName, "UTF-8");
+				writer.print(log);
+				writer.close();
+			}
+		} catch (Exception e) { console.error(e); }
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,11 +9,14 @@ import com.frc5104.utilities.ControllerHandler;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.Type;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /*Breakerbots Robotics Team 2018*/
 public class Robot extends IterativeRobot {
 	
+	
+	//  ----------------------------------------  Robot  ----------------------------------------  \\
 	public void robotInit() {
 		console.sets.create("RobotInit");
 		console.log("Initializing Code", Type.MAIN);
@@ -29,10 +32,18 @@ public class Robot extends IterativeRobot {
 		//CameraServer.getInstance().startAutomaticCapture();
 		console.sets.log("Initialization took", Type.MAIN, "RobotInit", "");
 	}
+	public void robotPeriodic() {
+		BreakerSubsystemManager.idleUpdate();
+	}
+	public void disabledInit() {
+		console.endLog();
+	}
 	
+
 	
-	
+	//  ----------------------------------------  Autonomous  ----------------------------------------  \\
 	public void autonomousInit() {
+		console.startLog();
 		console.log("Initalizing Autonomous", Type.AUTO);
 		
 		BreakerSubsystemManager.autoInit();
@@ -47,18 +58,15 @@ public class Robot extends IterativeRobot {
 	
 	
 	
+	//  ----------------------------------------  Teleop  ----------------------------------------  \\
 	public void teleopInit() {
+		console.startLog();
 		console.log("Initializing Teleop", Type.TELEOP);
+		
 		BreakerSubsystemManager.teleopInit();
 	}
 	public void teleopPeriodic() {
 		ControllerHandler.getInstance().update();
 		BreakerSubsystemManager.teleopUpdate();
-	}
-	
-	
-	
-	public void robotPeriodic() {
-		BreakerSubsystemManager.idleUpdate();
 	}
 }
