@@ -6,7 +6,7 @@ import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.Type;
 
 /*Breakerbots Robotics Team 2018*/
-public class EjectSqueezy implements BreakerCommand {
+public class EjectSqueezy extends BreakerCommand {
 
 	Squeezy squeezy;
 	double ejectEffort;
@@ -17,7 +17,7 @@ public class EjectSqueezy implements BreakerCommand {
     	ejectEffort = squeezyEffort;
     }
 
-    public void initialize() {
+    public void init() {
     	console.log("Ejecting", Type.AUTO);
     	squeezy.forceState(Squeezy.SqueezyState.EJECT);
     	
@@ -25,15 +25,10 @@ public class EjectSqueezy implements BreakerCommand {
     	Squeezy.kEjectEffort = ejectEffort;
     }
 
-    public void execute() {
-    	squeezy.update();
-    	squeezy.updateState();
-    }
-
-    public boolean isFinished() {
-        return squeezy.isInState(SqueezyState.EMPTY) ||
-        		squeezy.isInState(SqueezyState.UNJAM) ||
-        		squeezy.isInState(SqueezyState.INTAKE);
+    public boolean update() {
+    	return  squeezy.isInState(SqueezyState.EMPTY) ||
+    			squeezy.isInState(SqueezyState.UNJAM) ||
+    			squeezy.isInState(SqueezyState.INTAKE);
     }
 
     public void end() {

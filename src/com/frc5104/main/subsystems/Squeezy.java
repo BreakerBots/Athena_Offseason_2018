@@ -5,7 +5,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
+import com.frc5104.main.subsystems.Squeezy.SqueezyState;
 import com.frc5104.utilities.ControllerHandler;
+import com.frc5104.utilities.FilteredUltraSonic;
+import com.frc5104.utilities.TimedButton;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.Type;
 
@@ -17,9 +20,9 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 /**
  * Squeezy Sanchez (A Decent but also sucky intake mechanism)
  */
-public class Squeezy {
-	static Squeezy m_instance;
-	public static Squeezy getInstance() { if (m_instance == null) { m_instance = new Squeezy(); } return m_instance; }
+public class Squeezy implements BreakerSubsystem {
+	private static Squeezy _inst = null; 
+	public static Squeezy getInstance() { if (_inst == null) _inst = new Squeezy(); return _inst; }
 	
 	//Constants References
 	static final int kHasCubePosition = Constants.Squeezy.HasCubePosition;
@@ -40,30 +43,22 @@ public class Squeezy {
 		MANUAL_OPEN, MANUAL_CLOSE
 		
 	}
-	boolean manualStateDiagram = false;
 	
-	NetworkTable table = null;
-	
-	//An unreasonable starting value
-	private boolean useManualControls = false;/* (!)Add Mixin For Auto and Manual Controls */
-	private boolean calibrated = false;
+	private boolean manualStateDiagram = false;
 	private SqueezyState prevState = SqueezyState.EJECT;
-	SqueezyState state = SqueezyState.HOLDING;
-	ControllerHandler controller = ControllerHandler.getInstance();
+	private SqueezyState state = SqueezyState.HOLDING;
+	private ControllerHandler controller = ControllerHandler.getInstance();
 	
-	TalonSRX squeezer  = Devices.Squeezy.squeeze;
-	TalonSRX leftSpin  = Devices.Squeezy.leftSpin;
-	TalonSRX rightSpin = Devices.Squeezy.rightSpin;
+	//References
+	private static TalonSRX squeezer  = Devices.Squeezy.squeeze;
+	private TalonSRX leftSpin  = Devices.Squeezy.leftSpin;
+	private TalonSRX rightSpin = Devices.Squeezy.rightSpin;
+	private SqueezySensors sensors = new SqueezySensors();
+	private DoubleSolenoid fold = Devices.Squeezy.fold;
 	
 	//Eject Timing
 	long ejectTime = System.currentTimeMillis();
 	
-	//DoubleSolenoid lifter = new DoubleSolenoid(0,1);
-	SqueezySensors sensors = SqueezySensors.getInstance();
-	
-	//Fold
-	DoubleSolenoid fold = Devices.Squeezy.fold;
-
 	private Squeezy () {
 		//Make sure that the motor output and encoder counts are in sync
 			//OTHERWISE, the finely tuned closed-loop control becomes
@@ -97,13 +92,12 @@ public class Squeezy {
 		}
 	}
 	
-	TimedButton grabbedSensor = new TimedButton();
-	boolean leftUnjam = true;
-	public void updateState() {
+	private TimedButton grabbedSensor = new TimedButton();
+	private boolean leftUnjam = true;
+	private void updateState() {
 		if (squeezer.getSensorCollection().isFwdLimitSwitchClosed()) {
 //			if (!calibrated)
 			squeezer.setSelectedSensorPosition(0, 0, 10);
-			calibrated = true;
 		}
 		
 		prevState = state;
@@ -207,10 +201,11 @@ public class Squeezy {
 		
 	}//poll
 	
-	public void update() {
+	private void update() {
+		sensors.update();
 		switch (state) {
 		case EMPTY:
-			raise();
+			foldDown();
 			spinStop();
 			if (foldedUp())
 				close();
@@ -218,14 +213,12 @@ public class Squeezy {
 				leave();
 			break;
 		case EJECT:
-			lower();
+			foldDown();
 			spinOut();
 			shootSqueeze();
 			break;
-
-		//-------------Auto State Chart--------------//
 		case INTAKE:
-			lower();
+			foldDown();
 			spinIn();
 			if (foldedUp())
 				close();
@@ -233,31 +226,30 @@ public class Squeezy {
 				open();
 			break;
 		case CLOSING:
-			lower();
+			foldDown();
 			spinIn();
 			close();
 			break;
 		case HOLDING:
-			raise();
+			foldUp();
 			spinPinch();
 			hold();
 			break;
 		case TILT_UNJAM:
-			raise();
+			foldUp();
 			spinUnjam();
 			hold();
 			break;
 		case UNJAM:
-			lower();
+			foldDown();
 			spinStop();
 			if (foldedUp())
 				close();
 			else
 				open();
 			break;
-		//-------------Manual State Chart--------------//
 		case MANUAL_OPEN:
-			lower();
+			foldDown();
 			spinIn();
 			if (foldedDown())
 				open();
@@ -265,23 +257,19 @@ public class Squeezy {
 				close();
 			break;
 		case MANUAL_CLOSE:
-			lower();
+			foldDown();
 			spinIn();
 			close();
 			break;
-		}//switch
-		
-		postData();
-		
-	}//updateState
+		}
+	}
 	
-	//--------- Squeezy States ----------//
 	public double getRelativeEncoderPosition() {
 		double raw_pos = getEncoderPosition();
 		double rel_pos = raw_pos / -120000;
 		
 		return rel_pos;
-	}//getRelativeEncoderPosition
+	}
 	public double getRelativeEncoderVelocity() {
 		int raw_vel = getEncoderVelocity();
 		
@@ -291,184 +279,196 @@ public class Squeezy {
 		double rel_vel = raw_vel / -120000;
 				
 		return rel_vel;
-	}//getRelativeEncoderVelocity
+	}
 	public int getEncoderPosition() {
 		return squeezer.getSelectedSensorPosition(0);
-	}//getEncoderPosition
-	public int getEncoderVelocity() {
+	}
+	public static int getEncoderVelocity() {
 		return squeezer.getSelectedSensorVelocity(0);
-	}//getEncoderVelocity
+	}
 	
 	public boolean getOpenLimitSwitch() {
 		return squeezer.getSensorCollection().isFwdLimitSwitchClosed();
-	}//getOpenLimitSwitch
+	}
 
 	public boolean getClosedLimitSwitch() {
 		return squeezer.getSensorCollection().isRevLimitSwitchClosed();
-	}//getOpenLimitSwitch
+	}
 
 	public void forceState(SqueezyState newState) {
 		state = newState;
 		if (state == SqueezyState.EJECT)
 			ejectTime = System.currentTimeMillis();
-	}//forceState
+	}
 	
-	public boolean isInState (SqueezyState checkState) {
+	public boolean isInState(SqueezyState checkState) {
 		return state == checkState;
-	}//isInState
+	}
 	
 	public boolean hasCube() {
 		return state == SqueezyState.HOLDING;
-	}//hasCube
+	}
 	
-	//--------- Squeezy Actions ---------//
 	private void setSpinners(double effort) {
 		setSpinners(effort, 0);
-	}//setSpinners	
+	}
 	private void setSpinners(double effort, int invert) {
-		//invert
-		//0 invert none
-		//-1 invert left
-		//1 invert right
 		switch (invert) {
-		case -1:
-			leftSpin.set(ControlMode.PercentOutput, -effort);
-			rightSpin.set(ControlMode.PercentOutput, -kRightSpinMultiplier*effort);
-			break;
-		case 0:
-			leftSpin.set(ControlMode.PercentOutput, effort);
-			rightSpin.set(ControlMode.PercentOutput, -kRightSpinMultiplier*effort);
-			break;
-		case 1:
-			leftSpin.set(ControlMode.PercentOutput, effort);
-			rightSpin.set(ControlMode.PercentOutput, kRightSpinMultiplier*effort);
-			break;
+			case -1:
+				leftSpin.set(ControlMode.PercentOutput, -effort);
+				rightSpin.set(ControlMode.PercentOutput, -kRightSpinMultiplier*effort);
+				break;
+			case 0:
+				leftSpin.set(ControlMode.PercentOutput, effort);
+				rightSpin.set(ControlMode.PercentOutput, -kRightSpinMultiplier*effort);
+				break;
+			case 1:
+				leftSpin.set(ControlMode.PercentOutput, effort);
+				rightSpin.set(ControlMode.PercentOutput, kRightSpinMultiplier*effort);
+				break;
 		}
-	}//setSpinners	
+	}	
 	private void spinIn() {
 		setSpinners(kIntakeEffort);
-	}//spinIn
+	}
 	private void spinOut() {
 		setSpinners(kEjectEffort);
-	}//spinOut
+	}
 	private void spinStop() {
 		setSpinners(0);
-	}//setSpinnerState
+	}
 	private void spinPinch() {
 		setSpinners(kPinchEffort);
-	}//spinPinch
+	}
 	private void spinUnjam() {
 		setSpinners(kIntakeEffort, leftUnjam?-1:1);
-	}//spinUnjam
+	}
 	
 	private void open() {
 		squeezer.set(ControlMode.PercentOutput, kOpenEffort);
-	}//open
+	}
 	private void close() {
 		squeezer.set(ControlMode.PercentOutput, kCloseEffort);
-	}//close
+	}
 	private void shootSqueeze() {
 		squeezer.set(ControlMode.PercentOutput, kShootSqueezeEffort);
-	}//close
+	}
 	private void hold() {
 		squeezer.set(ControlMode.PercentOutput, kHoldEffort);
-	}//hold
+	}
 	private void leave() {
 		squeezer.set(ControlMode.PercentOutput, 0);
-	}//leave
-	
-	private void raise() {
-		//if (squeezer.getSelectedSensorPosition(0) < -10000)
-			//lifter.set(DoubleSolenoid.Value.kReverse);
-	}//raise
-	private void lower() {
-		//lifter.set(DoubleSolenoid.Value.kForward);
-	}//lower
-	
-	public void initTable(NetworkTable inst) {
-		if (inst == null) {
-			inst = NetworkTableInstance.getDefault().getTable("squeezy");
-		}
-		table = inst;
-	}//initTable
-	
-	PriorityCounter networkTablePriorityCounter = new PriorityCounter();
-	public void postData() {
-		if (table != null) {
-			
-			if (networkTablePriorityCounter.getLow()) {
-				setBoolean("sensors/detect_box", sensors.detectBox());
-				setBoolean("sensors/detect_box_gone", sensors.detectBoxGone());
-				setBoolean("sensors/detect_box_held", sensors.detectBoxHeld());
-				
-				double[] dists = sensors.getDistances();
-				
-				setDouble("ultrasonic/center", dists[0]);
-				setDouble("ultrasonic/left", dists[1]);
-				setDouble("ultrasonic/right", dists[2]);
-	
-				setString("prevState", prevState.toString());
-				setString("state", state.toString());
-			}
+	}
 
-			if (networkTablePriorityCounter.getLow()) {
-				setDouble("debug/voltage_squeezer", squeezer.getMotorOutputVoltage());
-				setDouble("debug/voltage_leftspin", leftSpin.getMotorOutputVoltage());
-				setDouble("debug/voltage_rightspin", rightSpin.getMotorOutputVoltage());
-				
-				setDouble("debug/current_squeezer", squeezer.getOutputCurrent());
-				setDouble("debug/current_leftspin", leftSpin.getOutputCurrent());
-				setDouble("debug/current_rightspin", rightSpin.getOutputCurrent());
-			}
-			
-			if (networkTablePriorityCounter.getMedium()) {
-				//Adding 1 to the hopefully non-negative encoder position should eliminate 1/0
-				setDouble("pos_rel", getRelativeEncoderPosition());
-				setDouble("vel_rel", getRelativeEncoderVelocity());
-				setDouble("pos", getEncoderPosition());
-				setDouble("vel", getEncoderVelocity());
-				
-				setDouble("in-out", getEncoderPosition()/1000);
-				setBoolean("Up", false);
-				
-				setBoolean("debug/state_Eject", state == SqueezyState.EJECT);
-				setBoolean("debug/state_Intake", state == SqueezyState.INTAKE);
-				
-				setBoolean("DetectedBox", sensors.detectBox());
-				setBoolean("BoxHeld", sensors.detectBoxHeld());
-	
-				setBoolean("debug/limit-fwd", squeezer.getSensorCollection().isFwdLimitSwitchClosed());
-				setBoolean("debug/limit-rev", squeezer.getSensorCollection().isRevLimitSwitchClosed());
-			}
-			
-			networkTablePriorityCounter.count();
-		}
-	}//postSqueezerData
-	
-	private void setString(String key, String value) {
-		table.getEntry(key).setString(value);
-	}//setString
-	private void setDouble(String key, double value) {
-		table.getEntry(key).setDouble(value);
-	}//setDouble
-	private void setBoolean(String key, boolean value) {
-		table.getEntry(key).setBoolean(value);
-	}//setBoolean
-
-	private class PriorityCounter {
-		private int counter = 0;
+	public void init() {
 		
-		public boolean getLow() {
-			return counter % 75 == 0;
+	}
+
+	public void teleopUpdate() {
+		update();
+	}
+
+	public void autoUpdate() {
+		//update();
+	}
+
+	public void idleUpdate() {
+		
+	}
+
+	public void initNetworkPosting() {
+		
+	}
+
+	public void postToNetwork() {
+		
+	}
+
+	public void teleopInit() {
+		
+	}
+
+	public void autoInit() {
+		//squeezy.forceState(SqueezyState.HOLDING);
+		forceState(SqueezyState.EMPTY);
+		foldUp();
+	}
+	
+	public class SqueezySensors {
+		private FilteredUltraSonic centerUltra = new FilteredUltraSonic(0, 1, 50);
+		private FilteredUltraSonic leftUltra = new FilteredUltraSonic(2, 3, 5);
+		private FilteredUltraSonic rightUltra = new FilteredUltraSonic(4, 5, 5);
+		
+		private SqueezySensors() {
+			centerUltra.init();
+			leftUltra.init();
+			rightUltra.init();
 		}
-		public boolean getMedium() {
-			return counter % 50 == 0;
+		
+		public void update() {
+			centerUltra.update();
+			leftUltra.update();
+			rightUltra.update();
+			
 		}
-		public boolean getHigh() {
-			return counter % 20 == 0;
+
+		public boolean detectBox() {
+			/*
+			 * Squeezy's maximum no-block separation is 19in.
+			 * Squeezy's minimum no-block separation is 8in
+			 * 
+			 * So, if the sum of the distances from the ultrasonics falls under 15in,
+			 * it must be that there is a block between the two ultrasonics.
+			 * 
+			 * At the shortest distance, Left+Right will still be above 15in,
+			 * at the largest distance, any significant block-sized object, (11-13in)
+			 * will bring the Left+Right distance down to (19-11)+(0) == 8in.
+			 */
+			double left = leftUltra.getDistance();
+			double right = rightUltra.getDistance();
+			//if (leftUltra.getDistance() + rightUltra.getDistance() < 18)
+			if (left < 10 || right < 10)
+				return true;
+			else
+				return false;
 		}
-		public void count() {
-			counter++;
+		
+		public boolean detectBoxGone() {
+			//if (!new Joystick(0).getRawButton(6))
+			if (centerUltra.getDistance() > 11.5)
+				return true;
+			else
+				return false;
+			//if (leftUltra.getDistance() > 4 && rightUltra.getDistance() > 4)
+			//	return true;
+			//else
+			//	return false;
 		}
-	}//PriorityCounter
-}//Squeezy
+		
+		public String encVel () {
+			int vel = Squeezy.getEncoderVelocity();
+			boolean bool = Math.abs(vel) < 30;
+			return "Vel Check: "+bool+" -- "+vel;
+		}
+		
+		public boolean detectBoxHeld() {
+			//if (new Joystick(0).getRawButton(6))/*3-11-18*/
+			
+			if (centerUltra.getDistance() < /*6*//*5.5*//*New 3d plate*/3)
+				//leftUltra.getDistance() < 2 &&
+				//rightUltra.getDistance() < 2)
+				return true;
+			else
+				return false;
+		}
+		
+		public double[] getDistances() {
+			double[] distances = new double[3];
+			distances[0] = centerUltra.getDistance();
+			distances[1] = leftUltra.getDistance();
+			distances[2] = rightUltra.getDistance();
+			
+			return distances;
+		}
+	}
+}

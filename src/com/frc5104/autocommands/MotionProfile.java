@@ -20,7 +20,7 @@ import jaci.pathfinder.followers.EncoderFollower;
 import jaci.pathfinder.modifiers.TankModifier;
 
 /*Breakerbots Robotics Team 2018*/
-public class MotionProfile implements BreakerCommand {
+public class MotionProfile extends BreakerCommand {
 
 	//Motion Profiling Objects
 	static Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.05, Constants._maxVelocity, Constants._maxAcceleration, Constants._maxJerk);
@@ -33,7 +33,7 @@ public class MotionProfile implements BreakerCommand {
     	trajectory = getTrajectory(points);
     }
 
-    public void initialize() {
+    public void init() {
     	console.log("Running MP Path", Type.AUTO);
     	Devices.Drive.Gyro.reset();
 		
@@ -60,7 +60,7 @@ public class MotionProfile implements BreakerCommand {
 		}
     }
 
-    public void execute() {
+    public boolean update() {
     	//Check Teleop Periodic For Reference on What Needs To Be Flipped
 		int leftEncoder = Drive.encoders.getLeft();
 		int rightEncoder = Drive.encoders.getRight();
@@ -87,12 +87,11 @@ public class MotionProfile implements BreakerCommand {
 				-l + a, 
 				-r - a
 		);
+		
+		//Return
+		return left.isFinished() && right.isFinished();
     }
 
-    public boolean isFinished() {
-    	return left.isFinished() && right.isFinished();
-    }
-    
     public void end() {
     	
     }

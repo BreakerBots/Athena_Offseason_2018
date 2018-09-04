@@ -1,4 +1,4 @@
-package com.frc5104.main.subsystems;
+package com.frc5104.utilities;
 
 /*Breakerbots Robotics Team 2018*/
 public class TimedButton {

@@ -1,6 +1,7 @@
 package com.frc5104.autocommands;
 
-public class BreakerCommandGroup {
+/*Breakerbots Robotics Team 2018*/
+public abstract class BreakerCommandGroup {
 	public BreakerCommand[] cs = new BreakerCommand[10];
 	public int cl = 0;
 	
@@ -9,11 +10,5 @@ public class BreakerCommandGroup {
 		cl++;
 	}
 	
-	public void update() {
-		
-	}
-	
-	public void init() {
-		
-	}
+	abstract public void init();
 }

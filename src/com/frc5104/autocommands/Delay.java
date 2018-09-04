@@ -4,7 +4,7 @@ import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.Type;
 
 /*Breakerbots Robotics Team 2018*/
-public class Delay implements BreakerCommand {
+public class Delay extends BreakerCommand {
 	long startTime;
 	int delay;
 
@@ -12,18 +12,16 @@ public class Delay implements BreakerCommand {
         delay = milliseconds;
     }
 
-    public void initialize() {
+    public void init() {
     	startTime = System.currentTimeMillis();
     }
 
-    public void execute() {
+    public boolean update() {
     	console.log("Delaying", Type.AUTO);
-    }
-
-    public boolean isFinished() {
+    	
     	return (System.currentTimeMillis() >= startTime + delay);
     }
-    
+
     public void end() {
     	
     }

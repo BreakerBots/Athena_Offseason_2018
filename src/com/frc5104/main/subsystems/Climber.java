@@ -10,28 +10,22 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /*Breakerbots Robotics Team 2018*/
-public class Climber {
-
-	static Climber m_instance = null;
+public class Climber implements BreakerSubsystem {
+	private static Climber _inst = null; 
+	public static Climber getInstance() { if (_inst == null) _inst = new Climber(); return _inst; }
 	
-	public static Climber getInstance() {
-		if (m_instance == null) {
-			m_instance = new Climber();
-		}
-		return m_instance;
-	}
-
-	Solenoid ptoSol = Devices.Climbing.ptoSol;
-	Servo hookHolder = Devices.Climbing.hookHolder;
-	ControllerHandler controller = ControllerHandler.getInstance();
+	//References
+	private Solenoid ptoSol = Devices.Climbing.ptoSol;
+	private Servo hookHolder = Devices.Climbing.hookHolder;
+	private ControllerHandler controller = ControllerHandler.getInstance();
 	
+	//Init
 	public void init() {
 		hookHolder.setPosition(0.2);
 	}
-	
-	
-	//Driving
-	public void update() {
+
+	//Teleop
+	public void teleopUpdate() {
 		if (controller.getHeldEvent(HMI.kPtoHoldAndHookPressButton, 0.4)) { 
 			console.log("Switching PTO", Type.TELEOP);
 			Devices.Climbing.ptoSol.set(!ptoSol.get());
@@ -46,5 +40,33 @@ public class Climber {
 		if (controller.getPressed(HMI.kOpenHookHolder)) {
 			Devices.Climbing.hookHolder.setPosition(1 - Devices.Climbing.hookHolder.getPosition());
 		}
+	}
+
+	public void autoUpdate() {
+		
+	}
+
+	public void idleUpdate() {
+		
+	}
+
+	public void initNetworkPosting() {
+		
+	}
+	
+	public void postToNetwork() {
+		
+	}
+
+	@Override
+	public void teleopInit() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void autoInit() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -1,6 +1,6 @@
 package com.frc5104.autocommands;
 
-
+/*Breakerbots Robotics Team 2018*/
 public class BreakerCommandScheduler {
 	static BreakerCommandScheduler m_instance = null;
 	public static BreakerCommandScheduler getInstance() {
@@ -31,11 +31,11 @@ public class BreakerCommandScheduler {
 	public void update() {
 		if (i < r.cl) {
 			if (!s) {
-				r.cs[i].initialize();
+				r.cs[i].init();
 				s = true;
 			}
-			r.cs[i].execute();
-			if (r.cs[i].isFinished()) {
+			if (r.cs[i].update()) {
+				r.cs[i].end();
 				i++;
 				s = false;
 			}

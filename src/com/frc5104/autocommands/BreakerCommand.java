@@ -1,8 +1,20 @@
 package com.frc5104.autocommands;
 
-public interface BreakerCommand {
-	public void initialize();
-	public void execute();
-	public boolean isFinished();
-	public void end();
+/*Breakerbots Robotics Team 2018*/
+abstract public class BreakerCommand {
+	/**
+	 * Called when command is started to be run
+	 */
+	abstract public void init();
+	
+	/**
+	 * Called periodically when the command is being run
+	 * @return If the command is finished
+	 */
+	abstract public boolean update();
+	
+	/**
+	 * Called when the command is finished being run
+	 */
+	abstract public void end();
 }

@@ -5,24 +5,22 @@ import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.Type;
 
 /*Breakerbots Robotics Team 2018*/
-public class StopDrive implements BreakerCommand {
+public class StopDrive extends BreakerCommand {
 
     public StopDrive() {
     	
     }
 
-    public void initialize() {
+    public void init() {
     	console.log("Stopping Drive", Type.AUTO);
     }
 
-    public void execute() {
+    public boolean update() {
     	Drive.getInstance().set(0, 0);
+    	
+    	return true;
     }
 
-    public boolean isFinished() {
-    	return false;
-    }
-    
     public void end() {
     	
     }
