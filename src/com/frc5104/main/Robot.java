@@ -3,13 +3,9 @@ package com.frc5104.main;
 import com.frc5104.autocommands.BreakerCommandScheduler;
 import com.frc5104.autopaths.*;
 import com.frc5104.main.subsystems.*;
-import com.frc5104.main.subsystems.Drive.shifters.Gear;
-import com.frc5104.main.subsystems.Squeezy.SqueezyState;
 import com.frc5104.utilities.ControllerHandler;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.Type;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /*Breakerbots Robotics Team 2018*/
@@ -36,14 +32,14 @@ public class Robot extends IterativeRobot {
 		BreakerSubsystemManager.idleUpdate();
 	}
 	public void disabledInit() {
-		console.endLog();
+		console.endLogFile();
 	}
 	
 
 	
 	//  ----------------------------------------  Autonomous  ----------------------------------------  \\
 	public void autonomousInit() {
-		console.startLog();
+		console.startLogFile();
 		console.log("Initalizing Autonomous", Type.AUTO);
 		
 		BreakerSubsystemManager.autoInit();
@@ -60,9 +56,9 @@ public class Robot extends IterativeRobot {
 	
 	//  ----------------------------------------  Teleop  ----------------------------------------  \\
 	public void teleopInit() {
-		console.startLog();
+		console.startLogFile();
 		console.log("Initializing Teleop", Type.TELEOP);
-		
+		  
 		BreakerSubsystemManager.teleopInit();
 	}
 	public void teleopPeriodic() {

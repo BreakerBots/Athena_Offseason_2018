@@ -180,7 +180,7 @@ public class Squeezy implements BreakerSubsystem {
 				manualStateDiagram = false;
 			}
 			break;
-		}//switch
+		}
 		
 		if (controller.getPressed(HMI.kSqueezyOpen)) {
 			state = SqueezyState.MANUAL_OPEN;
@@ -199,10 +199,11 @@ public class Squeezy implements BreakerSubsystem {
 		if (controller.getPressed(HMI.kSqueezyNeutral))
 			state = SqueezyState.EMPTY;
 		
-	}//poll
+	}
 	
 	private void update() {
 		sensors.update();
+		console.log(state.toString(), Type.AUTO);
 		switch (state) {
 		case EMPTY:
 			foldDown();
@@ -385,7 +386,7 @@ public class Squeezy implements BreakerSubsystem {
 	}
 
 	public void teleopInit() {
-		
+		forceState(SqueezyState.INTAKE);
 	}
 
 	public void autoInit() {
@@ -409,7 +410,6 @@ public class Squeezy implements BreakerSubsystem {
 			centerUltra.update();
 			leftUltra.update();
 			rightUltra.update();
-			
 		}
 
 		public boolean detectBox() {

@@ -90,8 +90,10 @@ public class Drive implements BreakerSubsystem {
 		 * @param high True: Set to High Gear, False: Set to Low Gear
 		 */
 		public static void set(boolean high) {
-			console.log(high ? "Shifting High" : "Shifting Low", Type.DRIVE);
-			gearShifters.set(high ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+			if (high ? !inHighGear() : inHighGear()) {
+				console.log(high ? "Shifting High" : "Shifting Low", Type.DRIVE);
+				gearShifters.set(high ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+			}
 		}
 		
 		public static enum Gear { 

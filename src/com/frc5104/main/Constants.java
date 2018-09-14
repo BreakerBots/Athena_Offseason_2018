@@ -22,8 +22,8 @@ public class Constants {
 		//Opening/Closing Arms
 		public static final double HoldEffort = -0.25;
 		public static final double ShootSqueezeEffort = -0.05;
-		public static final double CloseEffort = -0.30;
-		public static final double OpenEffort  = 0.25;
+		public static final double CloseEffort = -0.5;
+		public static final double OpenEffort  = 0.5;
 		
 		//Spinning Wheels
 		public static final double RightSpinMultiplier = 1.1;
