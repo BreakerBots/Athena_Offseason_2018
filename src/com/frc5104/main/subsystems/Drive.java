@@ -7,13 +7,13 @@ import com.frc5104.main.HMI;
 import com.frc5104.main.subsystems.Drive.shifters.Gear;
 import com.frc5104.utilities.ControllerHandler;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
 import com.frc5104.utilities.ControllerHandler.Control;
+import com.frc5104.utilities.console.c;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /*Breakerbots Robotics Team 2018*/
-public class Drive implements BreakerSubsystem {
+public class Drive extends BreakerSubsystem {
 	private static Drive _inst = null; 
 	public static Drive getInstance() { if (_inst == null) _inst = new Drive(); return _inst; }
 	
@@ -27,11 +27,16 @@ public class Drive implements BreakerSubsystem {
 	/**
 	 * Initialize Driving (Setup Talons)
 	 */
-	public void init() {
+	protected void init() {
+		//Reset the encoders
 		L1.setSelectedSensorPosition(0, 0, 10);
 		R1.setSelectedSensorPosition(0, 0, 10);
+		
+		//Makes L2, R2 followers
 		L2.set(ControlMode.Follower, L1.getDeviceID());
 		R2.set(ControlMode.Follower, R1.getDeviceID());
+		
+		//Inverts the motors correctly so that when L1, R1 are both set to full the robot moves forward
 		L1.set(ControlMode.PercentOutput, 0);
 		L1.setInverted(false);
 		L2.setInverted(false);
@@ -91,7 +96,7 @@ public class Drive implements BreakerSubsystem {
 		 */
 		public static void set(boolean high) {
 			if (high ? !inHighGear() : inHighGear()) {
-				console.log(high ? "Shifting High" : "Shifting Low", Type.DRIVE);
+				console.log(c.DRIVE, high ? "Shifting High" : "Shifting Low");
 				gearShifters.set(high ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
 			}
 		}
@@ -105,7 +110,7 @@ public class Drive implements BreakerSubsystem {
 		}
 	}
 
-	public void teleopUpdate() {
+	protected void teleopUpdate() {
 		ControllerHandler controller = ControllerHandler.getInstance();
 		L1.set(ControlMode.PercentOutput, controller.getAxis(Control.LY) - controller.getAxis(Control.LX));
 		R1.set(ControlMode.PercentOutput, controller.getAxis(Control.LY) + controller.getAxis(Control.LX));
@@ -116,27 +121,27 @@ public class Drive implements BreakerSubsystem {
 			shifters.set(false);
 	}
 
-	public void autoUpdate() {
+	protected void autoUpdate() {
 		
 	}
 
-	public void idleUpdate() {
+	protected void idleUpdate() {
 		
 	}
 
-	public void postToNetwork() {
+	protected void postToNetwork() {
 		
 	}
 
-	public void initNetworkPosting() {
+	protected void initNetworkPosting() {
 		
 	}
 
-	public void teleopInit() {
+	protected void teleopInit() {
 		shifters.set(Gear.Low);
 	}
 
-	public void autoInit() {
+	protected void autoInit() {
 		shifters.set(Gear.Low);
 	}
 }

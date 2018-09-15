@@ -3,7 +3,7 @@ package com.frc5104.main;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.utilities.TalonFactory;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
+import com.frc5104.utilities.console.c;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * All Devices used in Athena's Code
+ */
 public class Devices {
 
 	//Drive
@@ -47,5 +50,5 @@ public class Devices {
 		public static DoubleSolenoid sol = new DoubleSolenoid(2, 3);
 	}
 	
-	public int a() {console.log("Devices Created and Seth Proofed", Type.MAIN);return 0;}private int a = a();
+	public int a() {console.log(c.MAIN, "Devices Created and Seth Proofed");return 0;}private int a = a();
 }

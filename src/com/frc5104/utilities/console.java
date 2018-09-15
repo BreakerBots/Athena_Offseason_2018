@@ -4,63 +4,100 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import com.frc5104.main.Constants;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 /*Breakerbots Robotics Team 2018*/
 public class console {
 	
 	//  ----------------------------------------  Normal Logging  ----------------------------------------  \\
-	public static enum Type { 
-		TELEOP("i "), 
-		AUTO  ("i "), 
-		MAIN  ("s "), 
-		INTAKE("i "), 
-		ELEV  ("i "), 
-		DRIVE ("i "), 
-		OTHER ("o "), 
-		ERROR ("s "),
-		WARN  ("s ");
-		
-		String mod;
-		Type (String mod) {
-			this.mod = mod;
-		}
-	}
 	/**
-	 * Prints out text to the console under the category "OTHER"
-	 * @param a The text to print out
+	 * Categories for Logging
 	 */
-	public static void log(String a) { log(a, Type.OTHER); }
+	public static enum c { 
+		TELEOP, 
+		AUTO, 
+		MAIN, 
+		INTAKE, 
+		ELEV, 
+		DRIVE, 
+		OTHER
+	};
 	
+	/**
+	 * Types for Logging
+	 * "message" is the text appended to begining of log
+	 * ERROR => "ERROR"
+	 * INFO => ""
+	 * WARNING => "WARNING"
+	 */
+	public static enum t { 
+		ERROR  ("ERROR "),
+		INFO   (""),
+		WARNING("WARNING ");
+		
+		String message;
+		t (String message) {
+			this.message = message;
+		}
+	};
 	
 	//Main Log Function (Acts as Bus for other functions)
 	/**
 	 * Prints out text to the console under the specific category
+	 * Examples:
+	 * 	 [MAIN]: Message
+	 *   ERROR [AUTO]: Message
 	 * @param a The text to print out
-	 * @param t The desired category
+	 * @param t The type (Error, Info, Warning)
+	 * @param c the category (INTAKE, AUTO...)
 	 */
-	public static void log(String a, Type t) {
-		String f = t.mod + t.toString() + ": " + a;
+	public static void log(c c, t t, Object... a) {
+		String f = t.message + "[" + c.toString() + "]: " + objectArrayToString(a);
 		System.out.println(f);
-		log += f + "\n";
+		if (logFile.isLogging)
+			logFile.log += f + "\n";
 	}
 	
+	// -- INFO
+	/**
+	 * Prints out text to the console under the type "INFO"
+	 * @param c The category to print under
+	 * @param a The text to print out
+	 */
+	public static void log(c c, Object... a) { log(c, t.INFO, objectArrayToString(a)); }
+	/**
+	 * Prints out text to the console under the type "INFO" and category "OTHER"
+	 * @param a The text to print out
+	 */
+	public static void log(Object... a) { log(c.OTHER, t.INFO, objectArrayToString(a)); }
 	
+	// -- ERROR
 	/**
-	 * Prints out text to the console under the category "ERROR"
+	 * Prints out text to the console under the type "ERROR"
+	 * @param c The category to print under
 	 * @param a The text to print out
 	 */
-	public static void error(String a) { log(a, Type.ERROR); }
+	public static void error(c c, Object... a) { log(c, t.ERROR, objectArrayToString(a)); }
 	/**
-	 * Prints out text to the console under the category "ERROR"
+	 * Prints out text to the console under the type "ERROR" and category "OTHER"
 	 * @param a The text to print out
 	 */
-	public static void error(Exception a) { log(a.getMessage(), Type.ERROR); }
+	public static void error(Object... a) { log(c.OTHER, t.ERROR, objectArrayToString(a)); }
+	
+	// -- WARNING
 	/**
-	 * Prints out text to the console under the category "WARN"
+	 * Prints out text to the console under the type "WARN"
+	 * @param c The category to print under
 	 * @param a The text to print out
 	 */
-	public static void warn(String a) { log(a, Type.WARN); }
+	public static void warn(c c, Object... a) { log(c, t.WARNING, objectArrayToString(a)); }
+	/**
+	 * Prints out text to the console under the type "WARN" and category "OTHER"
+	 * @param a The text to print out
+	 */
+	public static void warn(Object... a) { log(c.OTHER, t.WARNING, objectArrayToString(a)); }
 	
 	
 	
@@ -82,7 +119,7 @@ public class console {
 				si++;
 			}
 			else
-				console.log("Max Amount of Sets Created", Type.ERROR);
+				console.log("Max Amount of Sets Created");
 		}
 		
 		/** Returns the index of the timing group/set (-1 if not found) */
@@ -112,16 +149,16 @@ public class console {
 		/** Returns the time (in specified format) of the corresponding timing group/set. Returns -1 if nothing found */
 		public static double getTime(String name, TimeFormat format) {
 			int i = getIndex(name);
-			if (i == -1) return -1;
+			if (i == -1) return 0;
 			else {
+				console.log(System.currentTimeMillis(), sv[i], System.currentTimeMillis() - sv[i]);
 				double r = System.currentTimeMillis() - sv[i];
-				console.log(System.currentTimeMillis() + ", " + sv[i]);
 				switch (format) {
 					case Milliseconds:
 						return r;
-					case Minutes:
-						return r / 1000.0;
 					case Seconds:
+						return r / 1000.0;
+					case Minutes:
 						return r / 1000.0 / 60.0;
 					default:
 						return r / 1000.0;
@@ -137,46 +174,66 @@ public class console {
 		 * @param timingGroupName The name of the timing group/set
 		 * @param timeSpacer What to add to the message before the time.
 		 */
-		public static void log(String a, Type t, String timingGroupName, String timeSpacer) {
-			console.log(a + " " + timeSpacer + " " + getTime(timingGroupName) + "s", t);
+		public static void log(c c, t t, String timingGroupName, Object... a) {
+			console.log(c, t, objectArrayToString(a) + " " + String.format("%.2f", getTime(timingGroupName)) + "s");
 		}
 	}
-
-
 	
 	//  ----------------------------------------  File Logging  ----------------------------------------  \\
-	private static String log = "";
-	private static boolean isLogging = false;
-	public static void startLogFile() {
-		if (!isLogging) {
-			isLogging = true;
-			log = "";
+	public static class logFile {
+		private static String log = "";
+		public static boolean isLogging = false;
+		
+		/**
+		 * Starts Recording the "console.logs" into a string that can be saved with "console.logFile.end()"
+		 * If the logger is already logging it will not clear the log, but just do nothing
+		 */
+		public static void start() {
+			if (!isLogging) {
+				isLogging = true;
+				log = "";
+			}
+		}
+		
+		/**
+		 * Saves the log string that is logged onto after calling "console.logFile.start()"
+		 * Match => "MatchLog" if Constants.SaveMatchLogs
+		 * Other => "GeneralLog" if Constants.SaveNonMatchLogs
+		 */
+		public static void end() {
+			try {
+				if (isLogging) {
+					isLogging = false;
+					
+					//File Path
+					boolean hasFMS = DriverStation.getInstance().isFMSAttached();
+					if (hasFMS ? Constants.Logging.SaveMatchLogs : Constants.Logging.SaveNonMatchLogs) {
+						String filePath = "/home/lvuser/" + (hasFMS ? "MatchLog/" : "GeneralLog/");
+						
+						//File Name
+						filePath += DateTimeFormatter.ofPattern("MM-dd-yyyy_HH-mm").format(LocalDateTime.now()) + ".txt";
+						
+						console.log("Saving Log File as: " + filePath);
+						
+						//Save File
+						PrintWriter writer = new PrintWriter(filePath, "UTF-8");
+						writer.print(log);
+						writer.close();
+					}
+				}
+			} catch (Exception e) { console.error(e); }
 		}
 	}
 	
-	public static void endLogFile() {
-		try {
-			if (isLogging) {
-				isLogging = false;
-				
-				//File Path
-				String filePath = "/home/lvuser/";
-				if (DriverStation.getInstance().isFMSAttached())
-					filePath += "MatchLog/";
-				else
-					filePath += "GeneralLog/";
-				
-				//File Name
-				String fileName = DateTimeFormatter.ofPattern("MM-dd-yyyy_HH-mm").format(LocalDateTime.now()) + ".txt";
-				
-				console.log("Saving Log File as: " + filePath + fileName);
-				
-				//Save File
-				PrintWriter writer = new PrintWriter(filePath + fileName, "UTF-8");
-				writer.print(log);
-				writer.close();
-			}
-		} catch (Exception e) { console.error(e); }
+	private static String objectArrayToString(Object[] a) {
+		String r = "";
+		for (int i = 0; i < a.length; i++) {
+			if (i != (a.length - 1))
+				r += a[i] + ", ";
+			else
+				r += a[i];
+		}
+		return r;
 	}
 }
 

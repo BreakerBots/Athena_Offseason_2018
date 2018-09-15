@@ -7,7 +7,14 @@ import com.ctre.phoenix.motorcontrol.VelocityMeasPeriod;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * Brewing fresh talons since 2017
+ */
 public class TalonFactory {
+	/**
+	 * Creates a TalonSRX and Factory Resets the Settings
+	 * @param id Device ID of the TalonSRX
+	 */
 	public static TalonSRX getTalon(int id) {
 		TalonSRX talon = new TalonSRX(id);
 		
@@ -56,6 +63,11 @@ public class TalonFactory {
 		return talon;
 	}
 	
+	/**
+	 * Creates a TalonSRX, Factory Resets the Settings, and makes it a follower (matches the speed) of another talon
+	 * @param id Device ID of the TalonSRX
+	 * @param followerId the id of the TalonSRX to follow
+	 */
 	public static TalonSRX getTalonFollower(int id, int followerId) {
 		TalonSRX talon = new TalonSRX(id);
 		
@@ -104,6 +116,11 @@ public class TalonFactory {
 		return talon;
 	}
 	
+	/**
+	 * Creates a TalonSRX, Factory Resets the Settings, and makes it a follower (matches the speed) of another talon
+	 * @param id Device ID of the TalonSRX
+	 * @param followerId the TalonSRX to follow
+	 */
 	public static TalonSRX getTalonFollower(int id, TalonSRX follower) {
 		TalonSRX talon = new TalonSRX(id);
 		

@@ -5,9 +5,15 @@ import java.io.Serializable;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Trajectory.Segment;
 
+/**
+ * A serializeable Pathfinder Trajectory (For Motion Profiling Path Caching)
+ */
 public class SerialTrajectory implements Serializable {
 	CerealSegment[] s;
 	
+	/**
+	 * Trajectory => SerialTrajectory
+	 */
 	public SerialTrajectory(Trajectory t) {
 		Segment[] sa = t.segments;
 		s = new CerealSegment[sa.length];
@@ -16,6 +22,9 @@ public class SerialTrajectory implements Serializable {
 		}
 	}
 	
+	/**
+	 * SerialTrajectory (this) => Trajectory
+	 */
 	public Trajectory getTrajectory() {
 		Segment[] sa = new Segment[s.length];
 		for (int i = 0; i < sa.length; i++) {
@@ -24,7 +33,13 @@ public class SerialTrajectory implements Serializable {
 		return new Trajectory(sa);
 	} 
 	
-	public class CerealSegment implements Serializable {
+	/**
+	 * A serializeable Pathfinder Segment (Part of a Trajectory)
+	 */
+	private class CerealSegment implements Serializable {
+		/**
+		 * Segment => CerealSegment
+		 */
 		public CerealSegment(Segment s) {
 			dt = s.dt;
 			x = s.x;
@@ -36,6 +51,9 @@ public class SerialTrajectory implements Serializable {
 			heading = s.heading;
 		}
 		
+		/**
+		 * CerealSegment => Segment
+		 */
 		public Segment getSeg() {
 			return new Segment(
 				dt,
@@ -49,6 +67,7 @@ public class SerialTrajectory implements Serializable {
 			);
 		}
 		
+		//Doubles attached to Segment (the basic variabled that get serialized)
 		double dt;
 		double x;
 		double y;

@@ -10,8 +10,7 @@ import com.frc5104.utilities.ControllerHandler;
 import com.frc5104.utilities.FilteredUltraSonic;
 import com.frc5104.utilities.TimedButton;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
-
+import com.frc5104.utilities.console.c;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -20,7 +19,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 /**
  * Squeezy Sanchez (A Decent but also sucky intake mechanism)
  */
-public class Squeezy implements BreakerSubsystem {
+public class Squeezy extends BreakerSubsystem {
 	private static Squeezy _inst = null; 
 	public static Squeezy getInstance() { if (_inst == null) _inst = new Squeezy(); return _inst; }
 	
@@ -83,11 +82,11 @@ public class Squeezy implements BreakerSubsystem {
 	}
 	public void processFold() {
 		if (controller.getPressed(HMI.kSqueezyDown)) {
-			console.log("Squeezy down", Type.INTAKE);
+			console.log(c.INTAKE, "Squeezy down");
 			foldDown();
 		}
 		if (controller.getPressed(HMI.kSqueezyUp)) {
-			console.log("Squeezy up", Type.INTAKE);
+			console.log(c.INTAKE, "Squeezy up");
 			foldUp();
 		}
 	}
@@ -192,7 +191,7 @@ public class Squeezy implements BreakerSubsystem {
 		}
 		
 		if (controller.getPressed(HMI.kSqueezyEject)) {
-			console.log("Ejecting", Type.INTAKE);
+			console.log(c.INTAKE, "Ejecting");
 			ejectTime = System.currentTimeMillis();
 			state = SqueezyState.EJECT;
 		}
@@ -203,7 +202,7 @@ public class Squeezy implements BreakerSubsystem {
 	
 	private void update() {
 		sensors.update();
-		console.log(state.toString(), Type.AUTO);
+		console.log(c.INTAKE, state.toString());
 		switch (state) {
 		case EMPTY:
 			foldDown();
@@ -361,35 +360,35 @@ public class Squeezy implements BreakerSubsystem {
 		squeezer.set(ControlMode.PercentOutput, 0);
 	}
 
-	public void init() {
+	protected void init() {
 		
 	}
 
-	public void teleopUpdate() {
+	protected void teleopUpdate() {
 		update();
 	}
 
-	public void autoUpdate() {
+	protected void autoUpdate() {
 		//update();
 	}
 
-	public void idleUpdate() {
+	protected void idleUpdate() {
 		
 	}
 
-	public void initNetworkPosting() {
+	protected void initNetworkPosting() {
 		
 	}
 
-	public void postToNetwork() {
+	protected void postToNetwork() {
 		
 	}
 
-	public void teleopInit() {
+	protected void teleopInit() {
 		forceState(SqueezyState.INTAKE);
 	}
 
-	public void autoInit() {
+	protected void autoInit() {
 		//squeezy.forceState(SqueezyState.HOLDING);
 		forceState(SqueezyState.EMPTY);
 		foldUp();

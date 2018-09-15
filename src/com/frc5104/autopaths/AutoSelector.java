@@ -2,12 +2,16 @@ package com.frc5104.autopaths;
 
 import com.frc5104.autocommands.BreakerCommandGroup;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
+import com.frc5104.utilities.console.c;
+import com.frc5104.utilities.console.t;
 
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * Uses ("FMS Data" + "Net Table" => "The Correct Path") 
+ */
 public class AutoSelector {
 	
 	public static volatile String gameData = null;
@@ -32,6 +36,7 @@ public class AutoSelector {
 	}
 	
 	public static BreakerCommandGroup getAuto() {
+		console.sets.create("GetAuto");
 		//Default Path is Baseline
 		BreakerCommandGroup auto = Paths.Baseline.getPath();
 
@@ -66,7 +71,7 @@ public class AutoSelector {
 		
 		//I Recived Game Data
 		if (gameData != null) {
-			console.log("Recieved Game Data => " + gameData + ". At => " + DriverStation.getInstance().getMatchTime(), Type.AUTO);
+			console.log(c.AUTO, "Recieved Game Data => " + gameData + ". At => " + DriverStation.getInstance().getMatchTime());
 			
 			//Get our Robot Position on the Field
 			String position;
@@ -96,11 +101,11 @@ public class AutoSelector {
 		}
 		//Got No Game Data => Defaults to Run Baseline
 		else {
-			console.log("Failed Game Data. At => " + DriverStation.getInstance().getMatchTime(), Type.AUTO);
+			console.log(c.AUTO, "Failed Game Data. At => " + DriverStation.getInstance().getMatchTime());
 		}
 		
-		//Print out the Path were Running
-		console.log("Chose Autonomous Route => " + auto.getClass().getName(), Type.AUTO);
+		//Print out the Path were Running + Time it took to choose
+		console.sets.log(c.AUTO, t.INFO, "GetAuto", "Chose Autonomous Route: " + auto.getClass().getName() + " taking ");
 		
 		return auto;
 	}

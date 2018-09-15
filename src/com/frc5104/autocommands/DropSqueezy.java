@@ -1,7 +1,7 @@
 package com.frc5104.autocommands;
 
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
+import com.frc5104.utilities.console.c;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -17,7 +17,7 @@ public class DropSqueezy extends BreakerCommand {
     }
 
     public void init() {
-    	console.log("Dropping Squeezy", Type.AUTO);
+    	console.log(c.AUTO, "Dropping Squeezy");
     	squeezy.set(Value.kForward);
     	start = System.currentTimeMillis();
     }

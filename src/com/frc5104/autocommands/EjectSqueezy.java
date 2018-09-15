@@ -3,7 +3,7 @@ package com.frc5104.autocommands;
 import com.frc5104.main.subsystems.Squeezy;
 import com.frc5104.main.subsystems.Squeezy.SqueezyState;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
+import com.frc5104.utilities.console.c;
 
 /*Breakerbots Robotics Team 2018*/
 public class EjectSqueezy extends BreakerCommand {
@@ -18,7 +18,7 @@ public class EjectSqueezy extends BreakerCommand {
     }
 
     public void init() {
-    	console.log("Ejecting", Type.AUTO);
+    	console.log(c.AUTO, "Ejecting");
     	squeezy.forceState(Squeezy.SqueezyState.EJECT);
     	
     	previousEffort = Squeezy.kEjectEffort;

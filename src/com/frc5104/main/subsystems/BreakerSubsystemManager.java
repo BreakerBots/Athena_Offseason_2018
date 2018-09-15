@@ -1,8 +1,16 @@
 package com.frc5104.main.subsystems;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * Manages the updating and handling of all BreakerSubsystems thrown into it
+ * @author Liam Snow
+ *
+ */
 public class BreakerSubsystemManager {
 	private static BreakerSubsystem[] targets;
+	/**
+	 * NECESSARY: Tell the Subsystem Manager what Subsystems to manage
+	 */
 	public static void throwSubsystems(BreakerSubsystem[] subsystems) {
 		targets = subsystems;
 	}

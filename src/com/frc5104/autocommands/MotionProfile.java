@@ -11,7 +11,7 @@ import com.frc5104.main.Devices;
 import com.frc5104.main.subsystems.Drive;
 import com.frc5104.utilities.SerialTrajectory;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
+import com.frc5104.utilities.console.c;
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -34,7 +34,7 @@ public class MotionProfile extends BreakerCommand {
     }
 
     public void init() {
-    	console.log("Running MP Path", Type.AUTO);
+    	console.log(c.AUTO, "Running MP Path");
     	Devices.Drive.Gyro.reset();
 		
 		//Modify The Tank To The Wheel Base Width, The Distance Between The Left and Right Wheels
@@ -109,16 +109,16 @@ public class MotionProfile extends BreakerCommand {
     	s = "_" + s.hashCode();
     	
     	//Read file
-    	console.log("Looking for MP Cache Under =>" + s, Type.AUTO);
+    	console.log(c.AUTO, "Looking for MP Cache Under =>" + s);
     	Trajectory t = readFile(s);
     	
     	//If the file does not exist, generate a path and save
     	if (t == null) {
-    		console.log("No MP Cache Found => Generating Path", Type.AUTO);
+    		console.log(c.AUTO, "No MP Cache Found => Generating Path");
     		console.sets.create("MPGEN");
     		t = (Trajectory) Pathfinder.generate(points, config);
     		writeFile(s, t);
-    		console.log("MP Path Generation Took " + console.sets.getTime("MPGEN") + "s", Type.AUTO);
+    		console.log(c.AUTO, "MP Path Generation Took " + console.sets.getTime("MPGEN") + "s");
     	}
     	return t;
 	}

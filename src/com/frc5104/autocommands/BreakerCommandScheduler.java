@@ -1,6 +1,9 @@
 package com.frc5104.autocommands;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * Handles the Execution of BreakerCommands inside the assigned BreakerCommandGroup (Entire Path)
+ */
 public class BreakerCommandScheduler {
 	static BreakerCommandScheduler m_instance = null;
 	public static BreakerCommandScheduler getInstance() {

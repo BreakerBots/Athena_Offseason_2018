@@ -5,6 +5,18 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * A much simpler to use version of WPI's Joystick (controller) class
+ * There is also a bunch of added functional for rumble and click events
+ * Every single control in the Control Enum is treated as a Button and Axis
+ * Features:
+ * 	Rumble (Soft, Hard)
+ *  Rumble for Duration (Soft, Hard)
+ *	Get Held Time (time button has been held for)
+ *	Get Axis Value
+ *	Get Button Down
+ *	Button Pressed/Released Event (Events are true for one tick (and then false) when triggered)
+ */
 public class ControllerHandler {
 	static ControllerHandler m_instance;
 	public static ControllerHandler getInstance() {
@@ -18,21 +30,24 @@ public class ControllerHandler {
 	private final int joyIndex = 0;
 	private Joystick controller = new Joystick(joyIndex);
 
-	//Normal Buttons
+	//Normal Buttons (Control, Slots, and Type all line up in indexes)
 	public enum Control { 
-		A, B, X, Y, LB, RB, MENU, LIST, LJ, RJ, 
-		N, NE, E, SE, S, SW, W, NW,
-		LX, LY, LT, RT, RX, RY }
+		A, B, X, Y, LB, RB , MENU, LIST, LJ, RJ, /*Button*/
+		N, NE, E , SE , S  , SW , W  , NW ,		 /*Dpad*/
+		LX, LY, LT, RT, RX, RY					 /*Axis*/
+	}
 	private static final int[] Slots = {
-		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
-		0, 45, 90, 135, 180, 225, 270, 315,
-		0, 1, 2, 3, 4, 5 }; 
+		1, 2, 3, 4, 5 , 6 , 7    , 8   , 9 , 10, /*Button*/ 
+		0, 45, 90, 135, 180, 225, 270, 315,		 /*Dpad*/
+		0 , 1 , 2 , 3 , 4 , 5					 /*Axis*/
+	}; 
 	private int[]     Type = {
-		/*Button*/1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-		/*Dpad*/3, 3, 3, 3, 3, 3, 3, 3,
-		/*Axis*/2, 2, 2, 2, 2, 2
+		1, 1, 1, 1, 1 , 1 , 1    , 1   , 1 , 1 , /*Button*/
+		3, 3 , 3 , 3  , 3  , 3  , 3  , 3  ,		 /*Dpad*/
+		2 , 2 , 2 , 2 , 2 , 2					 /*Axis*/
 	};
-	private double[]  Deadzones = { /*The Default Deadzones*/ 0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6 };
+	//Deadzones are for converting axises to buttons
+	private double[]  Deadzones = { 0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6 };
 	private boolean[] Val = new boolean[Slots.length];
 	private boolean[] LastVal = new boolean[Slots.length];
 	private boolean[] Pressed = new boolean[Slots.length];

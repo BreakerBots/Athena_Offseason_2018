@@ -5,17 +5,19 @@ import com.frc5104.autopaths.*;
 import com.frc5104.main.subsystems.*;
 import com.frc5104.utilities.ControllerHandler;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
+import com.frc5104.utilities.console.c;
+import com.frc5104.utilities.console.t;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 /*Breakerbots Robotics Team 2018*/
 public class Robot extends IterativeRobot {
+
 	
-	
-	//  ----------------------------------------  Robot  ----------------------------------------  \\
+	// -- Robot
 	public void robotInit() {
 		console.sets.create("RobotInit");
-		console.log("Initializing Code", Type.MAIN);
+		console.log(c.MAIN, t.INFO, "Initializing Code");
 		
 		BreakerSubsystemManager.throwSubsystems(new BreakerSubsystem[] {
 			Drive.getInstance(), 
@@ -26,21 +28,21 @@ public class Robot extends IterativeRobot {
 		BreakerSubsystemManager.init();
 		
 		//CameraServer.getInstance().startAutomaticCapture();
-		console.sets.log("Initialization took", Type.MAIN, "RobotInit", "");
+		
+		console.sets.log(c.MAIN, t.INFO, "RobotInit", "Initialization took ");
 	}
 	public void robotPeriodic() {
 		BreakerSubsystemManager.idleUpdate();
 	}
 	public void disabledInit() {
-		console.endLogFile();
+		console.logFile.end();
 	}
 	
-
 	
-	//  ----------------------------------------  Autonomous  ----------------------------------------  \\
+	// -- Autonomous
 	public void autonomousInit() {
-		console.startLogFile();
-		console.log("Initalizing Autonomous", Type.AUTO);
+		console.logFile.start();
+		console.log(c.AUTO, "Initalizing Autonomous");
 		
 		BreakerSubsystemManager.autoInit();
 		
@@ -53,16 +55,25 @@ public class Robot extends IterativeRobot {
 	}
 	
 	
-	
-	//  ----------------------------------------  Teleop  ----------------------------------------  \\
+	// -- Teleoperation
 	public void teleopInit() {
-		console.startLogFile();
-		console.log("Initializing Teleop", Type.TELEOP);
+		console.logFile.start();
+		console.log(c.TELEOP, "Initializing Teleop");
 		  
 		BreakerSubsystemManager.teleopInit();
 	}
 	public void teleopPeriodic() {
 		ControllerHandler.getInstance().update();
 		BreakerSubsystemManager.teleopUpdate();
+	}
+	
+	
+	// -- Test Mode
+	public void testInit() {
+		
+	}
+	
+	public void testPeriodic() {
+		
 	}
 }

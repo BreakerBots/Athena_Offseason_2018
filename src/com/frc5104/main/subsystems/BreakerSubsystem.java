@@ -1,46 +1,47 @@
 package com.frc5104.main.subsystems;
 
 /*Breakerbots Robotics Team 2018*/
-public interface BreakerSubsystem {
-	
-	
+/**
+ * A class that can be thrown into the BreakerSubsystemManager
+ */
+public abstract class BreakerSubsystem {
 	/**
 	 * CALLED when the robot code is ran
 	 */
-	public void init();
+	protected abstract void init();
 	
 	/**
 	 * CALLED at the start of teleop
 	 */
-	public void teleopInit();
+	protected abstract void teleopInit();
 	
 	/**
 	 * CALLED at ~50hz during teleop
 	 */
-	public void teleopUpdate();
+	protected abstract void teleopUpdate();
 	
 	/**
 	 * CALLED at the start of autonomous
 	 */
-	public void autoInit();
+	protected abstract void autoInit();
 	
 	/**
 	 * CALLED at ~50hz during autonomous
 	 */
-	public void autoUpdate();
+	protected abstract void autoUpdate();
 	
 	/**
 	 * CALLED at ~50hz while the robot is powered
 	 */
-	public void idleUpdate();
+	protected abstract void idleUpdate();
 	
 	/**
 	 * CALLED when the robot code is ran TO init the subsystems network table
 	 */
-	public void initNetworkPosting();
+	protected abstract void initNetworkPosting();
 	
 	/**
 	 * CALLED at ~50hz while the robot is powered TO update the subsystems network table
 	 */
-	public void postToNetwork();
+	protected abstract void postToNetwork();
 }

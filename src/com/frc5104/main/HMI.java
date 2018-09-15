@@ -3,6 +3,9 @@ package com.frc5104.main;
 import com.frc5104.utilities.ControllerHandler.Control;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * All Controls used in Athena's Code
+ */
 public class HMI {
 
 	//Drive
@@ -15,7 +18,7 @@ public class HMI {
 
 	//Climbing
 	public static final Control kPtoHoldAndHookPressButton = Control.Y; //0.4 Sec Hold
-	public static final Control kOpenHookHolder = /*Control.A*/Control.Y;
+	public static final Control kOpenHookHolder = Control.Y;
 	
 	//Squeezy Manual
 	public static final Control kSqueezyUp = Control.N;		//Up    on D-Pad

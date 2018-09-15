@@ -1,7 +1,7 @@
 package com.frc5104.autocommands;
 
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
+import com.frc5104.utilities.console.c;
 
 /*Breakerbots Robotics Team 2018*/
 public class Delay extends BreakerCommand {
@@ -17,7 +17,7 @@ public class Delay extends BreakerCommand {
     }
 
     public boolean update() {
-    	console.log("Delaying", Type.AUTO);
+    	console.log(c.AUTO, "Delaying");
     	
     	return (System.currentTimeMillis() >= startTime + delay);
     }

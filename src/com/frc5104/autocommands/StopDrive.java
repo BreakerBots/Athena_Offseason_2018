@@ -2,7 +2,7 @@ package com.frc5104.autocommands;
 
 import com.frc5104.main.subsystems.Drive;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.Type;
+import com.frc5104.utilities.console.c;
 
 /*Breakerbots Robotics Team 2018*/
 public class StopDrive extends BreakerCommand {
@@ -12,7 +12,7 @@ public class StopDrive extends BreakerCommand {
     }
 
     public void init() {
-    	console.log("Stopping Drive", Type.AUTO);
+    	console.log(c.AUTO, "Stopping Drive");
     }
 
     public boolean update() {

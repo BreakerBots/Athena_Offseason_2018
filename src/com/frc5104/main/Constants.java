@@ -1,5 +1,8 @@
 package com.frc5104.main;
 
+/**
+ * All Constants used in Athena's Code 
+ */
 public class Constants {
 	//Robot Varibles (In Imperial)
 	public static double _wheelDiameter = 6; 				  //Inches
@@ -40,5 +43,11 @@ public class Constants {
 		//Encoder
 		public static final int SOFT_STOP_BOTTOM = 0;
 		public static final int SOFT_STOP_TOP = -16150;
+	}
+	
+	//Logging
+	public static class Logging {
+		public static boolean SaveNonMatchLogs = false;
+		public static boolean SaveMatchLogs = true;
 	}
 }

@@ -14,7 +14,7 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 /*Breakerbots Robotics Team 2018*/
-public class Elevator implements BreakerSubsystem {
+public class Elevator extends BreakerSubsystem {
 	private static Elevator _inst = null; 
 	public static Elevator getInstance() { if (_inst == null) _inst = new Elevator(); return _inst; }
 	
@@ -66,7 +66,7 @@ public class Elevator implements BreakerSubsystem {
 		currentStage = Stage.kBottom;
 	}
 	
-	public void teleopUpdate() {
+	protected void teleopUpdate() {
 		//if (controlMode == Elevator.Control.kEffort) {
 			double output = userDeadband.get(controller.getAxis(HMI.kElevatorUpDown));
 			if (output > 0) output *= kDownScalar;
@@ -160,31 +160,31 @@ public class Elevator implements BreakerSubsystem {
 		talon1.configForwardLimitSwitchSource(LimitSwitchSource.Deactivated, LimitSwitchNormal.NormallyOpen, 10);
 	}
 
-	public void init() {
+	protected void init() {
 		
 	}
 
-	public void autoUpdate() {
+	protected void autoUpdate() {
 		
 	}
 
-	public void idleUpdate() {
+	protected void idleUpdate() {
 		
 	}
 	
-	public void initNetworkPosting() {
+	protected void initNetworkPosting() {
 		//NetworkTableInstance.getDefault().getTable("elevator");
 	}
 	
-	public void postToNetwork() {
+	protected void postToNetwork() {
 		
 	}
 
-	public void teleopInit() {
+	protected void teleopInit() {
 		
 	}
 
-	public void autoInit() {
+	protected void autoInit() {
 		
 	}
 }
