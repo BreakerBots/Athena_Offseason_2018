@@ -36,7 +36,6 @@ public class Elevator extends BreakerSubsystem {
 	Control controlMode = Control.kCalibrate;
 	Stage currentStage;
 
-	public Deadband userDeadband = new Deadband(0.2);
 	public double effort = 0;
 	public int prevEnc = -1;
 	
@@ -68,7 +67,7 @@ public class Elevator extends BreakerSubsystem {
 	
 	protected void teleopUpdate() {
 		//if (controlMode == Elevator.Control.kEffort) {
-			double output = userDeadband.get(controller.getAxis(HMI.kElevatorUpDown));
+			double output = Deadband.get(controller.getAxis(HMI.kElevatorUpDown), 0.2);
 			if (output > 0) output *= kDownScalar;
 			talon1.set(ControlMode.PercentOutput, output);
 		//}
