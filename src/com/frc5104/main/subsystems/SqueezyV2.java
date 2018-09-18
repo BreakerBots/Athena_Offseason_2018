@@ -81,6 +81,7 @@ public class SqueezyV2 extends BreakerSubsystem {
 	
 	private static double _armsHoldSpeed     = 0.1;
 	private static double _wheelHoldSpeed    = 0.1;
+	private static double _armsPhysicallyStoppedCurrent = 1;
 	
 	//Devices (d + DEVICE)
 	private static TalonSRX dArms       = Devices.Squeezy.squeeze;
@@ -169,9 +170,12 @@ public class SqueezyV2 extends BreakerSubsystem {
 			dArms.setSelectedSensorPosition(0, 0, 10);
 		}
 
+		public static double getCurrent() {
+			return dArms.getOutputCurrent();
+		}
+		
 		public static boolean isPhysicallyStopped() {
-			//TODO
-			return false;
+			return getCurrent() > _armsPhysicallyStoppedCurrent;
 		}
 	}
 	
