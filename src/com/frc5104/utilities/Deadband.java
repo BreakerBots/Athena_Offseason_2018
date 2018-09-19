@@ -15,29 +15,28 @@ package com.frc5104.utilities;
  *          \
  */
 public class Deadband {
-
-	static final Deadband default_01 = new Deadband(0.1);
-	
-	public static Deadband getDefault() {
-		return default_01;
-	}
-	
-	private boolean inverted = false;
-	
-	private double radius;
-	private double m, b;
-	
-	public Deadband (double radius) {
-		this.radius = radius;
-		
+	public static double get(double x, double radius) {
 		//m = (y2-y1)/(x2-x1)
 		//b = -m*radius
-		m = (1-0) / (1-radius);
-		b = 0 - m*radius;
+		double m = (1-0) / (1-radius);
+		double b = 0 - m*radius;
 		
+		double output = 0;
+		
+		if (x > radius)
+			output = m*x+b;
+		else if (x < -radius)
+			output = m*x-b;
+			
+		return output;
 	}
 	
-	public double get(double x) {
+	public static double get(double x, double radius, boolean inverted) {
+		//m = (y2-y1)/(x2-x1)
+		//b = -m*radius
+		double m = (1-0) / (1-radius);
+		double b = 0 - m*radius;
+		
 		double output = 0;
 		
 		if (inverted) x *= -1;
@@ -49,9 +48,4 @@ public class Deadband {
 			
 		return output;
 	}
-	
-	public void setInverted (boolean invert) {
-		inverted = invert;
-	}
-	
 }

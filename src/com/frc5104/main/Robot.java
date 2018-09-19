@@ -21,7 +21,7 @@ public class Robot extends IterativeRobot {
 		
 		BreakerSubsystemManager.throwSubsystems(new BreakerSubsystem[] {
 			Drive.getInstance(), 
-			Squeezy.getInstance(), 
+			SqueezyV2.getInstance(), 
 			Elevator.getInstance(), 
 			Climber.getInstance()
 		});
