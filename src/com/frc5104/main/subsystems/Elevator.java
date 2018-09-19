@@ -110,8 +110,8 @@ public class Elevator extends BreakerSubsystem {
 				wasInZone = prevEnc < checkStage.getCounts();
 				isInZone = enc < checkStage.getCounts();
 			}
-			if (!wasInZone && isInZone)
-				ControllerHandler.getInstance().rumbleHardFor(1, 0.1);
+			//if (!wasInZone && isInZone)
+				//ControllerHandler.getInstance().rumbleHardFor(1, 0.1);
 		}
 		
 		prevEnc = enc;
