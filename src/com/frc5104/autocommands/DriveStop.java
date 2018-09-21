@@ -5,14 +5,10 @@ import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 
 /*Breakerbots Robotics Team 2018*/
-public class StopDrive extends BreakerCommand {
-
-    public StopDrive() {
-    	
-    }
+public class DriveStop extends BreakerCommand {
 
     public void init() {
-    	console.log(c.AUTO, "Stopping Drive");
+    	console.log(c.DRIVE, "Stopping Drive");
     }
 
     public boolean update() {

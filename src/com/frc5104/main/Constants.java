@@ -3,6 +3,7 @@ package com.frc5104.main;
 /**
  * All Constants used in Athena's Code 
  */
+/*Breakerbots Robotics Team 2018*/
 public class Constants {
 	//Robot Varibles (In Feet)
 	public static double _wheelDiameter = 6 / 12; 			  //
@@ -19,35 +20,33 @@ public class Constants {
 	
 	//Squeezy
 	public static class Squeezy {
-		//Encoder
-		public static final int HasCubePosition = -68000;
+		public static double _armsInSpeed       = -0.6;
 		
-		//Opening/Closing Arms
-		public static final double HoldEffort = -0.25;
-		public static final double ShootSqueezeEffort = -0.05;
-		public static final double CloseEffort = -0.5;
-		public static final double OpenEffort  = 0.5;
+		public static double _wheelEjectSpeed   = -0.8;
+		public static double _armsOutEjectSpeed = -0.1;
+		public static double _ejectTime = 500;
 		
-		//Spinning Wheels
-		public static final double RightSpinMultiplier = 1.1;
-		public static final double IntakeEffort = -/*0.4*//*3-12-18 0.2*/0.2;
-		public static final double PinchEffort = -0.2;
-		public static double EjectEffort = 0.6;
+		public static double _armsOutSpeed      = 0.6;
+		public static double _wheelIntakeSpeed  = 0.4;
+		
+		public static double _armsHoldSpeed     = -0.15;
+		public static double _wheelHoldSpeed    = 0.1;
+		public static double _armsPhysicallyStoppedCurrent = 10;
 	}
 	
 	//Elevator
 	public static class Elevator {
 		//Teleop Movement Speed
-		public static final double DownScalar = 0.5;
+		public static final double _downScalar = 0.5;
 		
 		//Encoder
-		public static final int SOFT_STOP_BOTTOM = 0;
-		public static final int SOFT_STOP_TOP = -16150;
+		public static final int _softStopBottom = 0;
+		public static final int _softStopTop = -16150;
 	}
 	
 	//Logging
 	public static class Logging {
-		public static boolean SaveNonMatchLogs = false;
-		public static boolean SaveMatchLogs = true;
+		public static boolean _SaveNonMatchLogs = false;
+		public static boolean _SaveMatchLogs = true;
 	}
 }

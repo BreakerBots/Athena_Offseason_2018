@@ -19,7 +19,7 @@ public class console {
 		TELEOP, 
 		AUTO, 
 		MAIN, 
-		INTAKE, 
+		SQUEEZY, 
 		ELEV, 
 		DRIVE, 
 		OTHER
@@ -125,12 +125,11 @@ public class console {
 		/** Returns the index of the timing group/set (-1 if not found) */
 		public static int getIndex(String name) {
 			name = name.toLowerCase();
-			int t = -1;
 			for (int i = 0; i < sn.length; i++) {
 				if (sn[i] == name)
-					t = i;
+					return i;
 			}
-			return t;
+			return -1;
 		}
 		
 		/** Resets the time of the corresponding timing group/set */
@@ -207,7 +206,7 @@ public class console {
 					
 					//File Path
 					boolean hasFMS = DriverStation.getInstance().isFMSAttached();
-					if (hasFMS ? Constants.Logging.SaveMatchLogs : Constants.Logging.SaveNonMatchLogs) {
+					if (hasFMS ? Constants.Logging._SaveMatchLogs : Constants.Logging._SaveNonMatchLogs) {
 						String filePath = "/home/lvuser/" + (hasFMS ? "MatchLog/" : "GeneralLog/");
 						
 						//File Name

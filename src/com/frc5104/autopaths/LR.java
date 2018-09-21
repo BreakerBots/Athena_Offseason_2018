@@ -11,6 +11,5 @@ public class LR extends BreakerCommandGroup {
 	
 	public void init() {
 		add(new MotionProfile(points));
-		add(new StopDrive());
 	}
 }

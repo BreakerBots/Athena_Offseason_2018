@@ -7,8 +7,6 @@ import com.frc5104.utilities.console.c;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Solenoid;
 
 /*Breakerbots Robotics Team 2018*/
 /**
@@ -41,8 +39,8 @@ public class Devices {
 	
 	//Climbing
 	public static class Climbing {
-		public static Solenoid ptoSol = new Solenoid(4);
-		public static Servo hookHolder = new Servo(0);
+		//public static Solenoid ptoSol = new Solenoid(4);
+		//public static Servo hookHolder = new Servo(0);
 	}
 	
 	//Shifting

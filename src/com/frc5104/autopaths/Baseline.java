@@ -12,6 +12,5 @@ public class Baseline extends BreakerCommandGroup {
 		
 	public void init() {
 		add(new MotionProfile(points));
-		add(new StopDrive());
 	}
 }

@@ -5,469 +5,380 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
-import com.frc5104.main.subsystems.Squeezy.SqueezyState;
-import com.frc5104.utilities.ControllerHandler;
-import com.frc5104.utilities.FilteredUltraSonic;
-import com.frc5104.utilities.TimedButton;
+import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.c;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import com.frc5104.utilities.controller.Control;
+
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /*Breakerbots Robotics Team 2018*/
 /**
- * Squeezy Sanchez (A Decent but also sucky intake mechanism)
+ * Squeezy Sanchez (A Decent but also sucky intake mechanism, with new and improved code!!!)
  */
 public class Squeezy extends BreakerSubsystem {
 	private static Squeezy _inst = null; 
 	public static Squeezy getInstance() { if (_inst == null) _inst = new Squeezy(); return _inst; }
 	
-	//Constants References
-	static final int kHasCubePosition = Constants.Squeezy.HasCubePosition;
-	static final double kHoldEffort = Constants.Squeezy.HoldEffort;
-	static final double kShootSqueezeEffort = Constants.Squeezy.ShootSqueezeEffort;
-	static final double kCloseEffort = Constants.Squeezy.CloseEffort;
-	static final double kOpenEffort  = Constants.Squeezy.OpenEffort;
-	static final double kRightSpinMultiplier = Constants.Squeezy.RightSpinMultiplier;
-	static final double kIntakeEffort = Constants.Squeezy.IntakeEffort;
-	static final double kPinchEffort = Constants.Squeezy.PinchEffort;
-	public static double kEjectEffort = Constants.Squeezy.EjectEffort;
+	/*
+	 * TODO:
+	 * 	 - Arms Detect Physically Stopped
+	 * 	 - Test
+	 *   - If Adopted, move constants and controls
+	 */
 	
-	public enum SqueezyState {
-		EMPTY, EJECT,
-		//Auto State Chart
-		INTAKE, CLOSING, HOLDING, TILT_UNJAM, UNJAM,
-		//Manual State Chart
-		MANUAL_OPEN, MANUAL_CLOSE
-		
+	/*
+	 * Squeezy Vocab:
+	 * 	 - Word: Description/Definition
+	 * 		- Subword [MODIFIER] (ABBRIVIATION): Description/Definition <Relative Reference>
+	 * 
+	 * 	 - Fold: Squeezy Moving/Folding/Lifting Up and Down
+	 * 		- Up: Squeezy is folded up closer to the elevator (facing up)
+	 * 		- Down: Squeezy is folded down closer to the group (facing forward)
+	 * 		- Either (ethr): Squeezy is either folder <Up> or <Down> 
+	 * 
+	 * 	 - Wheels: The Green Wheels on Squeezy
+	 * 		- In [Speed]: The Wheels are spinning in an intake motion at <Speed> (in toward the robot)
+	 * 		- Out [Speed]: The Wheels are spinning in an eject motion at <Speed> (out from the robot)
+	 * 		- Idle: The Wheels are not being spun by the motor
+	 * 
+	 * 	 - Arms: Squeezy Arms and the Motor/Belt moving them
+	 * 		- Out: The Arms are the point farthest from eachother (fully open)
+	 * 		- In: The Arms are at the point closest to eachother (full in)
+	 * 		- Holding (hld or hold): The Arms are at or moving toward ~13 inches from eachother and pushing against the cube (enought to hold the cube)
+	 * 		- Idle (idl or idle): The Arms can be in any position and the motor is idle
+	 * 		- Idle Hold (i-hld or ihld): The Arms are ~13 inches from eachother (touching the cube), but not forcing/hold the cube
+	 * 		- Idle Out (i-out or iout): The arms are <Out> and <Idle>
+	 * 		- Idle In (i-in or iin): The arms are <In> and <Idle>
+	 * 		- Moving Out [Speed] (m-out): The arms are moving toward the <Out> position at <Speed>
+	 * 		- Moving In [Speed] (m-in): The arms are moving toward the <In> position at <Speed>
+	 * 
+	 * 	- Cube: Refering the Power-Up 2018 game object, the Power Cube (a milk crate with a yellow cover, 13"w x 13"l x 11"h)
+	 * 		- This mecanism is capable of picking up cubes at 13" and 11"
+	 */
+	
+	
+	
+	
+	
+				// <---- Variables ---->
+	
+	//State
+	public static enum SqueezyState {
+				//  Fold  |  Arms  |  Wheels  
+				// -------|--------|---------
+		intake,	//  down  |  out   |  in (intake speed)
+		eject,	//  down  |  i-hld |  out (eject speed)
+		hold,	//  ethr  |  hold  |  in (hold speed)
+		idle	//  ethr  |  idle  |  idle 
 	}
+	private static SqueezyState currentState = /*SqueezyMainState.hold*/SqueezyState.idle;
 	
-	private boolean manualStateDiagram = false;
-	private SqueezyState prevState = SqueezyState.EJECT;
-	private SqueezyState state = SqueezyState.HOLDING;
-	private ControllerHandler controller = ControllerHandler.getInstance();
+	//Devices (d + DEVICE)
+	private static TalonSRX dArms       = Devices.Squeezy.squeeze;
+	private static TalonSRX dLWheel     = Devices.Squeezy.leftSpin;
+	private static TalonSRX dRWheel     = Devices.Squeezy.rightSpin;
+	private static DoubleSolenoid dFold = Devices.Squeezy.fold; 
 	
-	//References
-	private static TalonSRX squeezer  = Devices.Squeezy.squeeze;
-	private TalonSRX leftSpin  = Devices.Squeezy.leftSpin;
-	private TalonSRX rightSpin = Devices.Squeezy.rightSpin;
-	private SqueezySensors sensors = new SqueezySensors();
-	private DoubleSolenoid fold = Devices.Squeezy.fold;
+				// <---- /Varibales ---->
 	
-	//Eject Timing
-	long ejectTime = System.currentTimeMillis();
 	
-	private Squeezy () {
-		//Make sure that the motor output and encoder counts are in sync
-			//OTHERWISE, the finely tuned closed-loop control becomes
-			//chaotic and accelerates away from the setpoint
-		squeezer.setSensorPhase(true);
-		state = SqueezyState.HOLDING;
-		updateState();
-		update();
-	}//Squeezy
+	private static boolean vHasCube = false;
+	private static double vEjectTime;
 	
-	public void foldUp() {
-		fold.set(DoubleSolenoid.Value.kReverse);
-	}
-	public boolean foldedUp() {
-		return fold.get() == DoubleSolenoid.Value.kReverse;
-	}
-	public void foldDown() {
-		fold.set(DoubleSolenoid.Value.kForward);
-	}
-	public boolean foldedDown() {
-		return fold.get() == DoubleSolenoid.Value.kForward;
-	}
-	public void processFold() {
-		if (controller.getPressed(HMI.kSqueezyDown)) {
-			console.log(c.INTAKE, "Squeezy down");
-			foldDown();
+	
+				// <---- Systems (Handle Devices Directly for the State Machine) ---->
+	
+	// - Wheels
+	private static class wheels {
+		private static void intake() {
+			dLWheel.set(ControlMode.PercentOutput, -Constants.Squeezy._wheelIntakeSpeed);
+			dRWheel.set(ControlMode.PercentOutput,  Constants.Squeezy._wheelIntakeSpeed);
 		}
-		if (controller.getPressed(HMI.kSqueezyUp)) {
-			console.log(c.INTAKE, "Squeezy up");
-			foldUp();
+		
+		private static void eject() {
+			dLWheel.set(ControlMode.PercentOutput, -Constants.Squeezy._wheelEjectSpeed);
+			dRWheel.set(ControlMode.PercentOutput,  Constants.Squeezy._wheelEjectSpeed);
+		}
+		
+		private static void idle() {
+			dLWheel.set(ControlMode.PercentOutput, 0);
+			dRWheel.set(ControlMode.PercentOutput, 0);
+		}
+		
+		private static void hold() {
+			dLWheel.set(ControlMode.PercentOutput, -Constants.Squeezy._wheelHoldSpeed);
+			dRWheel.set(ControlMode.PercentOutput,  Constants.Squeezy._wheelHoldSpeed);
 		}
 	}
 	
-	private TimedButton grabbedSensor = new TimedButton();
-	private boolean leftUnjam = true;
-	private void updateState() {
-		if (squeezer.getSensorCollection().isFwdLimitSwitchClosed()) {
-//			if (!calibrated)
-			squeezer.setSelectedSensorPosition(0, 0, 10);
+	// - Fold
+	private static class fold {
+		private static void up() {
+			dFold.set(DoubleSolenoid.Value.kReverse);
 		}
 		
-		prevState = state;
+		private static void down() {
+			dFold.set(DoubleSolenoid.Value.kForward);
+		}
+	}
+	
+	// - Arms
+	private static class arms {	
+		//Hold, Idle and Out are handled in the state machine
 		
-		switch (state) {
-		case EMPTY:
-			if (controller.getPressed(HMI.kSqueezyIntake)) {
-				state = SqueezyState.INTAKE;
-				manualStateDiagram = false;
-			}
-			break;
-		case EJECT:
-			if ((System.currentTimeMillis() - ejectTime) > 1000)
-				if (manualStateDiagram)
-					state = SqueezyState.MANUAL_OPEN;
-				else
-					state = SqueezyState.UNJAM;
-			break;
-		//--------------------------Auto State Chart--------------------------//
-		case INTAKE:
-			//UltraSonic: Move directly to holding when box is detected by motor stalls
-			if (sensors.detectBox()) {
-				state = SqueezyState.CLOSING;
-				grabbedSensor.reset();
-			}
-			break;
-		case CLOSING:
-//			if (controller.getPressed(HMI.kSqueezyCancel))
-//				state = SqueezyState.UNJAM;
-//			if (!(sensors.detectBox() && squeezer.getSelectedSensorPosition(0) > -90000))
-//				state = SqueezyState.INTAKE;
-//			if (sensors.detectBoxHeld()) {
-//				state = SqueezyState.HOLDING;
-//				ControllerHandler.getInstance().rumbleHardFor(0.5, 0.5);
-			int vel = getEncoderVelocity();
-			int pos = getEncoderPosition();
-			boolean bool = vel < 10 && vel > -500;
-//				bool = bool && pos < -60000;
-			grabbedSensor.update(bool);
+		public static void set(double speed) {
+			dArms.set(ControlMode.PercentOutput, speed);
+		}
+		
+		public static boolean hitInsideLimitSwitch() {
+			return dArms.getSensorCollection().isRevLimitSwitchClosed();
+		}
+		
+		public static boolean hitOutsideLimitSwitch() {
+			return dArms.getSensorCollection().isFwdLimitSwitchClosed();
+		}
+		
+		public static int getVelocity() {
+			return dArms.getSelectedSensorVelocity(0);
+		}
+		
+		public static int getPosition() {
+			return dArms.getSelectedSensorPosition(0);
+		}
+		
+		public static void resetPosition() {
+			dArms.setSelectedSensorPosition(0, 0, 10);
+		}
+
+		public static double getCurrent() {
+			return dArms.getOutputCurrent();
+		}
+		
+		public static boolean isPhysicallyStopped() {
+			return getCurrent() > Constants.Squeezy._armsPhysicallyStoppedCurrent;
+		}
+	}
+	
+				// <---- /Systems ---->
+	
+	
+	
+	
+	
+				// <---- Actions (Control Subsystems and State Machine) ---->
+	
+	public static class actions {
+		public static void foldSet(boolean up) {
+			if (up) {
+				fold.up();
 				
-			if (grabbedSensor.get(20)) {
-				state = SqueezyState.HOLDING;
-				controller.rumbleHardFor(0.5, 0.5);
+				//Folding Up => Hold State
+				hold();
 			}
-			if (squeezer.getSensorCollection().isRevLimitSwitchClosed())
-				state = SqueezyState.INTAKE;
-			break;
-		case HOLDING:
-			if (squeezer.getSensorCollection().isRevLimitSwitchClosed())
-				state = SqueezyState.INTAKE;
-//			if (getEncoderPosition() > kHasCubePosition) {
-			if (controller.getPressed(HMI.kSqueezyKnock)) {
-				leftUnjam = sensors.getDistances()[1] > sensors.getDistances()[2];
-				ejectTime = System.currentTimeMillis();
-				state = SqueezyState.TILT_UNJAM;
+			else {
+				fold.down();
 			}
-			break;
-		case TILT_UNJAM:
-			if (squeezer.getSensorCollection().isRevLimitSwitchClosed())
-				state = SqueezyState.EMPTY;
-			if (System.currentTimeMillis() - ejectTime > 500) {
-				state = SqueezyState.HOLDING;
-			}
-			break;
-		case UNJAM:
-			if (squeezer.getSensorCollection().isFwdLimitSwitchClosed())
-				state = SqueezyState.INTAKE;
-			if (controller.getPressed(HMI.kSqueezyIntake))
-				state = SqueezyState.INTAKE;
-			break;
-			
-		//---------------------Manual State Chart------------------------//
-		case MANUAL_OPEN:
-		case MANUAL_CLOSE:
-			//Manual Controls are available at any time,
-				// thus they do not fall in here.
-			//However, we do want the ability to go back into auto/intake mode.
-			if (controller.getPressed(HMI.kSqueezyIntake)) {
-				state = SqueezyState.INTAKE;
-				manualStateDiagram = false;
-			}
-			break;
 		}
 		
-		if (controller.getPressed(HMI.kSqueezyOpen)) {
-			state = SqueezyState.MANUAL_OPEN;
-			manualStateDiagram = true;
-		}
-		if (controller.getPressed(HMI.kSqueezyClose)) {
-			state = SqueezyState.MANUAL_CLOSE;
-			manualStateDiagram = true;
+		public static void eject() {
+			vEjectTime = System.currentTimeMillis();
+			setState(SqueezyState.eject);
 		}
 		
-		if (controller.getPressed(HMI.kSqueezyEject)) {
-			console.log(c.INTAKE, "Ejecting");
-			ejectTime = System.currentTimeMillis();
-			state = SqueezyState.EJECT;
+		public static void intake() {
+			setState(SqueezyState.intake);
 		}
-		if (controller.getPressed(HMI.kSqueezyNeutral))
-			state = SqueezyState.EMPTY;
 		
-	}
-	
-	private void update() {
-		sensors.update();
-		console.log(c.INTAKE, state.toString());
-		switch (state) {
-		case EMPTY:
-			foldDown();
-			spinStop();
-			if (foldedUp())
-				close();
-			else
-				leave();
-			break;
-		case EJECT:
-			foldDown();
-			spinOut();
-			shootSqueeze();
-			break;
-		case INTAKE:
-			foldDown();
-			spinIn();
-			if (foldedUp())
-				close();
-			else
-				open();
-			break;
-		case CLOSING:
-			foldDown();
-			spinIn();
-			close();
-			break;
-		case HOLDING:
-			foldUp();
-			spinPinch();
-			hold();
-			break;
-		case TILT_UNJAM:
-			foldUp();
-			spinUnjam();
-			hold();
-			break;
-		case UNJAM:
-			foldDown();
-			spinStop();
-			if (foldedUp())
-				close();
-			else
-				open();
-			break;
-		case MANUAL_OPEN:
-			foldDown();
-			spinIn();
-			if (foldedDown())
-				open();
-			else
-				close();
-			break;
-		case MANUAL_CLOSE:
-			foldDown();
-			spinIn();
-			close();
-			break;
+		public static void hold() {
+			vHasCube = false;
+			setState(SqueezyState.hold);
+		}
+		
+		public static void idle() {
+			setState(SqueezyState.idle);
 		}
 	}
 	
-	public double getRelativeEncoderPosition() {
-		double raw_pos = getEncoderPosition();
-		double rel_pos = raw_pos / -120000;
-		
-		return rel_pos;
-	}
-	public double getRelativeEncoderVelocity() {
-		int raw_vel = getEncoderVelocity();
-		
-		//if raw_vel = (raw_pos - raw_prev_pos) / time
-		//and pos = raw_pos / -120000.0
-		
-		double rel_vel = raw_vel / -120000;
-				
-		return rel_vel;
-	}
-	public int getEncoderPosition() {
-		return squeezer.getSelectedSensorPosition(0);
-	}
-	public static int getEncoderVelocity() {
-		return squeezer.getSelectedSensorVelocity(0);
-	}
+				// <---- /Actions ---->
 	
-	public boolean getOpenLimitSwitch() {
-		return squeezer.getSensorCollection().isFwdLimitSwitchClosed();
-	}
-
-	public boolean getClosedLimitSwitch() {
-		return squeezer.getSensorCollection().isRevLimitSwitchClosed();
-	}
-
-	public void forceState(SqueezyState newState) {
-		state = newState;
-		if (state == SqueezyState.EJECT)
-			ejectTime = System.currentTimeMillis();
-	}
 	
-	public boolean isInState(SqueezyState checkState) {
-		return state == checkState;
-	}
 	
-	public boolean hasCube() {
-		return state == SqueezyState.HOLDING;
-	}
 	
-	private void setSpinners(double effort) {
-		setSpinners(effort, 0);
-	}
-	private void setSpinners(double effort, int invert) {
-		switch (invert) {
-			case -1:
-				leftSpin.set(ControlMode.PercentOutput, -effort);
-				rightSpin.set(ControlMode.PercentOutput, -kRightSpinMultiplier*effort);
-				break;
-			case 0:
-				leftSpin.set(ControlMode.PercentOutput, effort);
-				rightSpin.set(ControlMode.PercentOutput, -kRightSpinMultiplier*effort);
-				break;
-			case 1:
-				leftSpin.set(ControlMode.PercentOutput, effort);
-				rightSpin.set(ControlMode.PercentOutput, kRightSpinMultiplier*effort);
-				break;
-		}
-	}	
-	private void spinIn() {
-		setSpinners(kIntakeEffort);
-	}
-	private void spinOut() {
-		setSpinners(kEjectEffort);
-	}
-	private void spinStop() {
-		setSpinners(0);
-	}
-	private void spinPinch() {
-		setSpinners(kPinchEffort);
-	}
-	private void spinUnjam() {
-		setSpinners(kIntakeEffort, leftUnjam?-1:1);
-	}
 	
-	private void open() {
-		squeezer.set(ControlMode.PercentOutput, kOpenEffort);
-	}
-	private void close() {
-		squeezer.set(ControlMode.PercentOutput, kCloseEffort);
-	}
-	private void shootSqueeze() {
-		squeezer.set(ControlMode.PercentOutput, kShootSqueezeEffort);
-	}
-	private void hold() {
-		squeezer.set(ControlMode.PercentOutput, kHoldEffort);
-	}
-	private void leave() {
-		squeezer.set(ControlMode.PercentOutput, 0);
-	}
-
+				// <---- Management (Calls Actions and Handles State Machine) ---->
+	
 	protected void init() {
 		
 	}
-
+	
+	private static void setState(SqueezyState state) {
+		currentState = state;
+	}
+	
+	public static SqueezyState getState() {
+		return currentState;
+	}
+	
+	protected void update() {
+		switch (currentState) {
+			case intake: {
+				//  Fold: down, 
+				//	Arms: out, 
+				//  Wheels: in (intake speed)
+				
+				// Fold
+				fold.down();
+				
+				//Arms
+				if (!arms.hitOutsideLimitSwitch()) {
+					arms.set(Constants.Squeezy._armsOutSpeed);
+				}
+				else {
+					arms.set(0);
+				}
+				
+				//Wheels
+				wheels.intake();
+				
+				break;
+			}
+			case eject: {
+				//  Fold: down, 
+				//  Arms: idle-hold (moving out slightly), 
+				//  Wheels: out (eject speed)
+				
+				// Fold
+				fold.down();
+				boolean time = ((double)(System.currentTimeMillis()) - vEjectTime) < Constants.Squeezy._ejectTime;
+				if (!arms.hitOutsideLimitSwitch() && time) {
+					//Arms
+					arms.set(Constants.Squeezy._armsOutEjectSpeed);
+					
+					//Wheels
+					wheels.eject();
+				} 
+				else 
+					setState(SqueezyState.idle);
+				
+				break;
+			}
+			case hold: {
+				//  Fold: either, 
+				//  Arms: hold, 
+				//  Wheels: in (hold speed)
+				// *Hold includes moving the arms in to a position to hold the cube
+				
+				//Switch to idle since there was no cube
+				if (arms.hitInsideLimitSwitch())
+					setState(SqueezyState.idle);
+				
+				//shouldHoldCube = false;
+				if (vHasCube) {
+					//Arms
+					arms.set(Constants.Squeezy._armsHoldSpeed);
+					
+					//Wheels
+					wheels.hold();
+				}
+				else {
+					//Arms
+					arms.set(Constants.Squeezy._armsInSpeed);
+					
+					//Wheels
+					wheels.idle();
+					
+					//Has Cube
+					vHasCube = arms.isPhysicallyStopped();
+				}
+				
+				break;
+			}
+			case idle: {
+				//  Fold: either, 
+				//  Arms: idle, 
+				//  Wheels: idle
+				
+				//Arms
+				arms.set(0);
+				
+				//Wheels
+				wheels.idle();
+				
+				break;
+			}
+		} //End of Switch/Case
+	}
+	
+	protected void teleopInit() {
+		setState(SqueezyState.idle);
+	}
+	
 	protected void teleopUpdate() {
+		/*
+		 * User Actions:
+		 * 		Fold Up (Stops Intake and Eject)
+		 * 		Fold Down
+		 * 		Eject (If holding and folded down)
+		 * 		Intake (If folded down)
+		 * 		Hold
+		 * 		Idle
+		 * 
+		 * - Picking up cube:
+		 * 		1) Fold Down
+		 * 		2) Intake
+		 * 		3) Drive up to cube
+		 * 		4) Hold
+		 */
+		
+		//Fold Up
+		if (controller.getPressed(HMI.Squeezy._foldUp))
+			actions.foldSet(true);
+		
+		//Fold Down
+		if (controller.getPressed(HMI.Squeezy._foldDown))
+			actions.foldSet(false);
+		
+		// - State Switching
+		//Intake
+		if (controller.getPressed(HMI.Squeezy._intake))
+			actions.intake();
+		
+		//Eject
+		if (controller.getPressed(HMI.Squeezy._eject))
+			actions.eject();
+		
+		//Hold
+		if (controller.getPressed(HMI.Squeezy._hold))
+			actions.hold();
+		
+		//Idle
+		if (controller.getPressed(HMI.Squeezy._idle))
+			actions.idle();
+		
 		update();
 	}
-
-	protected void autoUpdate() {
-		//update();
+	
+	protected void autoInit() {
+		setState(SqueezyState.hold);
 	}
-
+	
+	protected void autoUpdate() {
+		//Controlled in the Breaker Command System
+		
+		update();
+	}
+	
 	protected void idleUpdate() {
 		
 	}
-
+	
 	protected void initNetworkPosting() {
 		
 	}
-
+	
 	protected void postToNetwork() {
 		
 	}
-
-	protected void teleopInit() {
-		forceState(SqueezyState.INTAKE);
-	}
-
-	protected void autoInit() {
-		//squeezy.forceState(SqueezyState.HOLDING);
-		forceState(SqueezyState.EMPTY);
-		foldUp();
-	}
 	
-	public class SqueezySensors {
-		private FilteredUltraSonic centerUltra = new FilteredUltraSonic(0, 1, 50);
-		private FilteredUltraSonic leftUltra = new FilteredUltraSonic(2, 3, 5);
-		private FilteredUltraSonic rightUltra = new FilteredUltraSonic(4, 5, 5);
-		
-		private SqueezySensors() {
-			centerUltra.init();
-			leftUltra.init();
-			rightUltra.init();
-		}
-		
-		public void update() {
-			centerUltra.update();
-			leftUltra.update();
-			rightUltra.update();
-		}
-
-		public boolean detectBox() {
-			/*
-			 * Squeezy's maximum no-block separation is 19in.
-			 * Squeezy's minimum no-block separation is 8in
-			 * 
-			 * So, if the sum of the distances from the ultrasonics falls under 15in,
-			 * it must be that there is a block between the two ultrasonics.
-			 * 
-			 * At the shortest distance, Left+Right will still be above 15in,
-			 * at the largest distance, any significant block-sized object, (11-13in)
-			 * will bring the Left+Right distance down to (19-11)+(0) == 8in.
-			 */
-			double left = leftUltra.getDistance();
-			double right = rightUltra.getDistance();
-			//if (leftUltra.getDistance() + rightUltra.getDistance() < 18)
-			if (left < 10 || right < 10)
-				return true;
-			else
-				return false;
-		}
-		
-		public boolean detectBoxGone() {
-			//if (!new Joystick(0).getRawButton(6))
-			if (centerUltra.getDistance() > 11.5)
-				return true;
-			else
-				return false;
-			//if (leftUltra.getDistance() > 4 && rightUltra.getDistance() > 4)
-			//	return true;
-			//else
-			//	return false;
-		}
-		
-		public String encVel () {
-			int vel = Squeezy.getEncoderVelocity();
-			boolean bool = Math.abs(vel) < 30;
-			return "Vel Check: "+bool+" -- "+vel;
-		}
-		
-		public boolean detectBoxHeld() {
-			//if (new Joystick(0).getRawButton(6))/*3-11-18*/
-			
-			if (centerUltra.getDistance() < /*6*//*5.5*//*New 3d plate*/3)
-				//leftUltra.getDistance() < 2 &&
-				//rightUltra.getDistance() < 2)
-				return true;
-			else
-				return false;
-		}
-		
-		public double[] getDistances() {
-			double[] distances = new double[3];
-			distances[0] = centerUltra.getDistance();
-			distances[1] = leftUltra.getDistance();
-			distances[2] = rightUltra.getDistance();
-			
-			return distances;
-		}
-	}
+				// <---- /Management ---->
 }

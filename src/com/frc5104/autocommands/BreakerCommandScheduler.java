@@ -21,6 +21,9 @@ public class BreakerCommandScheduler {
 		//Save the new Command Group
 		r = commandGroup;
 		
+		//Make sure that the robot always stops after autonomous
+		r.add(new DriveStop());
+		
 		//Reset Command Group Filter Index
 		i = 0;
 		

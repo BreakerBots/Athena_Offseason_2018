@@ -1,6 +1,7 @@
 package com.frc5104.main;
 
-import com.frc5104.utilities.ControllerHandler.Control;
+import com.frc5104.utilities.controller;
+import com.frc5104.utilities.controller.Control;
 
 /*Breakerbots Robotics Team 2018*/
 /**
@@ -9,27 +10,38 @@ import com.frc5104.utilities.ControllerHandler.Control;
 public class HMI {
 
 	//Drive
-	public static final Control kDriveX = Control.LX;		//Left  Stick
-	public static final Control kDriveY = Control.LY;		//Right Stick
-	public static final Control kDriveShift = Control.RT;	//Right Trigger
+	public static class Drive {
+		public static final Control _driveX = Control.LX;
+		private static final boolean _triggerDrive = true;
+		public static double driveY() {
+			if (_triggerDrive)
+				return controller.getAxis(Control.LT) - controller.getAxis(Control.RT);
+			else
+				return controller.getAxis(Control.LY);
+		}
+		
+		public static final Control _shift = Control.RT;
+	}
 	
 	//Elevator
-	public static final Control kElevatorUpDown = Control.RY; //Right Stick
-
+	public static class Elevator {
+		public static final Control _drive = Control.RY; //Right Stick
+	}
+	
 	//Climbing
-	public static final Control kPtoHoldAndHookPressButton = Control.Y; //0.4 Sec Hold
-	public static final Control kOpenHookHolder = Control.Y;
+	public static class Climbing {
+		public static final Control _ptoShift = Control.Y;
+		public static final Control _openHookHolder = Control.Y;
+	}
 	
-	//Squeezy Manual
-	public static final Control kSqueezyUp = Control.N;		//Up    on D-Pad
-	public static final Control kSqueezyDown = Control.S;	//Down  on D-Pad
-	public static final Control kSqueezyOpen = Control.W;	//Left  on D-Pad
-	public static final Control kSqueezyClose = Control.E;	//Right on D-Pad
-	
-	//Squeezy Automatic
-	public static final Control kSqueezyEject = Control.LB;	//Eject Mode
-	public static final Control kSqueezyNeutral = Control.B;//Neutral Mode (Stop Wheels from Spinning)
-	public static final Control kSqueezyIntake = Control.X;	//Intake Mode (Spin Wheels and Move In)
-	public static final Control kSqueezyKnock = Control.LT; //?
+	//Squeezy
+	public static class Squeezy {
+		public static final Control _foldUp   = Control.A;
+		public static final Control _foldDown = Control.Y;
 
+		public static final Control _eject    = Control.LB;
+		public static final Control _intake   = Control.B;
+		public static final Control _hold     = Control.X;
+		public static final Control _idle     = Control.LIST;
+	}
 }

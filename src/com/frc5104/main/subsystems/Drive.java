@@ -5,9 +5,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
 import com.frc5104.main.subsystems.Drive.shifters.Gear;
-import com.frc5104.utilities.ControllerHandler;
+import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console;
-import com.frc5104.utilities.ControllerHandler.Control;
+import com.frc5104.utilities.controller.Control;
 import com.frc5104.utilities.console.c;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -111,11 +111,10 @@ public class Drive extends BreakerSubsystem {
 	}
 
 	protected void teleopUpdate() {
-		ControllerHandler controller = ControllerHandler.getInstance();
-		L1.set(ControlMode.PercentOutput, controller.getAxis(Control.LY) - controller.getAxis(Control.LX));
-		R1.set(ControlMode.PercentOutput, controller.getAxis(Control.LY) + controller.getAxis(Control.LX));
+		L1.set(ControlMode.PercentOutput, HMI.Drive.driveY() - controller.getAxis(HMI.Drive._driveX));
+		R1.set(ControlMode.PercentOutput, HMI.Drive.driveY() + controller.getAxis(HMI.Drive._driveX));
 	
-		if (ControllerHandler.getInstance().getAxis(HMI.kDriveShift) > 0.6)
+		if (controller.getAxis(HMI.Drive._shift) > 0.6)
 			shifters.set(true);
 		else
 			shifters.set(false);
