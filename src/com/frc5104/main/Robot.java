@@ -1,6 +1,7 @@
 package com.frc5104.main;
 
 import com.frc5104.autocommands.BreakerCommandScheduler;
+import com.frc5104.autocommands.MotionProfile;
 import com.frc5104.autopaths.AutoSelector;
 import com.frc5104.main.subsystems.*;
 
@@ -23,6 +24,8 @@ public class Robot extends BreakerRobot {
 		);
 	}
 	
-	public void _testInit() {}
-	public void _testPeriodic() {}
+	public void _teleopInit() { }
+	
+	public void _testInit() { }
+	public void _testPeriodic() { }
 }

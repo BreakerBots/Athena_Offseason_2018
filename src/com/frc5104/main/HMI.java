@@ -20,7 +20,7 @@ public class HMI {
 				return controller.getAxis(Control.LY);
 		}
 		
-		public static final Control _shift = Control.RT;
+		public static final Control _shift = Control.LJ;
 	}
 	
 	//Elevator

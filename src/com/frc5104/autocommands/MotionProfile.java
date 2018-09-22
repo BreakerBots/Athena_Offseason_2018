@@ -23,8 +23,8 @@ import jaci.pathfinder.modifiers.TankModifier;
 public class MotionProfile extends BreakerCommand {
 
 	//Motion Profiling Objects
-	static Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.05, Constants._maxVelocity, Constants._maxAcceleration, Constants._maxJerk);
-	static Trajectory trajectory;
+	Trajectory.Config config = new Trajectory.Config(Trajectory.FitMethod.HERMITE_CUBIC, Trajectory.Config.SAMPLES_HIGH, 0.05, Constants._maxVelocity, Constants._maxAcceleration, Constants._maxJerk);
+	Trajectory trajectory;
 	TankModifier modifier;
 	EncoderFollower left;
 	EncoderFollower right;
@@ -93,14 +93,14 @@ public class MotionProfile extends BreakerCommand {
     }
 
     public void end() {
-    	
+    	console.log(c.AUTO, "MP Path Finished");
     }
 
     public double clamp(double a, double min, double max) {
     	return a < min ? min : (a > max ? max : a);
     }
     
-    public static Trajectory getTrajectory(Waypoint[] points) {
+    public Trajectory getTrajectory(Waypoint[] points) {
 		//Parse trajectory name
 		String s = "";
     	for (Waypoint p : points) {
@@ -124,7 +124,7 @@ public class MotionProfile extends BreakerCommand {
 	}
 	
 	//Finds, reads, and returns the trajectory saved with name
-	public static Trajectory readFile(String name) {
+	public Trajectory readFile(String name) {
 		try {
 			File file = new File("/home/lvuser/MotionProfilingCache/" + name);
 			FileInputStream fis = new FileInputStream(file);
@@ -141,7 +141,7 @@ public class MotionProfile extends BreakerCommand {
 	}
 	
 	//Writes the path to a new file
-	public static void writeFile(String name, Trajectory t) {
+	public void writeFile(String name, Trajectory t) {
 		try {
 			FileOutputStream fos = new FileOutputStream("/home/lvuser/MotionProfilingCache/" + name);
 		    ObjectOutputStream oos = new ObjectOutputStream(fos);

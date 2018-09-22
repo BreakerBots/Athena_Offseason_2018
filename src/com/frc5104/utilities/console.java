@@ -58,6 +58,7 @@ public class console {
 		System.out.println(f);
 		if (logFile.isLogging)
 			logFile.log += f + "\n";
+		ntConsole.logToStream(f);
 	}
 	
 	// -- INFO
@@ -126,7 +127,7 @@ public class console {
 		public static int getIndex(String name) {
 			name = name.toLowerCase();
 			for (int i = 0; i < sn.length; i++) {
-				if (sn[i] == name)
+				if (name.equals(sn[i]))
 					return i;
 			}
 			return -1;
@@ -150,7 +151,6 @@ public class console {
 			int i = getIndex(name);
 			if (i == -1) return 0;
 			else {
-				console.log(System.currentTimeMillis(), sv[i], System.currentTimeMillis() - sv[i]);
 				double r = System.currentTimeMillis() - sv[i];
 				switch (format) {
 					case Milliseconds:

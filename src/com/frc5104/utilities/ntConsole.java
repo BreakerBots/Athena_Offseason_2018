@@ -1,13 +1,15 @@
 package com.frc5104.utilities;
 
 import java.lang.reflect.Method;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class ntConsole {
 	
 	private static String streamString = "";
+	private static String inputString = "";
+	private static String cmdsString = "";
+	private static int updateCounter = 0;
 	
 	private static NetworkTable table;
 	
@@ -28,7 +30,7 @@ public class ntConsole {
 		
 		private static int findIndexOfCommand(String com) {
 			for (int i = 0; i < coms.length; i++) {
-				if (coms[i] == com)
+				if (com.equals(coms[i]))
 					return i;
 			}
 			return -1;
@@ -36,31 +38,55 @@ public class ntConsole {
 	}
 	
 	/**
-	 * An update function for this class, call in robotPeriodic
+	 * An init function for this class, call in robotInit
 	 */
-	public static void update() {
+	public static void init() {
 		//Init Network Table
 		if (table == null)
 			table = NetworkTableInstance.getDefault().getTable("Console");
 		
-		//Input
-		String ci = table.getEntry("input").getString("");
-		if (ci != "") {
-			//Parse & Execute
-			ci = ci.toLowerCase();
-			String[] ca = ci.split(" ");
-			String cr = executeCommand(ca[0], ca[1]);
+		table.getEntry("stream").setString("");
+		table.getEntry("input").setString("");
+		table.getEntry("response").setString("");
+		table.getEntry("commands").setString("");
+	}
+	
+	/**
+	 * An update function for this class, call in robotPeriodic
+	 */
+	public static void update() {
+		try {
+		if (updateCounter > (0.5/*seconds*/ * 50)) {
+			updateCounter = 0;
 			
-			//Send Response
-			table.getEntry("response").setString(cr);
+			//Init Network Table
+			if (table == null)
+				table = NetworkTableInstance.getDefault().getTable("Console");
 			
-			//Clear input
-			table.getEntry("input").setString("");
+			//Input
+			String ci = table.getEntry("input").getString("");
+			if (!ci.equals("") && !ci.equals(inputString)) {
+				inputString = ci;
+				ci = ci.substring(1);
+				
+				//Parse & Execute
+				int ca = ci.indexOf(' ');
+				String com = ci.toLowerCase().substring(0, ca);
+				String mod = ci.substring(ca + 1);
+				String cr = executeCommand(com, mod);
+				
+				//Send Response
+				table.getEntry("response").setString(ci + "<splitme>" + cr);
+			}
+			
+			//Stream
+			if (streamString != "") {
+				table.getEntry("stream").setString(streamString);
+				streamString = "";
+			}
 		}
-		
-		//Stream
-		table.getEntry("stream").setString(streamString);
-		streamString = "";
+		updateCounter++;
+		} catch (Exception e) { console.error(e); }
 	}
 	
 	/**
@@ -82,16 +108,25 @@ public class ntConsole {
 	 * @param command The name of the command in which to register
 	 * @param functionCallback The function called when the command is executed. Must take in String (the mod) and return a string (the response)
 	 */
-	public static void registerCommand(Class location, String command, Method functionCallback) {
-		registeredCommands.push(
-			location,
-			command.toLowerCase(),
-			functionCallback
-		);
+	public static void registerCommand(Class<?> location, String command, String functionCallback) {
+		try {
+			Method func = location.getMethod(functionCallback, String.class);
+			
+			registeredCommands.push(
+				location,
+				command.toLowerCase(),
+				func
+			);
+			
+			cmdsString += command.toLowerCase() + "<splitme>";
+			table.getEntry("commands").setString(cmdsString);
+		} catch (Exception e) {
+			console.error("Failed to create the console command " + command + " because " + e); 
+		}
 	}
 	
 	private static String executeCommand(String com, String mod) {
-		int a = registeredCommands.findIndexOfCommand(com);
+		int a = registeredCommands.findIndexOfCommand(com.toLowerCase());
 		if (a != -1) {
 			try {
 				return (String) registeredCommands.funs[a].invoke(registeredCommands.locs[a], mod);

@@ -6,6 +6,7 @@ import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
 import com.frc5104.utilities.controller;
+import com.frc5104.utilities.ntConsole;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller.Control;
 
@@ -208,7 +209,7 @@ public class Squeezy extends BreakerSubsystem {
 				// <---- Management (Calls Actions and Handles State Machine) ---->
 	
 	protected void init() {
-		
+
 	}
 	
 	private static void setState(SqueezyState state) {

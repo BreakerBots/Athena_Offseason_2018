@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.IterativeRobot;
  * Just misc function calls that (almost) never change
  */
 public abstract class BreakerRobot extends IterativeRobot {
-
+	private static boolean isEnabled = false;
 	
 	// -- Robot
 	public abstract void _robotInit();
@@ -30,6 +30,10 @@ public abstract class BreakerRobot extends IterativeRobot {
 		
 		//CameraServer.getInstance().startAutomaticCapture();
 		
+		ntConsole.init();
+		
+		Constants.initCommand();
+		
 		console.sets.log(c.MAIN, t.INFO, "RobotInit", "Initialization took ");
 	}
 	public void robotPeriodic() {
@@ -37,6 +41,7 @@ public abstract class BreakerRobot extends IterativeRobot {
 		ntConsole.update();
 	}
 	public void disabledInit() {
+		pitchEnabledStatus(false);
 		console.logFile.end();
 	}
 	
@@ -44,6 +49,7 @@ public abstract class BreakerRobot extends IterativeRobot {
 	// -- Autonomous
 	public abstract void _autonomousInit();
 	public void autonomousInit() {
+		pitchEnabledStatus(true);
 		console.logFile.start();
 		console.log(c.AUTO, "Initalizing Autonomous");
 		
@@ -58,11 +64,15 @@ public abstract class BreakerRobot extends IterativeRobot {
 	
 	
 	// -- Teleoperation
+	public abstract void _teleopInit();
 	public void teleopInit() {
+		pitchEnabledStatus(true);
 		console.logFile.start();
 		console.log(c.TELEOP, "Initializing Teleop");
 		  
 		BreakerSubsystemManager.teleopInit();
+		
+		_teleopInit();
 	}
 	public void teleopPeriodic() {
 		controller.update();
@@ -74,10 +84,19 @@ public abstract class BreakerRobot extends IterativeRobot {
 	public abstract void _testInit();
 	public abstract void _testPeriodic();
 	public void testInit() {
+		pitchEnabledStatus(true);
 		_testInit();
 	}
 	
 	public void testPeriodic() {
 		_testPeriodic();
+	}
+	
+	// -- Enabling
+	private void pitchEnabledStatus(boolean status) {
+		if (isEnabled != status) {
+			isEnabled = status;
+			console.log(c.MAIN, t.INFO, "Robot " + (isEnabled ? "Enabled" : "Disabled"));
+		}
 	}
 }
