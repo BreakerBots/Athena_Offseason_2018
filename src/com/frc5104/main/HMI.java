@@ -14,10 +14,13 @@ public class HMI {
 		public static double driveX() {
 			return controller.getAxis(Control.LX);
 		}
+		
+		public static final boolean _usingTriggerDrive = true;
 		public static double driveY() {
-			if (true) return controller.getAxis(Control.LT) - controller.getAxis(Control.RT);
+			if (_usingTriggerDrive) return controller.getAxis(Control.LT) - controller.getAxis(Control.RT);
 			else return controller.getAxis(Control.LY);
 		}
+		
 		public static final Control _shift = Control.LJ;
 	}
 	

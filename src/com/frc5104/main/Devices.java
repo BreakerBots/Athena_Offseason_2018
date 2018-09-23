@@ -2,12 +2,8 @@ package com.frc5104.main;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.utilities.TalonFactory;
-import com.frc5104.utilities.console;
-import com.frc5104.utilities.console.c;
-
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 /*Breakerbots Robotics Team 2018*/
 /**

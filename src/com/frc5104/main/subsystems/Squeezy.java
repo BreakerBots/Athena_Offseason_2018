@@ -129,13 +129,13 @@ public class Squeezy extends BreakerSubsystem {
 			return dArms.getSensorCollection().isFwdLimitSwitchClosed();
 		}
 		
-		public static int getVelocity() {
-			return dArms.getSelectedSensorVelocity(0);
-		}
+		//public static int getVelocity() {
+		//	return dArms.getSelectedSensorVelocity(0);
+		//}
 		
-		public static int getPosition() {
-			return dArms.getSelectedSensorPosition(0);
-		}
+		//public static int getPosition() {
+		//	return dArms.getSelectedSensorPosition(0);
+		//}
 		
 		public static void resetPosition() {
 			dArms.setSelectedSensorPosition(0, 0, 10);
