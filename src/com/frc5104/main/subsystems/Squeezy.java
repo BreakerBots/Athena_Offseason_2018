@@ -360,7 +360,8 @@ public class Squeezy extends BreakerSubsystem {
 	}
 	
 	protected void autoInit() {
-		setState(SqueezyState.hold);
+		//setState(SqueezyState.hold);
+		setState(SqueezyState.idle);
 	}
 	
 	protected void autoUpdate() {

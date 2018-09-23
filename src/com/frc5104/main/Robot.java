@@ -20,7 +20,7 @@ public class Robot extends BreakerRobot {
 		//Autonomous Picker
 		BreakerCommandScheduler.getInstance().set(
 			/*AutoSelector.getAuto()*/
-			AutoSelector.Paths.Baseline.getPath()
+			AutoSelector.Paths.LR.getPath()
 		);
 	}
 	

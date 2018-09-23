@@ -11,6 +11,7 @@ public class BreakerCommandScheduler {
 	public static BreakerCommandScheduler getInstance() { if (m_instance == null) { m_instance = new BreakerCommandScheduler(); } return m_instance; }
 	
 	public BreakerCommandGroup r = null;
+	public int cl = 0;
 	public int i = 0;
 	public boolean s = false;
 	
@@ -21,6 +22,7 @@ public class BreakerCommandScheduler {
 		//Save the new Command Group
 		r = null;
 		r = commandGroup;
+		cl = commandGroup.cl;
 		
 		//Reset Command Group Filter Index
 		i = 0;

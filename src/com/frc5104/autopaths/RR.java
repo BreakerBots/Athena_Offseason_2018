@@ -7,10 +7,11 @@ import jaci.pathfinder.Waypoint;
 public class RR extends BreakerCommandGroup {
 	Waypoint[] points = {
 		new Waypoint(0, 0, 0),
-		new Waypoint(0, 10, 0)
+		new Waypoint(22, -2, -45)
 	};
 	
 	public void init() {
 		add(new MotionProfile(points));
+		add(new DriveStop());
 	}
 }
