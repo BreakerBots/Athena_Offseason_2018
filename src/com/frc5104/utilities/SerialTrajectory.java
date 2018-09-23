@@ -9,6 +9,7 @@ import jaci.pathfinder.Trajectory.Segment;
  * A serializeable Pathfinder Trajectory (For Motion Profiling Path Caching)
  */
 public class SerialTrajectory implements Serializable {
+	private static final long serialVersionUID = 9023409738013710743L;
 	CerealSegment[] s;
 	
 	/**
@@ -37,6 +38,7 @@ public class SerialTrajectory implements Serializable {
 	 * A serializeable Pathfinder Segment (Part of a Trajectory)
 	 */
 	private class CerealSegment implements Serializable {
+		private static final long serialVersionUID = 5352736871944902882L;
 		/**
 		 * Segment => CerealSegment
 		 */

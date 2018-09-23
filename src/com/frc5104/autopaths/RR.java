@@ -11,7 +11,7 @@ public class RR extends BreakerCommandGroup {
 	};
 	
 	public void init() {
-		add(new MotionProfile(points));
+		add(new DriveTrajectoryWP(points));
 		add(new DriveStop());
 	}
 }

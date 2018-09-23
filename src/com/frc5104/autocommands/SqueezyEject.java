@@ -1,7 +1,6 @@
 package com.frc5104.autocommands;
 
 import com.frc5104.main.subsystems.Squeezy;
-import com.frc5104.main.subsystems.Squeezy.SqueezyState;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 
