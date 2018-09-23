@@ -1,9 +1,5 @@
 package com.frc5104.main;
 
-import java.lang.reflect.Field;
-
-import com.frc5104.utilities.ntConsole;
-
 /**
  * All Constants used in Athena's Code 
  */
@@ -53,97 +49,5 @@ public class Constants {
 	public static class Logging {
 		public static boolean _SaveNonMatchLogs = false;
 		public static boolean _SaveMatchLogs = true;
-	}
-	
-	
-	
-	//Command Stuff
-	public static void initCommand() {
-		ntConsole.registerCommand(Constants.class, "setConstant", "setConstant");
-		ntConsole.registerCommand(Constants.class, "getConstant", "getConstant");
-	}
-	public static String getConstant(String var) {
-		try {
-			Field f = null;
-			Class<?> cl = null;
-			
-			if (var.indexOf(".") != -1) {
-				String varClassName = var.substring(0, var.indexOf("."));
-				var = var.substring(var.indexOf(".") + 1);
-				
-				for (Class<?> cc : Constants.class.getDeclaredClasses()) {
-					if (varClassName.equals(cc.getSimpleName())) 
-						cl = cc;
-				}
-				if (cl == null)
-					throw new Exception("Didn't find a class under that name");
-			}
-			else {
-				cl = Constants.class;
-			}
-			f = cl.getField(var);
-			
-			switch(f.getType().toString()) {
-				case "int": {
-					return f.getName() + " is " + f.getInt(cl);
-				}
-				case "double": {
-					return f.getName() + " is " + f.getDouble(cl);
-				}
-				case "boolean": {
-					return f.getName() + " is " + f.getBoolean(cl);
-				}
-				default:
-					return f.getName() + " is " + f.get(cl);
-			}
-		} catch (Exception e) {
-			return "Constants Command Error: " + e;
-		}
-	}
-	public static String setConstant(String a) {
-		try {
-			String var = a.split(" ")[0];
-			String val = a.split(" ")[1];
-			Field f = null;
-			Class<?> cl = null;
-			
-			if (var.indexOf(".") != -1) {
-				String varClassName = var.substring(0, var.indexOf("."));
-				var = var.substring(var.indexOf(".") + 1);
-				
-				for (Class<?> cc : Constants.class.getDeclaredClasses()) {
-					if (varClassName.equals(cc.getSimpleName())) 
-						cl = cc;
-				}
-				if (cl == null)
-					throw new Exception("Didn't find a class under that name");
-			}
-			else {
-				cl = Constants.class;
-			}
-			f = cl.getField(var);
-			
-			switch(f.getType().toString()) {
-				case "int": {
-					f.setInt(cl, Integer.parseInt(val));
-					break;
-				}
-				case "double": {
-					f.setDouble(cl, Double.parseDouble(val));
-					break;
-				}
-				case "boolean": {
-					f.setBoolean(cl, Boolean.parseBoolean(val));
-					break;
-				}
-				default: {
-					f.set(cl, val);
-				}
-			}
-			
-			return "Set " + var + " to " + val;
-		} catch (Exception e) {
-			return "Constants Command Error: " + e;
-		}
 	}
 }

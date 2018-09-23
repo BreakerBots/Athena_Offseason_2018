@@ -1,11 +1,9 @@
 package com.frc5104.main;
 
 import com.frc5104.autocommands.BreakerCommandScheduler;
-import com.frc5104.autopaths.AutoSelector;
 import com.frc5104.main.subsystems.BreakerSubsystemManager;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
-import com.frc5104.utilities.ntConsole;
 import com.frc5104.utilities.console.c;
 import com.frc5104.utilities.console.t;
 
@@ -30,15 +28,10 @@ public abstract class BreakerRobot extends IterativeRobot {
 		
 		//CameraServer.getInstance().startAutomaticCapture();
 		
-		ntConsole.init();
-		
-		Constants.initCommand();
-		
 		console.sets.log(c.MAIN, t.INFO, "RobotInit", "Initialization took ");
 	}
 	public void robotPeriodic() {
 		BreakerSubsystemManager.idleUpdate();
-		ntConsole.update();
 	}
 	public void disabledInit() {
 		pitchEnabledStatus(false);

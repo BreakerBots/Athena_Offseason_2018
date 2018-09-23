@@ -3,9 +3,7 @@ package com.frc5104.utilities;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
 import com.frc5104.main.Constants;
-
 import edu.wpi.first.wpilibj.DriverStation;
 
 /*Breakerbots Robotics Team 2018*/
@@ -58,7 +56,6 @@ public class console {
 		System.out.println(f);
 		if (logFile.isLogging)
 			logFile.log += f + "\n";
-		ntConsole.logToStream(f);
 	}
 	
 	// -- INFO
