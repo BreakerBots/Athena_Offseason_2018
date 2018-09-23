@@ -6,8 +6,6 @@ import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
 import com.frc5104.utilities.controller;
-import com.frc5104.utilities.console;
-import com.frc5104.utilities.controller.Control;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
@@ -18,13 +16,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 public class Squeezy extends BreakerSubsystem {
 	private static Squeezy _inst = null; 
 	public static Squeezy getInstance() { if (_inst == null) _inst = new Squeezy(); return _inst; }
-	
-	/*
-	 * TODO:
-	 * 	 - Arms Detect Physically Stopped
-	 * 	 - Test
-	 *   - If Adopted, move constants and controls
-	 */
 	
 	/*
 	 * Squeezy Vocab:
@@ -235,6 +226,7 @@ public class Squeezy extends BreakerSubsystem {
 				}
 				else {
 					arms.set(0);
+					arms.resetPosition();
 				}
 				
 				//Wheels

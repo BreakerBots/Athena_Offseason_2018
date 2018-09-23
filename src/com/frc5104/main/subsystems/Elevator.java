@@ -4,14 +4,12 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.frc5104.calc.BreakerMath;
 import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
-import com.frc5104.main.subsystems.Drive.shifters.Gear;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.Deadband;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 
 /*Breakerbots Robotics Team 2018*/
 public class Elevator extends BreakerSubsystem {
@@ -40,14 +38,6 @@ public class Elevator extends BreakerSubsystem {
 		user 				//Teleop State
 	}
 	private static ElevatorState currentState = ElevatorState.user;
-	
-	//Constants References
-	private static final double _driveSpeed      = 0.6; //Teleop Drive Speed
-	private static final double _calibrateSpeed  = 0.1; //Calbrating Drive Speed
-	private static final int    _softStopBottom  = Constants.Elevator._softStopBottom; //Soft limit switch value for bottom
-	private static final int    _softStopTop     = Constants.Elevator._softStopTop; //Soft limit switch value for top
-	private static final boolean _hardLimitSwitchesEnabled = true; //Should use hard limit switches
-	private static final boolean _softLimitSwitchesEnabled = false; //Should use soft limit switches (encoder values)
 	
 	//References
 	private static final TalonSRX drivers = Devices.Elevator.a; /*Talon 31 + 32, 32 is a follower (see more in Devices.java)*/
@@ -83,18 +73,18 @@ public class Elevator extends BreakerSubsystem {
 		public static class softLimitSwitches {
 			public static void enable() {
 				drivers.configReverseSoftLimitEnable(true, 10);
-				drivers.configReverseSoftLimitThreshold(_softStopTop, 10);
+				drivers.configReverseSoftLimitThreshold(Constants.Elevator._softStopTop, 10);
 
 				drivers.configForwardSoftLimitEnable(true, 10);
-				drivers.configForwardSoftLimitThreshold(_softStopBottom, 10);
+				drivers.configForwardSoftLimitThreshold(Constants.Elevator._softStopBottom, 10);
 			}
 			
 			public static void disable() {
 				drivers.configReverseSoftLimitEnable(false, 10);
-				drivers.configReverseSoftLimitThreshold(_softStopTop, 10);
+				drivers.configReverseSoftLimitThreshold(Constants.Elevator._softStopTop, 10);
 
 				drivers.configForwardSoftLimitEnable(false, 10);
-				drivers.configForwardSoftLimitThreshold(_softStopBottom, 10);
+				drivers.configForwardSoftLimitThreshold(Constants.Elevator._softStopBottom, 10);
 			}
 		}
 		
@@ -133,13 +123,13 @@ public class Elevator extends BreakerSubsystem {
 				// <---- Management ---->
 	protected void init() {
 		//Soft Limit Switches
-		if (_softLimitSwitchesEnabled)
+		if (Constants.Elevator._softLimitSwitchesEnabled)
 			sensors.softLimitSwitches.enable();
 		else
 			sensors.softLimitSwitches.disable();
 		
 		//Hard Limit Switches (HAL Sensors)
-		if (_hardLimitSwitchesEnabled)
+		if (Constants.Elevator._hardLimitSwitchesEnabled)
 			sensors.hardLimitSwitches.enable();
 		else
 			sensors.hardLimitSwitches.disable();
@@ -153,10 +143,10 @@ public class Elevator extends BreakerSubsystem {
 		switch (currentState) {
 			//Autonomous States
 			case calibrating: {
-				actions.setSpeed(-_calibrateSpeed);
-				if (sensors.hardLimitSwitches.hitLower()) {
-					currentState = ElevatorState.brake;
-				}
+				//actions.setSpeed(-Constants.Elevator._calibrateSpeed);
+				//if (sensors.hardLimitSwitches.hitLower()) {
+				//	currentState = ElevatorState.brake;
+				//}
 			}
 			case brake: {
 				actions.setSpeed(0);
@@ -165,18 +155,18 @@ public class Elevator extends BreakerSubsystem {
 			//Teleop State
 			case user: {
 				double s = controller.getAxis(HMI.Elevator._drive);
-				s = Deadband.get(s * _driveSpeed, 0.1);
+				s = Deadband.get(s, 0.1);
 				
 				//Moving Down
 				if (s < 0 && !sensors.hardLimitSwitches.hitLower())
-					actions.setSpeed(s);
+					actions.setSpeed(Constants.Elevator._downScalar);
 				
 				//Moving Up
 				else if (s > 0 && !sensors.hardLimitSwitches.hitUpper())
-					actions.setSpeed(s);
+					actions.setSpeed(Constants.Elevator._upScalar);
 				
 				// Not Moving
-				else if (s == 0)
+				else
 					actions.setSpeed(s);
 			}
 		}

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import com.frc5104.main.Constants;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 
 /*Breakerbots Robotics Team 2018*/
 public class console {
@@ -43,16 +44,16 @@ public class console {
 	
 	//Main Log Function (Acts as Bus for other functions)
 	/**
-	 * Prints out text to the console under the specific category
+	 * Prints out text to the console under the specific category (Base Function)
 	 * Examples:
-	 * 	 [MAIN]: Message
-	 *   ERROR [AUTO]: Message
+	 * 	 2.12 [MAIN]: Message
+	 *   90.12 ERROR [AUTO]: Message
 	 * @param a The text to print out
 	 * @param t The type (Error, Info, Warning)
 	 * @param c the category (INTAKE, AUTO...)
 	 */
 	public static void log(c c, t t, Object... a) {
-		String f = t.message + "[" + c.toString() + "]: " + objectArrayToString(a);
+		String f = String.format("%.2f", Timer.getFPGATimestamp()) + ": " + t.message + "[" + c.toString() + "]: " + objectArrayToString(a);
 		System.out.println(f);
 		if (logFile.isLogging)
 			logFile.log += f + "\n";

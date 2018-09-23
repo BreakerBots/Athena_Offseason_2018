@@ -11,6 +11,6 @@ public class LL extends BreakerCommandGroup {
 	};
 	
 	public void init() {
-		add(new MotionProfile(points));
+		add(new DriveTrajectoryWP(points));
 	}
 }

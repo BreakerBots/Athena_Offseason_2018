@@ -11,15 +11,13 @@ public class HMI {
 
 	//Drive
 	public static class Drive {
-		public static final Control _driveX = Control.LX;
-		private static final boolean _triggerDrive = true;
-		public static double driveY() {
-			if (_triggerDrive)
-				return controller.getAxis(Control.LT) - controller.getAxis(Control.RT);
-			else
-				return controller.getAxis(Control.LY);
+		public static double driveX() {
+			return controller.getAxis(Control.LX);
 		}
-		
+		public static double driveY() {
+			if (true) return controller.getAxis(Control.LT) - controller.getAxis(Control.RT);
+			else return controller.getAxis(Control.LY);
+		}
 		public static final Control _shift = Control.LJ;
 	}
 	
