@@ -39,7 +39,6 @@ Offseason Code for Power-up-2018. Implements all new code in practice for 2019.
 | Single Instance Objects | Singleton or Static |
 | Constant Classes | Use sub-classes for org. |
 | Complex Systems/Objects | Include a Dictionary of Some Sort |
-Use Singletons or Static functions for larger objects. For constant classes (Constants.java, HMI.java) use static sub-classes for more organization. For lar
 
 #### Singleton Example
 ```
