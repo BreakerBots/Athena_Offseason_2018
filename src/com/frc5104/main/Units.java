@@ -7,25 +7,41 @@ package com.frc5104.main;
 public class Units {
 	
 	// Wheels
+	/**
+	 * Calculates wheel circumfrance (in feet) from the wheel diameter
+	 */
 	public static double wheelCircum() {
-		return Constants._wheelBaseWidth * Math.PI;
+		return Constants._wheelDiameter * Math.PI;
 	}
 	
+	// Ticks and Wheel Revs
+	public static double ticksToWheelRevolutions(double ticks) {
+		return ticks / Constants._ticksPerRevolution;
+	}
+	public static double wheelRevolutionsToTicks(double revs) {
+		return revs * Constants._ticksPerRevolution;
+	}
+	
+	// Feet and Wheel Revs
+	public static double feetToWheelRevolutions(double feet) {
+		return feet / wheelCircum();
+	}
+	public static double wheelRevolutionsToFeet(double revs) {
+		return revs * wheelCircum();
+	}
 	
 	// Feet and Ticks
 	public static double ticksToFeet(double ticks) {
-		return wheelCircum() * ticks / Constants._ticksPerRevolution;
+		return wheelRevolutionsToFeet(ticksToWheelRevolutions(ticks));
 	}
-	
 	public static double feetToTicks(double feet) {
-		return feet / wheelCircum() / Constants._ticksPerRevolution;
+		return wheelRevolutionsToTicks(feetToWheelRevolutions(feet));
 	}
 	
 	// feet/second and talon velocity (ticks/100ms)
 	public static double talonVelToFeetPerSecond(double ticks) {
 		return ticksToFeet(ticks) * 10;
 	}
-	
 	public static double feetPerSecondToTalonVel(double feet) {
 		return feetToTicks(feet) / 10;
 	}
@@ -34,7 +50,6 @@ public class Units {
 	public static double feetToInches(double feet) {
 		return feet  * 12.0;
 	}
-	
 	public static double inchesToFeet(double inches) {
 		return inches / 12.0;
 	}
@@ -53,7 +68,6 @@ public class Units {
 	public static double degreesToRadians(double deg) {
 		return Math.toRadians(deg);
 	}
-	
 	public static double radiansToDegress(double radians) {
 		return Math.toDegrees(radians);
 	}
