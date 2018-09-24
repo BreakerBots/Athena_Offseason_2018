@@ -5,7 +5,7 @@ import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 
 /*Breakerbots Robotics Team 2018*/
-public class DriveStop extends BreakerCommand {
+public class DriveStop extends BreakerAction {
 
     public void init() {
     	console.log(c.DRIVE, "Stopping Drive");

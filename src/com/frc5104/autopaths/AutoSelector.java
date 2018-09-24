@@ -1,6 +1,6 @@
 package com.frc5104.autopaths;
 
-import com.frc5104.autocommands.BreakerCommandGroup;
+import com.frc5104.autocommands.BreakerPath;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 import com.frc5104.utilities.console.t;
@@ -16,7 +16,7 @@ public class AutoSelector {
 	
 	public static volatile String gameData = null;
 	
-	//Having the paths predeclared lets them process waypoints in robot idle
+	//A trick to the pre initialize all the paths
 	public static enum Paths {
 		Baseline(new Baseline()),
 		LL(new LL()), 
@@ -26,19 +26,19 @@ public class AutoSelector {
 		RL(new RL()),
 		RR(new RR());
 		
-		BreakerCommandGroup path;
-		Paths (BreakerCommandGroup path){
+		BreakerPath path;
+		Paths (BreakerPath path){
 			this.path = path;
 		}
-		public BreakerCommandGroup getPath() {
+		public BreakerPath getPath() {
 			return this.path;
 		}
 	}
 	
-	public static BreakerCommandGroup getAuto() {
+	public static BreakerPath getAuto() {
 		console.sets.create("GetAuto");
 		//Default Path is Baseline
-		BreakerCommandGroup auto = Paths.Baseline.getPath();
+		BreakerPath auto = Paths.Baseline.getPath();
 
 		Thread gameDataThread = new Thread() {
 			public void run() {

@@ -55,7 +55,7 @@ public class Constants {
 		public static final double lowDrivePidD = 0.00;
 	}
 	
-	//Trajectory
+	//Trajectory (Depricated)
 	public static final class AutonomousWP {
 		//Pathfinder (Deprication Notice)
 		public static final double _PIDA[] = { 1.0, 0.0, 0.0, 0 };//(None) [Tune] Speed
@@ -85,7 +85,9 @@ public class Constants {
 	public static final class Squeezy {
 		public static final double _armsInSpeed       = -0.6;	//(TalSpeed) [Choose/Tune]
 		
-		public static final double _wheelEjectSpeed   = -0.8;	//(TalSpeed) [Choose]
+		public static final double _wheelEjectSpeedLow  = -0.3;	//(TalSpeed) [Choose]
+		public static final double _wheelEjectSpeedMed  = -0.6;	//(TalSpeed) [Choose]
+		public static final double _wheelEjectSpeedHigh = -0.9;	//(TalSpeed) [Choose]
 		public static final double _armsOutEjectSpeed = -0.1;	//(TalSpeed) [Choose]
 		public static final double _ejectTime = 500;			//(Milliseconds) [Choose]
 		

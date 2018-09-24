@@ -1,4 +1,4 @@
-package com.frc5104.calc;
+package com.frc5104.math;
 
 import com.frc5104.main.Constants;
 import com.frc5104.main.Units;

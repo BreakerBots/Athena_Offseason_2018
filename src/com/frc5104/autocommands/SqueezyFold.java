@@ -5,7 +5,7 @@ import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 
 /*Breakerbots Robotics Team 2018*/
-public class SqueezyFold extends BreakerCommand {
+public class SqueezyFold extends BreakerAction {
 
 	private boolean up;
 	

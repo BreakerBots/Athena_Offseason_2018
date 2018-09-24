@@ -1,9 +1,9 @@
 package com.frc5104.autocommands;
 
-import com.frc5104.calc.BreakerMath;
-import com.frc5104.calc.BreakerTrajectoryGenerator;
 import com.frc5104.main.Constants;
 import com.frc5104.main.subsystems.Drive;
+import com.frc5104.math.BreakerMath;
+import com.frc5104.math.BreakerTrajectoryGenerator;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 import jaci.pathfinder.Pathfinder;
@@ -14,24 +14,27 @@ import jaci.pathfinder.modifiers.TankModifier;
 
 /*Breakerbots Robotics Team 2018*/
 /**
- * Generate and Follow a Trajectory using Pathfinder
+ * Follow a Trajectory using Pathfinder
  * (!) Deprication Notice
  */
-public class DriveTrajectoryWP extends BreakerCommand {
+public class DriveTrajectoryWP extends BreakerAction {
 
 	private Trajectory t;
 	private TankModifier m;
-	EncoderFollower l;
-	EncoderFollower r;
+	private EncoderFollower l;
+	private EncoderFollower r;
+	private Waypoint[] p;
 		
     public DriveTrajectoryWP(Waypoint[] points) {
-    	t = BreakerTrajectoryGenerator.getTrajectory(points);
-    	m = BreakerTrajectoryGenerator.getTankModifier(t);
-    	l = new EncoderFollower(m.getLeftTrajectory());
-		r = new EncoderFollower(m.getRightTrajectory());
+    	this.p = points;
     }
 
     public void init() {
+    	t = BreakerTrajectoryGenerator.getTrajectory(p);
+    	m = BreakerTrajectoryGenerator.getTankModifier(t);
+    	l = new EncoderFollower(m.getLeftTrajectory());
+		r = new EncoderFollower(m.getRightTrajectory());
+    	
     	console.log(c.AUTO, "Running MP Path");
     	
     	//Reset Devices

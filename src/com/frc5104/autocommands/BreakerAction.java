@@ -4,7 +4,7 @@ package com.frc5104.autocommands;
 /**
  * A Single BreakerCommand (ind. peices of a path)
  */
-abstract public class BreakerCommand {
+abstract public class BreakerAction {
 	/**
 	 * Called when command is started to be run
 	 */

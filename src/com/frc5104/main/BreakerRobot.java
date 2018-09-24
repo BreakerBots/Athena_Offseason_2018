@@ -1,9 +1,9 @@
 package com.frc5104.main;
 
-import com.frc5104.autocommands.BreakerCommandScheduler;
-import com.frc5104.calc.Odometry;
+import com.frc5104.autocommands.BreakerPathScheduler;
 import com.frc5104.main.subsystems.BreakerSubsystemManager;
 import com.frc5104.main.subsystems.Drive;
+import com.frc5104.math.Odometry;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console.c;
@@ -89,7 +89,7 @@ public abstract class BreakerRobot extends TimedRobot {
 	}
 	public void autonomousPeriodic() {
 		//Run Autonomous Path
-		BreakerCommandScheduler.getInstance().update();
+		BreakerPathScheduler.getInstance().update();
 		
 		//Auto Update Subsystems
 		BreakerSubsystemManager.autoUpdate();

@@ -4,11 +4,11 @@ package com.frc5104.autocommands;
 /**
  * Handles the Execution of BreakerCommands inside the assigned BreakerCommandGroup (Entire Path)
  */
-public class BreakerCommandScheduler {
-	static BreakerCommandScheduler m_instance = null;
-	public static BreakerCommandScheduler getInstance() { if (m_instance == null) { m_instance = new BreakerCommandScheduler(); } return m_instance; }
+public class BreakerPathScheduler {
+	static BreakerPathScheduler m_instance = null;
+	public static BreakerPathScheduler getInstance() { if (m_instance == null) { m_instance = new BreakerPathScheduler(); } return m_instance; }
 	
-	public BreakerCommandGroup r = null;
+	public BreakerPath r = null;
 	public int cl = 0;
 	public int i = 0;
 	public boolean s = false;
@@ -16,17 +16,14 @@ public class BreakerCommandScheduler {
 	/**
 	 * Set the target command group
 	 */
-	public void set(BreakerCommandGroup commandGroup) {
+	public void set(BreakerPath path) {
 		//Save the new Command Group
 		r = null;
-		r = commandGroup;
-		cl = commandGroup.cl;
+		r = path;
+		cl = path.cl;
 		
 		//Reset Command Group Filter Index
 		i = 0;
-		
-		//Make the Command Init Commands and Add To Array
-		r.init();
 		
 		//Say that the first command hasn't been Initiated
 		s = false;

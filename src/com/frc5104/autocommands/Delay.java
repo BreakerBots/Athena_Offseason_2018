@@ -4,7 +4,7 @@ import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 
 /*Breakerbots Robotics Team 2018*/
-public class Delay extends BreakerCommand {
+public class Delay extends BreakerAction {
 	long startTime;
 	int delay;
 

@@ -1,4 +1,4 @@
-package com.frc5104.calc;
+package com.frc5104.math;
 
 import java.io.File;
 import java.io.FileInputStream;

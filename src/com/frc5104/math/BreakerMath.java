@@ -1,4 +1,4 @@
-package com.frc5104.calc;
+package com.frc5104.math;
 
 /*Breakerbots Robotics Team 2018*/
 /**

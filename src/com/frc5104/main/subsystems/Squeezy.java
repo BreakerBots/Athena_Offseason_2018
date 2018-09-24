@@ -70,11 +70,24 @@ public class Squeezy extends BreakerSubsystem {
 	private static TalonSRX dRWheel     = Devices.Squeezy.rightSpin;
 	private static DoubleSolenoid dFold = Devices.Squeezy.fold; 
 	
+	
+	//Variables (v + VAR)
+	private static boolean vHasCube = false;
+	private static double vEjectSpeed = SqueezyEjectSpeed.High.getSpeed();
+	private static double vEjectTime;
+	
+	//Eject Speeds
+	public static enum SqueezyEjectSpeed {
+		Low(Constants.Squeezy._wheelEjectSpeedLow),
+		Med(Constants.Squeezy._wheelEjectSpeedMed),
+		High(Constants.Squeezy._wheelEjectSpeedHigh);
+		double speed; SqueezyEjectSpeed (double s) { this.speed = s; } public double getSpeed() { return this.speed; }
+	}
+	
 				// <---- /Varibales ---->
 	
 	
-	private static boolean vHasCube = false;
-	private static double vEjectTime;
+	
 	
 	
 				// <---- Systems (Handle Devices Directly for the State Machine) ---->
@@ -87,8 +100,8 @@ public class Squeezy extends BreakerSubsystem {
 		}
 		
 		private static void eject() {
-			dLWheel.set(ControlMode.PercentOutput, -Constants.Squeezy._wheelEjectSpeed);
-			dRWheel.set(ControlMode.PercentOutput,  Constants.Squeezy._wheelEjectSpeed);
+			dLWheel.set(ControlMode.PercentOutput, -vEjectSpeed);
+			dRWheel.set(ControlMode.PercentOutput,  vEjectSpeed);
 		}
 		
 		private static void idle() {
@@ -173,6 +186,13 @@ public class Squeezy extends BreakerSubsystem {
 		
 		public static void eject() {
 			vEjectTime = System.currentTimeMillis();
+			vEjectSpeed = SqueezyEjectSpeed.High.getSpeed();
+			setState(SqueezyState.eject);
+		}
+		
+		public static void eject(SqueezyEjectSpeed speed) {
+			vEjectTime = System.currentTimeMillis();
+			vEjectSpeed = speed.getSpeed();
 			setState(SqueezyState.eject);
 		}
 		

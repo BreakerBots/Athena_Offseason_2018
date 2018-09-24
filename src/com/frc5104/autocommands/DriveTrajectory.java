@@ -1,10 +1,10 @@
 package com.frc5104.autocommands;
 
-import com.frc5104.calc.BreakerTrajectoryFollower;
-import com.frc5104.calc.BreakerTrajectoryGenerator;
-import com.frc5104.calc.Odometry;
-import com.frc5104.calc.RobotDriveSignal;
 import com.frc5104.main.subsystems.Drive;
+import com.frc5104.math.BreakerTrajectoryFollower;
+import com.frc5104.math.BreakerTrajectoryGenerator;
+import com.frc5104.math.Odometry;
+import com.frc5104.math.RobotDriveSignal;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 
@@ -12,20 +12,22 @@ import jaci.pathfinder.Waypoint;
 
 /*Breakerbots Robotics Team 2018*/
 /**
- * Generate and Follow a Trajectory using Pathfinder
- * Deprication Notice
+ * Follow a trajectory using the Breaker Trajectory Follower (Ramses Follower)
  */
-public class DriveTrajectory extends BreakerCommand {
+public class DriveTrajectory extends BreakerAction {
 
 	private BreakerTrajectoryFollower f;
+	private Waypoint[] p;
 		
     public DriveTrajectory(Waypoint[] points) {
-    	f = new BreakerTrajectoryFollower(
-    			BreakerTrajectoryGenerator.getTrajectory(points)
-    		);
+    	this.p = points;
     }
 
     public void init() {
+    	f = new BreakerTrajectoryFollower(
+	    			BreakerTrajectoryGenerator.getTrajectory(p)
+	    		);
+    	
     	console.log(c.AUTO, "Running Trajectory");
 		
 		//Reset Devices
