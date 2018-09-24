@@ -1,6 +1,5 @@
-# Power-Up-2018-Offseason
+# BreakerBots 2018 Offseason
 Offseason Code for Power-up-2018. Implements all new code in practice for 2019.
-
 
 ## Running
 1) Download or Clone This Repository
@@ -10,6 +9,7 @@ Offseason Code for Power-up-2018. Implements all new code in practice for 2019.
 5) Choose the location of This Repository, and then "Finish"
 6) Install the [Pathfinder Libraries](https://github.com/JacisNonsense/Pathfinder)
 7) Run "WPILib Java Deploy"
+
 
 ## Features
 - Onboard trajectory generation, caching, and following
@@ -22,6 +22,12 @@ Offseason Code for Power-up-2018. Implements all new code in practice for 2019.
 - New Drive Code with integration into autonomous
 - Odometry, robot position calculating
 
+
+## Robot
+![Robot Image](/images/Athena.jpg)
+
+
+# Breakerbots Style Guide
 
 ## Naming Scheme
 | Object | Naming Scheme |
