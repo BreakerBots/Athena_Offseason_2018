@@ -2,6 +2,7 @@ package com.frc5104.math;
 
 import com.frc5104.main.Constants;
 import com.frc5104.main.Units;
+import com.frc5104.math.RobotDriveSignal.DriveUnit;
 
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
@@ -40,7 +41,7 @@ public class BreakerTrajectoryFollower {
 		double right = 0;
 		
 		if (isFinished())
-			return new RobotDriveSignal(left, right);
+			return new RobotDriveSignal(left, right, DriveUnit.feetPerSecond);
 		
 
 		//Get Current Segment from index
@@ -64,7 +65,7 @@ public class BreakerTrajectoryFollower {
 		//Go to the next index
 		i += 1;
 	   
-		return new RobotDriveSignal(left, right);
+		return new RobotDriveSignal(left, right, DriveUnit.feetPerSecond);
 	}
 
 	// -- Other -- \\

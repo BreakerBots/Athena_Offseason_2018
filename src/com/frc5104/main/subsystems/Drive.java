@@ -7,6 +7,8 @@ import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
 import com.frc5104.main.Units;
+import com.frc5104.math.RobotDriveSignal;
+import com.frc5104.math.RobotDriveSignal.DriveUnit;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
@@ -15,19 +17,16 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /*Breakerbots Robotics Team 2018*/
 public class Drive extends BreakerSubsystem {
-	private static Drive _inst = null; 
-	public static Drive getInstance() { if (_inst == null) _inst = new Drive(); return _inst; }
-	
 	//Device References (d + Device)
-	public static TalonSRX L1 = Devices.Drive.L1;
-	public static TalonSRX L2 = Devices.Drive.L2;
-	public static TalonSRX R1 = Devices.Drive.R1;
-	public static TalonSRX R2 = Devices.Drive.R2;
+	private static TalonSRX L1 = Devices.Drive.L1;
+	private static TalonSRX L2 = Devices.Drive.L2;
+	private static TalonSRX R1 = Devices.Drive.R1;
+	private static TalonSRX R2 = Devices.Drive.R2;
 	
 	/**
-	 * Initialize Driving (Setup Talons)
+	 * Setup/Configure Devices
 	 */
-	protected void init() {
+	private void configDevices() {
 		//Should Take ~200ms
 		
 		//Reset the encoders
@@ -93,30 +92,36 @@ public class Drive extends BreakerSubsystem {
         R1.enableCurrentLimit(true);
 		
 		//Stop the motors
-		set(0, 0);
+		set(new RobotDriveSignal(0, 0, DriveUnit.percentOutput));
 		
 		//Reset Gyro
 		Gyro.reset();
 	}
 	
 	/**
-	 * Sets the speed of the motors (talon percent speed) [Base Function]
-	 * @param l The left speed  (talon percent speed)
-	 * @param r The right speed (talon percent speed)
+	 * Sets the speed of the drive motors to the corresponding speeds specified in the Drive Signal
+	 * @param signal
 	 */
-	public void set(double l, double r) {
-		L1.set(ControlMode.PercentOutput, l * Constants.Drive._leftAccount);
-		R1.set(ControlMode.PercentOutput, r * Constants.Drive._rightAccount);
+	public static void set(RobotDriveSignal signal) {
+		switch (signal.unit) {
+			case percentOutput: {
+				L1.set(ControlMode.PercentOutput, signal.leftSpeed * Constants.Drive._leftAccount);
+				R1.set(ControlMode.PercentOutput, signal.rightSpeed * Constants.Drive._rightAccount);
+				break;
+			}
+			case feetPerSecond: {
+				L1.set(ControlMode.Velocity, Units.feetPerSecondToTalonVel(signal.leftSpeed));
+				R1.set(ControlMode.Velocity, Units.feetPerSecondToTalonVel(signal.rightSpeed));
+				break;
+			}
+		}
 	}
 	
 	/**
-	 * Sets the speed of the motors (feet/second) [Base Function]
-	 * @param l The left speed  (feet/second)
-	 * @param r The right speed (feet/second)
+	 * Stops the drive motors
 	 */
-	public void setFPS(double l, double r) {
-		L1.set(ControlMode.Velocity, Units.feetPerSecondToTalonVel(l));
-		R1.set(ControlMode.Velocity, Units.feetPerSecondToTalonVel(r));
+	public static void stop() {
+		set(new RobotDriveSignal(0, 0, DriveUnit.percentOutput));
 	}
 	
 	//Encoders
@@ -184,11 +189,18 @@ public class Drive extends BreakerSubsystem {
 	
 	
 	
-	//Subsystem Functions
+	
+	// -- Subsystem Functions
+	protected Drive() {
+		
+	}
+	
 	protected void teleopUpdate() {
 		set(
+			new RobotDriveSignal(
 				HMI.Drive.driveY() - HMI.Drive.driveX(), //Left
-				HMI.Drive.driveY() + HMI.Drive.driveX()  //Right
+				HMI.Drive.driveY() + HMI.Drive.driveX(),  //Right
+			DriveUnit.percentOutput)
 		);
 	
 		if (controller.getPressed(HMI.Drive._shift))
@@ -219,5 +231,9 @@ public class Drive extends BreakerSubsystem {
 
 	protected void autoInit() {
 		shifters.set(false);
+	}
+
+	protected void init() {
+		configDevices();
 	}
 }

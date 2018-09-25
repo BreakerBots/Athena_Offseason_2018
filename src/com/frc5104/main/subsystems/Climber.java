@@ -2,15 +2,16 @@ package com.frc5104.main.subsystems;
 
 /*Breakerbots Robotics Team 2018*/
 public class Climber extends BreakerSubsystem {
-	private static Climber _inst = null; 
-	public static Climber getInstance() { if (_inst == null) _inst = new Climber(); return _inst; }
 	
-	//Init
+	// -- Subsystem Functions
+	protected Climber() {
+		
+	}
+	
 	protected void init() {
 		//hookHolder.setPosition(0.2);
 	}
 
-	//Teleop
 	protected void teleopUpdate() {
 //		if (controller.getHeldEvent(HMI.kPtoHoldAndHookPressButton, 0.4)) { 
 //			console.log(c.TELEOP, "Switching PTO");

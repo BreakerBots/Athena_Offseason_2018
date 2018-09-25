@@ -12,7 +12,7 @@ public class DriveStop extends BreakerAction {
     }
 
     public boolean update() {
-    	Drive.getInstance().set(0, 0);
+    	Drive.stop();
     	
     	return true;
     }

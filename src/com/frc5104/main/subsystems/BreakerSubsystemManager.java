@@ -1,5 +1,7 @@
 package com.frc5104.main.subsystems;
 
+import com.frc5104.utilities.console;
+
 /*Breakerbots Robotics Team 2018*/
 /**
  * Manages the updating and handling of all BreakerSubsystems thrown into it
@@ -11,8 +13,18 @@ public class BreakerSubsystemManager {
 	/**
 	 * NECESSARY: Tell the Subsystem Manager what Subsystems to manage
 	 */
-	public static void throwSubsystems(BreakerSubsystem[] subsystems) {
-		targets = subsystems;
+	@SafeVarargs
+	public static void throwSubsystems(Class<? extends BreakerSubsystem>... subsystems) {
+		try {
+			//Convert Subsystem Classes into Instances
+			targets = new BreakerSubsystem[subsystems.length];
+			for (int i = 0; i < subsystems.length; i++) {
+				targets[i] = subsystems[i].newInstance();
+			}
+		} catch (Exception e) {
+			console.error("Failed to Cast Subsystem Classes into Instances", e);
+			e.printStackTrace();
+		}
 	}
 	
 	/**

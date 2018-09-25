@@ -79,7 +79,7 @@ public abstract class BreakerRobot extends TimedRobot {
 		console.log(c.AUTO, "Initalizing Autonomous");
 		
 		//Stop Motors
-		Drive.getInstance().set(0, 0);
+		Drive.stop();
 		
 		//Auto Init Subsystems
 		BreakerSubsystemManager.autoInit();

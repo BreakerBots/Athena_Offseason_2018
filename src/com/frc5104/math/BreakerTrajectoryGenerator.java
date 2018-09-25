@@ -7,7 +7,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import com.frc5104.main.Constants;
-import com.frc5104.utilities.SerialTrajectory;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 
@@ -85,7 +84,7 @@ public class BreakerTrajectoryGenerator {
 			File file = new File("/home/lvuser/MotionProfilingCache/" + name);
 			FileInputStream fis = new FileInputStream(file);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			Trajectory t = ((SerialTrajectory) ois.readObject()).getTrajectory();
+			Trajectory t = ((BreakerCacheTrajectory) ois.readObject()).getTrajectory();
 			ois.close();
 			fis.close();
 			return t;
@@ -103,7 +102,7 @@ public class BreakerTrajectoryGenerator {
 		try {
 			FileOutputStream fos = new FileOutputStream("/home/lvuser/MotionProfilingCache/" + name);
 		    ObjectOutputStream oos = new ObjectOutputStream(fos);
-		    oos.writeObject(new SerialTrajectory(t));
+		    oos.writeObject(new BreakerCacheTrajectory(t));
 		    oos.close();
 		    fos.close();
 		}

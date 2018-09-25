@@ -14,9 +14,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
  * Squeezy Sanchez (A Decent but also sucky intake mechanism, with new and improved code!!!)
  */
 public class Squeezy extends BreakerSubsystem {
-	private static Squeezy _inst = null; 
-	public static Squeezy getInstance() { if (_inst == null) _inst = new Squeezy(); return _inst; }
-	
 	/*
 	 * Squeezy Vocab:
 	 * 	 - Word: Description/Definition
@@ -210,6 +207,14 @@ public class Squeezy extends BreakerSubsystem {
 		}
 	}
 	
+	private static void setState(SqueezyState state) {
+		currentState = state;
+	}
+	
+	public static SqueezyState getState() {
+		return currentState;
+	}
+	
 				// <---- /Actions ---->
 	
 	
@@ -217,17 +222,8 @@ public class Squeezy extends BreakerSubsystem {
 	
 	
 				// <---- Management (Calls Actions and Handles State Machine) ---->
-	
-	protected void init() {
-
-	}
-	
-	private static void setState(SqueezyState state) {
-		currentState = state;
-	}
-	
-	public static SqueezyState getState() {
-		return currentState;
+	protected Squeezy() {
+		
 	}
 	
 	protected void update() {
@@ -376,8 +372,6 @@ public class Squeezy extends BreakerSubsystem {
 	}
 	
 	protected void autoUpdate() {
-		//Controlled in the Breaker Command System
-		
 		update();
 	}
 	
@@ -390,6 +384,10 @@ public class Squeezy extends BreakerSubsystem {
 	}
 	
 	protected void postToNetwork() {
+		
+	}
+
+	protected void init() {
 		
 	}
 	

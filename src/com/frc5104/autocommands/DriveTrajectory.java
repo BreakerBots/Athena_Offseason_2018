@@ -4,7 +4,6 @@ import com.frc5104.main.subsystems.Drive;
 import com.frc5104.math.BreakerTrajectoryFollower;
 import com.frc5104.math.BreakerTrajectoryGenerator;
 import com.frc5104.math.Odometry;
-import com.frc5104.math.RobotDriveSignal;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 
@@ -46,17 +45,13 @@ public class DriveTrajectory extends BreakerAction {
 		//int rightEncoder = Drive.encoders.getRight();
 		//double angle = -Devices.Drive.Gyro.getAngle() / Math.cos(Pathfinder.d2r(Constants.Drive._gyroAngle));
 		
-    	RobotDriveSignal rds = f.getNextDriveSignal(Odometry.getPosition());
-        Drive.getInstance().setFPS(
-        	rds.leftSpeed,
-        	rds.rightSpeed
-        );
+        Drive.set(f.getNextDriveSignal(Odometry.getPosition()));
     	
 		return f.isFinished();
     }
 
     public void end() {
+    	Drive.stop();
     	console.log(c.AUTO, "Trajectory Finished");
-    	Drive.getInstance().set(0, 0);
     }
 }

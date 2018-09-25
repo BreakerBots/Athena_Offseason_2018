@@ -12,9 +12,6 @@ import com.frc5104.utilities.Deadband;
 
 /*Breakerbots Robotics Team 2018*/
 public class Elevator extends BreakerSubsystem {
-	private static Elevator _inst = null; 
-	public static Elevator getInstance() { if (_inst == null) _inst = new Elevator(); return _inst; }
-	
 	/*
 	 * Elevator Vocab:
 	 *   - Word: Description/Definition
@@ -107,19 +104,23 @@ public class Elevator extends BreakerSubsystem {
 	
 	
 	
-	// <---- Actions ---->
+				// <---- Actions ---->
 	public static class actions {
 		public static void setSpeed(double speed) {
 			drivers.set(ControlMode.PercentOutput, speed);
 		}
 	}
-	// <---- /Actions ---->
+				// <---- /Actions ---->
 	
 	
 	
 	
 	
-				// <---- Management ---->
+				// <---- Subsystem Functions ---->
+	protected Elevator() {
+		
+	}
+	
 	protected void init() {
 		//Soft Limit Switches
 		if (Constants.Elevator._softLimitSwitchesEnabled)
@@ -196,5 +197,5 @@ public class Elevator extends BreakerSubsystem {
 	protected void postToNetwork() {
 		
 	}
-				// <---- /Management ---->
+				// <---- /Subsystem Functions ---->
 }

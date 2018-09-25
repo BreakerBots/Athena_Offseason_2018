@@ -1,4 +1,4 @@
-package com.frc5104.utilities;
+package com.frc5104.math;
 
 import java.io.Serializable;
 
@@ -6,16 +6,16 @@ import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Trajectory.Segment;
 
 /**
- * A serializeable Pathfinder Trajectory (For Motion Profiling Path Caching)
+ * A Cerealizable Pathfinder Trajectory (For Motion Profiling Path Caching)
  */
-public class SerialTrajectory implements Serializable {
+public class BreakerCacheTrajectory implements Serializable {
 	private static final long serialVersionUID = 9023409738013710743L;
 	CerealSegment[] s;
 	
 	/**
 	 * Trajectory => SerialTrajectory
 	 */
-	public SerialTrajectory(Trajectory t) {
+	public BreakerCacheTrajectory(Trajectory t) {
 		Segment[] sa = t.segments;
 		s = new CerealSegment[sa.length];
 		for (int i = 0; i < sa.length; i++) {
@@ -35,6 +35,7 @@ public class SerialTrajectory implements Serializable {
 	} 
 	
 	/**
+	 * *A flake of a chereo*
 	 * A serializeable Pathfinder Segment (Part of a Trajectory)
 	 */
 	private class CerealSegment implements Serializable {

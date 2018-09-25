@@ -7,11 +7,11 @@ import com.frc5104.main.subsystems.*;
 /*Breakerbots Robotics Team 2018*/
 public class Robot extends BreakerRobot {
 	public void _robotInit() {
-		BreakerSubsystemManager.throwSubsystems(new BreakerSubsystem[] {
-			Drive.getInstance(), 
-			Squeezy.getInstance(), 
-			Elevator.getInstance()
-		});
+		BreakerSubsystemManager.throwSubsystems(
+			Squeezy.class,
+			Elevator.class,
+			Drive.class
+		);
 		
 		//CameraServer.getInstance().startAutomaticCapture();
 	}
@@ -23,8 +23,15 @@ public class Robot extends BreakerRobot {
 		);
 	}
 	
-	public void _teleopInit() { }
+	public void _teleopInit() { 
+		
+	}
 	
-	public void _testInit() { }
-	public void _testPeriodic() { }
+	public void _testInit() {
+		
+	}
+	
+	public void _testPeriodic() { 
+		
+	}
 }
