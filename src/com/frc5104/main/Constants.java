@@ -19,7 +19,7 @@ import jaci.pathfinder.Trajectory.FitMethod;
  *    
  * Marks: []
  *    - Tune
- *    - Choose: Tune to your liking
+ *    - Choose
  *    - Measure
  *    - Other/None
  */
@@ -55,9 +55,8 @@ public class Constants {
 		public static final double lowDrivePidD = 0.00;
 	}
 	
-	//Trajectory (Depricated)
+	// -- AutonomousWP (! Deprication Notice)
 	public static final class AutonomousWP {
-		//Pathfinder (Deprication Notice)
 		public static final double _PIDA[] = { 1.0, 0.0, 0.0, 0 };//(None) [Tune] Speed
 		public static final double _maxVelocity = 8.0; 			  //(Feet) [Tune] in ft/s
 		public static final double _maxAcceleration = 4.0; 		  //(Feet) [Tune] in ft/s/s
@@ -66,7 +65,7 @@ public class Constants {
 		public static final double _xAngleMult = 4.0;			  //(None) [Tune] Multiple the x cordinate of this in each trajectory
 	}
 	
-	//Trajectory
+	// -- Autonomous
 	public static final class Autonomous {
 		//Trajectory Generation
 		public static final double _maxVelocity = 8.0; 			  //(Feet) [Tune] in ft/s
@@ -81,7 +80,7 @@ public class Constants {
 		public static final double _tfZeta = 0.2; //(None) [Tune/Choose] (Range: Zero to One) Increases/Decreases Dampening
 	}
 	
-	//Squeezy
+	// -- Squeezy
 	public static final class Squeezy {
 		public static final double _armsInSpeed       = -0.6;	//(TalSpeed) [Choose/Tune]
 		
@@ -99,7 +98,7 @@ public class Constants {
 		public static final double _armsPhysicallyStoppedCurrent = 10; //(TalCurrent) [Tune]
 	}
 	
-	//Elevator
+	// -- Elevator
 	public static final class Elevator {
 		public static final double _downScalar = 0.4;   //(TalSpeed) [Choose]
 		public static final double _upScalar = 0.6; 	//(TalSpeed) [Choose]
@@ -111,15 +110,15 @@ public class Constants {
 		public static final int _softStopTop = -16150;  //(Encoder Tick) [Choose/Tune] Look into Elevator.java
 	}
 	
-	//Logging
+	// -- Logging
 	public static final class Logging {
 		public static final boolean _SaveNonMatchLogs = false;
 		public static final boolean _SaveMatchLogs = true;
 	}
 	
-	//Looper
+	// -- Looper
 	public static final class Loops {
-		public static final double _odometryHz = 100; //(hz) [choose]
-		public static final double _robotHz    = 50;  //(hz) [choose]
+		public static final double _odometryHz = 100; //(hz) [Choose]
+		public static final double _robotHz    = 50;  //(hz) [Choose]
 	}
 }

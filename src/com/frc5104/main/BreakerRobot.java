@@ -34,11 +34,11 @@ public abstract class BreakerRobot extends TimedRobot {
 		//Call fallthrough
 		_robotInit();
 		
-		//Run Odometry
-		Odometry.run();
-		
 		//Init Subsystems
 		BreakerSubsystemManager.init();
+		
+		//Run Odometry
+		Odometry.run();
 		
 		console.log(c.MAIN, "Devices Created and Seth Proofed");
 		
