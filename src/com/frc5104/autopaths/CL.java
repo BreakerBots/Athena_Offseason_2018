@@ -6,6 +6,12 @@ import com.frc5104.main.Constants;
 import jaci.pathfinder.Waypoint;
 
 public class CL extends BreakerPath {
+	/*
+	 * Measured Points [x (in), y (in), angle (deg)]:
+	 * 	0, 0, 0 (Base)
+	 * 	-32.5, 108, 0
+	 */
+	
 	public CL() {
 		add(new DriveTrajectoryWP(new Waypoint[] {
 				new Waypoint(0, 0, 0),
