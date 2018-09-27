@@ -95,7 +95,7 @@ public class Constants {
 		
 		public static final double _armsHoldSpeed     = -0.15;//(TalSpeed) [Choose]
 		public static final double _wheelHoldSpeed    =  0.1;	//(TalSpeed) [Choose]
-		public static final double _armsPhysicallyStoppedCurrent = 10; //(TalCurrent) [Tune]
+		public static final double _armsPhysicallyStoppedCurrent = 12; //(TalCurrent) [Tune]
 	}
 	
 	// -- Elevator

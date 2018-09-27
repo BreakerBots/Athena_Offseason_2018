@@ -2,6 +2,7 @@ package com.frc5104.math;
 
 import com.frc5104.main.Constants;
 import com.frc5104.main.subsystems.Drive;
+import com.frc5104.utilities.console;
 import com.frc5104.main.Units;
 
 import edu.wpi.first.wpilibj.Notifier;
@@ -24,11 +25,12 @@ public class Odometry {
             y +=  Math.sin(theta) * dPos;
             lastPos = currentPos;
             position.set(x, y, theta);
+            //console.log(position.toString());
         });
 	}
 	
 	public static void run() {
-		if (m_notifier != null)
+		if (m_notifier == null)
 			init();
 		
 		m_notifier.startPeriodic(1.0 / Constants.Loops._odometryHz);

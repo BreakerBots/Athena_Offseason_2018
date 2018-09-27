@@ -81,7 +81,7 @@ public class AutoSelector {
 					getEntry("AutoPos").
 					getString("null");
 
-			if (!position.equals("null")) {
+			if ((gameData.charAt(0) == 'L' || gameData.charAt(0) == 'R') && !position.equals("null")) {
 				switch (position) {
 					case "L":
 						auto = (gameData.charAt(0) == 'L') ? Paths.LL.getPath() : Paths.LR.getPath();
@@ -105,7 +105,7 @@ public class AutoSelector {
 		}
 		
 		//Print out the Path were Running + Time it took to choose
-		console.sets.log(c.AUTO, t.INFO, "GetAuto", "Chose Autonomous Route: " + auto.getClass().getName() + " taking ");
+		console.sets.log(c.AUTO, t.INFO, "GetAuto", "Chose Autonomous Route: " + auto.getClass().getSimpleName() + " and took ");
 		
 		return auto;
 	}

@@ -8,7 +8,8 @@ public class Baseline extends BreakerPath {
 	public Baseline() {
 		add(new DriveTrajectoryWP(new Waypoint[] {
 				new Waypoint(0, 0, 0),
-				new Waypoint(10, 0, 0)
+				new Waypoint(18, 0, 0)
+				// Measured at 120 in
 			}));
 		add(new DriveStop());
 	}

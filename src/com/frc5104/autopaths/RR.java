@@ -18,5 +18,9 @@ public class RR extends BreakerPath {
 					//measured at (14, -1, -90)
 			}));
 		add(new DriveStop());
+		add(new Delay(1000));
+		add(new SqueezyFold(false));
+		add(new Delay(100));
+		add(new SqueezyEject());
 	}
 }

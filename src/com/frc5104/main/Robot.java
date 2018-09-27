@@ -18,8 +18,8 @@ public class Robot extends BreakerRobot {
 	
 	public void _autonomousInit() {
 		BreakerPathScheduler.getInstance().set(
-			/*AutoSelector.getAuto()*/
-			AutoSelector.Paths.LR.getPath()
+			//AutoSelector.getAuto()
+			AutoSelector.Paths.LL.getPath()
 		);
 	}
 	

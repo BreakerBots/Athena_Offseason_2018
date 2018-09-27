@@ -26,5 +26,9 @@ public class LR extends BreakerPath {
 				//new Waypoint(20,	20.5	* Constants._xAngleMult, 90)
 			}));
 		add(new DriveStop());
+		add(new Delay(1000));
+		add(new SqueezyFold(false));
+		add(new Delay(100));
+		add(new SqueezyEject());
 	}
 }

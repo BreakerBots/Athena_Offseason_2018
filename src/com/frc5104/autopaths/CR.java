@@ -19,5 +19,9 @@ public class CR extends BreakerPath {
 					//measured at (9, 2.7, 0)
 			}));
 		add(new DriveStop());
+		add(new Delay(1000));
+		add(new SqueezyFold(false));
+		add(new Delay(100));
+		add(new SqueezyEject());
 	}
 }
