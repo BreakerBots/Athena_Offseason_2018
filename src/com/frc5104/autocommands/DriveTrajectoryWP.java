@@ -32,12 +32,13 @@ public class DriveTrajectoryWP extends BreakerAction {
     }
 
     public void init() {
-    	t = BreakerTrajectoryGenerator.getTrajectory(p);
+    	console.sets.create("RunTrajectoryTime");
+    	console.log(c.AUTO, "Running TrajectoryWP");
+    	
+    	t = BreakerTrajectoryGenerator.getTrajectoryWP(p);
     	m = BreakerTrajectoryGenerator.getTankModifier(t);
     	l = new EncoderFollower(m.getLeftTrajectory());
 		r = new EncoderFollower(m.getRightTrajectory());
-    	
-    	console.log(c.AUTO, "Running MP Path");
     	
     	//Reset Devices
     	Drive.Gyro.reset();
@@ -88,6 +89,6 @@ public class DriveTrajectoryWP extends BreakerAction {
 
     public void end() {
     	Drive.stop();
-    	console.log(c.AUTO, "MP Path Finished");
+    	console.log(c.AUTO, "TrajectoryWP Finished in " + console.sets.getTime("RunTrajectoryTime") + "s");
     }
 }

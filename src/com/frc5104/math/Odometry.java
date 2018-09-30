@@ -11,20 +11,21 @@ import edu.wpi.first.wpilibj.Notifier;
 public class Odometry {
 	private static Notifier m_notifier = null;
 		
-	private static double lastPos, currentPos, dPos;
-	private volatile static double x, y, theta;
-	public static RobotPosition position = new RobotPosition(0, 0, 0);
+	private volatile static double lastPos, currentPos, dPos, theta;
+	public volatile static RobotPosition position = new RobotPosition(0, 0, 0);
 	
 	private static void init() {
 		lastPos = currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
 		m_notifier = new Notifier(() -> {
 			currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
-            dPos = Units.ticksToFeet(currentPos - lastPos);
-            theta = Units.degreesToRadians(BreakerMath.bound180(Drive.Gyro.getAngle()));
-			x +=  Math.cos(theta) * dPos;
-            y +=  Math.sin(theta) * dPos;
-            lastPos = currentPos;
-            position.set(x, y, theta);
+			dPos = Units.ticksToFeet(currentPos - lastPos);
+			lastPos = currentPos;
+			theta = Units.degreesToRadians(BreakerMath.bound180(Drive.Gyro.getAngle() * 0.6));
+            position.set(
+        		position.x + Math.cos(theta) * dPos, 
+        		position.y + Math.sin(theta) * dPos, 
+        		theta
+            );
             //console.log(position.toString());
         });
 	}
@@ -45,7 +46,14 @@ public class Odometry {
 		return position;
 	}
 	
-	public static void setPosition(RobotPosition robotPosition) {
-		position = robotPosition;
+	public static void reset() {
+		Drive.Gyro.reset();
+		Drive.encoders.reset(10);
+		lastPos = 0; 
+		currentPos = 0; 
+		dPos = 0; 
+		theta = 0;
+		position = new RobotPosition(0, 0, 0);
+		lastPos = currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
 	}
 }

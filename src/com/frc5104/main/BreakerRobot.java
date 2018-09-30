@@ -44,11 +44,14 @@ public abstract class BreakerRobot extends TimedRobot {
 		
 		console.sets.log(c.MAIN, t.INFO, "RobotInit", "Initialization took ");
 	}
+	
+	public abstract void _robotPeriodic();
 	public void robotPeriodic() {
 		//Idle Update Subsystems
 		BreakerSubsystemManager.idleUpdate();
 		
-		if (DriverStation.getInstance().isFMSAttached() && !printedMatch) {
+		//Print out the Match
+		try { if (DriverStation.getInstance().isFMSAttached() && !printedMatch) {
 			System.out.println(
 				"[Match]: " +
 				DriverStation.getInstance().getMatchType().toString() + " Match " +
@@ -57,7 +60,9 @@ public abstract class BreakerRobot extends TimedRobot {
 				"on the " + DriverStation.getInstance().getAlliance() + "Alliance"
 			);
 			printedMatch = true;
-		}
+		} } catch (Exception err) { console.error(err); }
+		
+		_robotPeriodic();
 		
 		if (RobotController.isBrownedOut())
 			console.error("Robot Browning Out! Battery Voltage: " + RobotController.getBatteryVoltage() + ", Input Current: " + RobotController.getInputCurrent() + ", Input Voltage: " + RobotController.getInputVoltage());

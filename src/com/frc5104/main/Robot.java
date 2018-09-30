@@ -3,6 +3,9 @@ package com.frc5104.main;
 import com.frc5104.autocommands.BreakerPathScheduler;
 import com.frc5104.autopaths.AutoSelector;
 import com.frc5104.main.subsystems.*;
+import com.frc5104.utilities.console;
+
+import edu.wpi.first.wpilibj.CameraServer;
 
 /*Breakerbots Robotics Team 2018*/
 public class Robot extends BreakerRobot {
@@ -13,13 +16,17 @@ public class Robot extends BreakerRobot {
 			Drive.class
 		);
 		
-		//CameraServer.getInstance().startAutomaticCapture();
+		CameraServer.getInstance().startAutomaticCapture();
+	}
+	
+	public void _robotPeriodic() {
+//		console.log("L:" + Drive.encoders.getLeft(), "R: " + Drive.encoders.getRight());
 	}
 	
 	public void _autonomousInit() {
 		BreakerPathScheduler.getInstance().set(
-			//AutoSelector.getAuto()
-			AutoSelector.Paths.LL.getPath()
+			AutoSelector.getAuto()
+//			AutoSelector.Paths.Baseline.getPath()
 		);
 	}
 	

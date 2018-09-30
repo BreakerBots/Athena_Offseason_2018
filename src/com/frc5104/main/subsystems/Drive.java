@@ -10,6 +10,7 @@ import com.frc5104.main.Units;
 import com.frc5104.math.RobotDriveSignal;
 import com.frc5104.math.RobotDriveSignal.DriveUnit;
 import com.frc5104.utilities.controller;
+import com.frc5104.utilities.Deadband;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -27,18 +28,18 @@ public class Drive extends BreakerSubsystem {
 	 * Setup/Configure Devices
 	 */
 	private void configDevices() {
-		//Should Take ~200ms
-		
-		//Reset the encoders
-		encoders.reset(10);
+		//Wait until Talons are Ready to Recieve
+		try {
+			Thread.sleep(10);
+		} catch (Exception e) { console.error(e); }
 		
 		// Left Talons Config
 		L2.set(ControlMode.Follower, L1.getDeviceID());
 		L1.setInverted(false);
 		L2.setInverted(false);
 	
-		L1.setNeutralMode(NeutralMode.Coast);
-		L2.setNeutralMode(NeutralMode.Coast);
+		L1.setNeutralMode(NeutralMode.Brake);
+		L2.setNeutralMode(NeutralMode.Brake);
 		
 		L1.configClosedloopRamp(Constants.Drive._rampSeconds, 10);
         L2.configClosedloopRamp(Constants.Drive._rampSeconds, 10);
@@ -55,11 +56,11 @@ public class Drive extends BreakerSubsystem {
         L1.config_kI(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidI, 10);
         L1.config_kD(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidD, 10);
         
-        L1.configPeakCurrentLimit(Constants.Drive._currentLimitPeak, 10);
-        L1.configPeakCurrentDuration(Constants.Drive._currentLimitPeakTime, 10);
-        L1.configContinuousCurrentLimit(Constants.Drive._currentLimitSustained, 10);
+        //L1.configPeakCurrentLimit(Constants.Drive._currentLimitPeak, 10);
+        //L1.configPeakCurrentDuration(Constants.Drive._currentLimitPeakTime, 10);
+        //L1.configContinuousCurrentLimit(Constants.Drive._currentLimitSustained, 10);
         
-        L1.enableCurrentLimit(true);
+        //L1.enableCurrentLimit(true);
         
         
         // Right Talons Config
@@ -67,8 +68,8 @@ public class Drive extends BreakerSubsystem {
 		R1.setInverted(true);
 		R2.setInverted(true);
 	
-		R1.setNeutralMode(NeutralMode.Coast);
-		R2.setNeutralMode(NeutralMode.Coast);
+		R1.setNeutralMode(NeutralMode.Brake);
+		R2.setNeutralMode(NeutralMode.Brake);
 		
 		R1.configClosedloopRamp(Constants.Drive._rampSeconds, 10);
         R2.configClosedloopRamp(Constants.Drive._rampSeconds, 10);
@@ -85,17 +86,25 @@ public class Drive extends BreakerSubsystem {
         R1.config_kI(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidI, 10);
         R1.config_kD(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidD, 10);
         
-        R1.configPeakCurrentLimit(Constants.Drive._currentLimitPeak, 10);
-        R1.configPeakCurrentDuration(Constants.Drive._currentLimitPeakTime, 10);
-        R1.configContinuousCurrentLimit(Constants.Drive._currentLimitSustained, 10);
+        //R1.configPeakCurrentLimit(Constants.Drive._currentLimitPeak, 10);
+        //R1.configPeakCurrentDuration(Constants.Drive._currentLimitPeakTime, 10);
+        //R1.configContinuousCurrentLimit(Constants.Drive._currentLimitSustained, 10);
         
-        R1.enableCurrentLimit(true);
+        //R1.enableCurrentLimit(true);
 		
 		//Stop the motors
 		set(new RobotDriveSignal(0, 0, DriveUnit.percentOutput));
 		
 		//Reset Gyro
 		Gyro.reset();
+		
+		//Reset Encoder
+		encoders.reset(10);
+		
+		//Wait until Talons have Caught Up
+		try {
+			Thread.sleep(100);
+		} catch (Exception e) { console.error(e); }
 	}
 	
 	/**
@@ -103,13 +112,19 @@ public class Drive extends BreakerSubsystem {
 	 * @param signal
 	 */
 	public static void set(RobotDriveSignal signal) {
+		signal.leftSpeed = signal.leftSpeed * Constants.Drive._leftAccount;
+		signal.rightSpeed = signal.rightSpeed * Constants.Drive._rightAccount;
 		switch (signal.unit) {
 			case percentOutput: {
-				L1.set(ControlMode.PercentOutput, signal.leftSpeed * Constants.Drive._leftAccount);
-				R1.set(ControlMode.PercentOutput, signal.rightSpeed * Constants.Drive._rightAccount);
+				L1.set(ControlMode.PercentOutput, signal.leftSpeed);
+				R1.set(ControlMode.PercentOutput, signal.rightSpeed);
 				break;
 			}
 			case feetPerSecond: {
+				console.log(
+					"L: " + signal.leftSpeed,
+					"R: " + signal.rightSpeed
+					);
 				L1.set(ControlMode.Velocity, Units.feetPerSecondToTalonVel(signal.leftSpeed));
 				R1.set(ControlMode.Velocity, Units.feetPerSecondToTalonVel(signal.rightSpeed));
 				break;
@@ -164,6 +179,11 @@ public class Drive extends BreakerSubsystem {
 				Devices.Drive.shift.set(high ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
 			}
 		}
+		
+		public static void toggle() {
+			set(!inHighGear());
+		}
+		
 	}
 
 	//Gyro
@@ -198,15 +218,20 @@ public class Drive extends BreakerSubsystem {
 	protected void teleopUpdate() {
 		set(
 			new RobotDriveSignal(
-				HMI.Drive.driveY() - HMI.Drive.driveX(), //Left
-				HMI.Drive.driveY() + HMI.Drive.driveX(),  //Right
+				Deadband.get(HMI.Drive.driveY() - HMI.Drive.driveX(), HMI.Drive._deadband), //Left
+				Deadband.get(HMI.Drive.driveY() + HMI.Drive.driveX(), HMI.Drive._deadband), //Right
 			DriveUnit.percentOutput)
 		);
+		
+//		set(
+//			new RobotDriveSignal(
+//				Deadband.get(HMI.Drive.driveY() - HMI.Drive.driveX(), HMI.Drive._deadband) * 5, //Left
+//				Deadband.get(HMI.Drive.driveY() + HMI.Drive.driveX(), HMI.Drive._deadband) * 5,  //Right
+//			DriveUnit.feetPerSecond)
+//		);
 	
 		if (controller.getPressed(HMI.Drive._shift))
-			shifters.set(true);
-		else
-			shifters.set(false);
+			shifters.toggle();
 	}
 
 	protected void autoUpdate() {

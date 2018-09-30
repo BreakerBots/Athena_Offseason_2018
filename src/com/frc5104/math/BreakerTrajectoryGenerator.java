@@ -32,6 +32,15 @@ public class BreakerTrajectoryGenerator {
 			Constants.Autonomous._maxJerk
 	);
 	
+	private static Trajectory.Config configWP = new Trajectory.Config(
+			Constants.Autonomous._fitMethod, 
+			Constants.Autonomous._samples, 
+			1.0 / Constants.Autonomous._dt, 
+			Constants.AutonomousWP._maxVelocity, 
+			Constants.AutonomousWP._maxAcceleration, 
+			Constants.AutonomousWP._maxJerk
+	);
+	
 	/**
 	 * Will either return a cached version of a Trajectory under those points (~500ms)
 	 * or will Generate a Trajectory a cache it (~5000ms - ~15000ms)
@@ -74,6 +83,35 @@ public class BreakerTrajectoryGenerator {
 		TankModifier m = new TankModifier(t);
 		m.modify(Constants._wheelBaseWidth);
 		return m;
+	}
+	
+	public static Trajectory getTrajectoryWP(Waypoint[] points) {
+		try {
+			//Parse trajectory name
+			String s = "";
+	    	for (Waypoint p : points) {
+	    		s += (Double.toString(p.x) + "/" + Double.toString(p.y) + "/" + Double.toString(p.angle));
+	    	}
+	    	s = "_" + s.hashCode();
+	    	
+	    	//Read file
+	    	console.log(c.AUTO, "Looking for Similar Cached Trajectory Under " + s);
+	    	Trajectory t = readFile(s);
+	    	
+	    	//If the file does not exist, generate a path and save
+	    	if (t == null) {
+	    		console.log(c.AUTO, "No Similar Cached Trajectory Found => Generating Path");
+	    		console.sets.create("MPGEN");
+	    		t = (Trajectory) Pathfinder.generate(points, configWP);
+	    		writeFile(s, t);
+	    		console.log(c.AUTO, "Trajectory Generation Took " + console.sets.getTime("MPGEN") + "s");
+	    	}
+	    	return t;
+		}
+		catch (Exception e) {
+			console.error(e);
+			return null;
+		}
 	}
 	
 	/**

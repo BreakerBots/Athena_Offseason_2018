@@ -11,7 +11,8 @@ import jaci.pathfinder.Trajectory.Segment;
 /*Breakerbots Robotics Team 2018*/
 /**
  * Pathfinder Trajectory Follower (Ramsete Follower)
- * Based of 3863's implementation of "https://www.dis.uniroma1.it/~labrob/pub/papers/Ramsete01.pdf" (5.12)
+ * Based on UCLA's "Ramsete" follower... "https://www.dis.uniroma1.it/~labrob/pub/papers/Ramsete01.pdf"
+ * Referenced from team 3863
  * Follows a trajectory through indexes and returns motor speeds (ft/s) every tick 
  */
 public class BreakerTrajectoryFollower {
@@ -34,8 +35,8 @@ public class BreakerTrajectoryFollower {
 	 * @param robotPosition The Robot's position on the field (get from Odometry.java)
 	 * @return The Motor Speeds to follow the trajector (IN FEET PER SECOND!!!)
 	 */
-	public RobotDriveSignal getNextDriveSignal(RobotPosition robotPosition) {
-		this.robotPosition = robotPosition;
+	public RobotDriveSignal getNextDriveSignal(RobotPosition currentRobotPosition) {
+		this.robotPosition = currentRobotPosition;
 		
 		double left = 0;
 		double right = 0;
@@ -59,8 +60,8 @@ public class BreakerTrajectoryFollower {
 		//w = clamp(w, Math.PI * -2.0, Math.PI * 2.0);
 
 		//Convert Angular and Linear Velocities to into wheel speeds 
-		left  = (-Constants._wheelBaseWidth * w) / 2 + v;
-		right = (+Constants._wheelBaseWidth * w) / 2 + v;
+		left  = -((+Constants._wheelBaseWidth * w) / 2 + v);
+		right = -((-Constants._wheelBaseWidth * w) / 2 + v);
 
 		//Go to the next index
 		i += 1;

@@ -23,28 +23,18 @@ public class DriveTrajectory extends BreakerAction {
     }
 
     public void init() {
-    	f = new BreakerTrajectoryFollower(
-	    			BreakerTrajectoryGenerator.getTrajectory(p)
-	    		);
-    	
+    	console.sets.create("RunTrajectoryTime");
     	console.log(c.AUTO, "Running Trajectory");
-		
-		//Reset Devices
-		Drive.Gyro.reset();
-		Drive.encoders.reset(10);
-		
-		Odometry.setPosition(f.getInitRobotPosition());
+    	
+    	f = new BreakerTrajectoryFollower( BreakerTrajectoryGenerator.getTrajectory(p) );
+    	
+		Odometry.reset();
 		
 		//Wait 100ms for Device Catchup
-		try { Thread.sleep(100); } 
-		catch (Exception e) { console.error(e); e.printStackTrace(); }
+		try { Thread.sleep(100); }  catch (Exception e) { console.error(e); e.printStackTrace(); }
     }
 
     public boolean update() {
-		//int leftEncoder = Drive.encoders.getLeft();
-		//int rightEncoder = Drive.encoders.getRight();
-		//double angle = -Devices.Drive.Gyro.getAngle() / Math.cos(Pathfinder.d2r(Constants.Drive._gyroAngle));
-		
         Drive.set(f.getNextDriveSignal(Odometry.getPosition()));
     	
 		return f.isFinished();
@@ -52,6 +42,6 @@ public class DriveTrajectory extends BreakerAction {
 
     public void end() {
     	Drive.stop();
-    	console.log(c.AUTO, "Trajectory Finished");
+    	console.log(c.AUTO, "Trajectory Finished in " + console.sets.getTime("RunTrajectoryTime") + "s");
     }
 }

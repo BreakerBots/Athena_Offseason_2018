@@ -32,18 +32,22 @@ public class Units {
 	
 	// Feet and Ticks
 	public static double ticksToFeet(double ticks) {
-		return wheelRevolutionsToFeet(ticksToWheelRevolutions(ticks));
+		double r = ticksToWheelRevolutions(ticks);
+			   r = wheelRevolutionsToFeet(r);
+		return r;
 	}
 	public static double feetToTicks(double feet) {
-		return wheelRevolutionsToTicks(feetToWheelRevolutions(feet));
+		double r = feetToWheelRevolutions(feet);
+			   r = wheelRevolutionsToTicks(r);
+		return r;
 	}
 	
 	// feet/second and talon velocity (ticks/100ms)
-	public static double talonVelToFeetPerSecond(double ticks) {
-		return ticksToFeet(ticks) * 10;
+	public static double talonVelToFeetPerSecond(double talonVel) {
+		return ticksToFeet(talonVel) * 10;
 	}
-	public static double feetPerSecondToTalonVel(double feet) {
-		return feetToTicks(feet) / 10;
+	public static double feetPerSecondToTalonVel(double feetPerSecond) {
+		return feetToTicks(feetPerSecond) / 10;
 	}
 	
 	// Feet and Inches

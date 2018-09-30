@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
+import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -227,6 +228,8 @@ public class Squeezy extends BreakerSubsystem {
 	}
 	
 	protected void update() {
+		console.log(arms.getCurrent());
+		
 		switch (currentState) {
 			case intake: {
 				//  Fold: down, 
@@ -293,7 +296,7 @@ public class Squeezy extends BreakerSubsystem {
 					arms.set(Constants.Squeezy._armsInSpeed);
 					
 					//Wheels
-					wheels.idle();
+					wheels.intake();
 					
 					//Has Cube
 					vHasCube = arms.isPhysicallyStopped();
@@ -319,6 +322,7 @@ public class Squeezy extends BreakerSubsystem {
 	
 	protected void teleopInit() {
 		setState(SqueezyState.idle);
+		vEjectSpeed = SqueezyEjectSpeed.High.getSpeed();
 	}
 	
 	protected void teleopUpdate() {
@@ -367,8 +371,9 @@ public class Squeezy extends BreakerSubsystem {
 	}
 	
 	protected void autoInit() {
-		//setState(SqueezyState.hold);
-		setState(SqueezyState.idle);
+		setState(SqueezyState.hold);
+		actions.foldSet(true);
+//		setState(SqueezyState.idle);
 	}
 	
 	protected void autoUpdate() {

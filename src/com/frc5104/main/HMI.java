@@ -22,6 +22,7 @@ public class HMI {
 		}
 		
 		public static final Control _shift = Control.LJ;
+		public static final double _deadband = 0.1;
 	}
 	
 	//Elevator

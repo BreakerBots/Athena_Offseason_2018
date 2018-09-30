@@ -155,19 +155,19 @@ public class Elevator extends BreakerSubsystem {
 			//Teleop State
 			case user: {
 				double s = controller.getAxis(HMI.Elevator._drive);
-				s = Deadband.get(s, 0.1);
+				s = -Deadband.getReverse(s, 0.1);
 				
 				//Moving Down
 				if (s < 0 && !sensors.hardLimitSwitches.hitLower())
-					actions.setSpeed(Constants.Elevator._downScalar);
+					actions.setSpeed(-s * Constants.Elevator._downScalar);
 				
 				//Moving Up
 				else if (s > 0 && !sensors.hardLimitSwitches.hitUpper())
-					actions.setSpeed(Constants.Elevator._upScalar);
+					actions.setSpeed(-s * Constants.Elevator._upScalar);
 				
 				// Not Moving
 				else
-					actions.setSpeed(s);
+					actions.setSpeed(0);
 			}
 		}
 	}

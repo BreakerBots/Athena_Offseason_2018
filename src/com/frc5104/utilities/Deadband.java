@@ -15,6 +15,12 @@ package com.frc5104.utilities;
  *          \
  */
 public class Deadband {
+	/**
+	 * Calculates a deadband upon "x" with the "radius"
+	 * @param x The number to calculate on
+	 * @param radius the Radius of the deadband
+	 * @return The calculated value upon "x"
+	 */
 	public static double get(double x, double radius) {
 		//m = (y2-y1)/(x2-x1)
 		//b = -m*radius
@@ -31,21 +37,10 @@ public class Deadband {
 		return output;
 	}
 	
-	public static double get(double x, double radius, boolean inverted) {
-		//m = (y2-y1)/(x2-x1)
-		//b = -m*radius
-		double m = (1-0) / (1-radius);
-		double b = 0 - m*radius;
-		
-		double output = 0;
-		
-		if (inverted) x *= -1;
-		
-		if (x > radius)
-			output = m*x+b;
-		else if (x < -radius)
-			output = m*x-b;
-			
-		return output;
+	/**
+	 * This is not an inverted deadband, but instead has calculates a fix for a clipping deadband
+	 */
+	public static double getReverse(double x, double radius) {
+		return get(x, -radius) - radius;
 	}
 }

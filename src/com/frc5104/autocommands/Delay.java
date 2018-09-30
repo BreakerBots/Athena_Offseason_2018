@@ -13,12 +13,11 @@ public class Delay extends BreakerAction {
     }
 
     public void init() {
+    	console.log(c.AUTO, "Delaying + " + delay + "ms");
     	startTime = System.currentTimeMillis();
     }
 
     public boolean update() {
-    	console.log(c.AUTO, "Delaying");
-    	
     	return (System.currentTimeMillis() >= startTime + delay);
     }
 
