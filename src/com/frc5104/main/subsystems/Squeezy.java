@@ -5,8 +5,10 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
+import com.frc5104.utilities.BooleanChangeEvent;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
+import com.frc5104.utilities.console.c;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
@@ -71,15 +73,19 @@ public class Squeezy extends BreakerSubsystem {
 	
 	//Variables (v + VAR)
 	private static boolean vHasCube = false;
-	private static double vEjectSpeed = SqueezyEjectSpeed.High.getSpeed();
+	private static double vWheelEjectSpeed = SqueezyEjectSpeed.High.wheelSpeed;
+	private static double vArmsEjectSpeed = SqueezyEjectSpeed.High.armsSpeed;
 	private static double vEjectTime;
+	private static BooleanChangeEvent vBCubeEjected = new BooleanChangeEvent(true);
+	private static BooleanChangeEvent vBHitOut = new BooleanChangeEvent(true);
+	private static BooleanChangeEvent vBHasCube = new BooleanChangeEvent(true);
 	
 	//Eject Speeds
 	public static enum SqueezyEjectSpeed {
-		Low(Constants.Squeezy._wheelEjectSpeedLow),
-		Med(Constants.Squeezy._wheelEjectSpeedMed),
-		High(Constants.Squeezy._wheelEjectSpeedHigh);
-		double speed; SqueezyEjectSpeed (double s) { this.speed = s; } public double getSpeed() { return this.speed; }
+		Low(Constants.Squeezy._wheelEjectSpeedLow, Constants.Squeezy._armsEjectSpeedLow),
+		Med(Constants.Squeezy._wheelEjectSpeedMed, Constants.Squeezy._armsEjectSpeedMed),
+		High(Constants.Squeezy._wheelEjectSpeedHigh, Constants.Squeezy._armsEjectSpeedHigh);
+		double wheelSpeed; double armsSpeed; SqueezyEjectSpeed (double wheelSpeed, double armsSpeed) { this.wheelSpeed = wheelSpeed; this.armsSpeed = armsSpeed; } 
 	}
 	
 				// <---- /Varibales ---->
@@ -98,8 +104,8 @@ public class Squeezy extends BreakerSubsystem {
 		}
 		
 		private static void eject() {
-			dLWheel.set(ControlMode.PercentOutput, -vEjectSpeed);
-			dRWheel.set(ControlMode.PercentOutput,  vEjectSpeed);
+			dLWheel.set(ControlMode.PercentOutput, -vWheelEjectSpeed);
+			dRWheel.set(ControlMode.PercentOutput,  vWheelEjectSpeed);
 		}
 		
 		private static void idle() {
@@ -171,6 +177,7 @@ public class Squeezy extends BreakerSubsystem {
 	
 	public static class actions {
 		public static void foldSet(boolean up) {
+			console.log(c.SQUEEZY, "Folding " + (up ? "Up" : "Down"));
 			if (up) {
 				fold.up();
 				
@@ -183,27 +190,34 @@ public class Squeezy extends BreakerSubsystem {
 		}
 		
 		public static void eject() {
+			console.log(c.SQUEEZY, "Ejecting at High speed");
 			vEjectTime = System.currentTimeMillis();
-			vEjectSpeed = SqueezyEjectSpeed.High.getSpeed();
+			vWheelEjectSpeed = SqueezyEjectSpeed.High.wheelSpeed;
+			vArmsEjectSpeed = SqueezyEjectSpeed.High.armsSpeed;
 			setState(SqueezyState.eject);
 		}
 		
 		public static void eject(SqueezyEjectSpeed speed) {
+			console.log(c.SQUEEZY, "Ejecting at " + speed.name() + " speed");
 			vEjectTime = System.currentTimeMillis();
-			vEjectSpeed = speed.getSpeed();
+			vWheelEjectSpeed = speed.wheelSpeed;
+			vArmsEjectSpeed = speed.armsSpeed;
 			setState(SqueezyState.eject);
 		}
 		
 		public static void intake() {
+			console.log(c.SQUEEZY, "Intaking");
 			setState(SqueezyState.intake);
 		}
 		
 		public static void hold() {
+			console.log(c.SQUEEZY, "Holding");
 			vHasCube = false;
 			setState(SqueezyState.hold);
 		}
 		
 		public static void idle() {
+			console.log(c.SQUEEZY, "Idling");
 			setState(SqueezyState.idle);
 		}
 	}
@@ -228,8 +242,6 @@ public class Squeezy extends BreakerSubsystem {
 	}
 	
 	protected void update() {
-		console.log(arms.getCurrent());
-		
 		switch (currentState) {
 			case intake: {
 				//  Fold: down, 
@@ -260,10 +272,11 @@ public class Squeezy extends BreakerSubsystem {
 				
 				// Fold
 				fold.down();
+				
 				boolean time = ((double)(System.currentTimeMillis()) - vEjectTime) < Constants.Squeezy._ejectTime;
 				if (!arms.hitOutsideLimitSwitch() && time) {
 					//Arms
-					arms.set(Constants.Squeezy._armsOutEjectSpeed);
+					arms.set(vArmsEjectSpeed);
 					
 					//Wheels
 					wheels.eject();
@@ -318,11 +331,19 @@ public class Squeezy extends BreakerSubsystem {
 				break;
 			}
 		} //End of Switch/Case
+		
+		if (vBCubeEjected.get(currentState == SqueezyState.eject))
+			controller.rumbleHardFor(Math.abs(vWheelEjectSpeed), 0.1);
+		
+		if (vBHasCube.get(arms.isPhysicallyStopped()))
+			controller.rumbleHardFor(0.1, 0.1);
+		
+		if (vBHitOut.get(arms.hitOutsideLimitSwitch()))
+			controller.rumbleSoftFor(0.1, 0.1);
 	}
 	
 	protected void teleopInit() {
 		setState(SqueezyState.idle);
-		vEjectSpeed = SqueezyEjectSpeed.High.getSpeed();
 	}
 	
 	protected void teleopUpdate() {

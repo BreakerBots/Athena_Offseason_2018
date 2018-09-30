@@ -177,6 +177,7 @@ public class Drive extends BreakerSubsystem {
 			if (high ? !inHighGear() : inHighGear()) {
 				console.log(c.DRIVE, high ? "Shifting High" : "Shifting Low");
 				Devices.Drive.shift.set(high ? DoubleSolenoid.Value.kForward : DoubleSolenoid.Value.kReverse);
+				controller.rumbleSoftFor(high ? 0.75 : 0.25, 0.2);
 			}
 		}
 		
