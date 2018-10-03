@@ -1,3 +1,5 @@
+//Good 
+
 package com.frc5104.autopaths;
 
 import com.frc5104.autocommands.*;
@@ -14,7 +16,7 @@ public class CL extends BreakerPath {
 	public CL() {
 		add(new DriveTrajectory(new Waypoint[] {
 				new Waypoint(0, 0, 0),
-				new Waypoint(3, -11, 0)
+				new Waypoint(10, -5.4, 0)
 			}));
 		add(new DriveStop());
 		add(new Delay(1000));

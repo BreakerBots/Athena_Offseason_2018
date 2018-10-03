@@ -15,7 +15,7 @@ public class LR extends BreakerPath {
 	 */
 	
 	public LR() {
-		add(new DriveTrajectoryWP(new Waypoint[] {
+		add(new DriveTrajectory(new Waypoint[] {
 				new Waypoint(0, 0, 0),
 				new Waypoint(50/6.0, 0, 0),
 				new Waypoint(150/6.0, 0, 0),

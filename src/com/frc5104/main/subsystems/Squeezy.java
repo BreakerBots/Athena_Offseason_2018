@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
+import com.frc5104.math.BreakerMath;
 import com.frc5104.utilities.BooleanChangeEvent;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
@@ -333,13 +334,13 @@ public class Squeezy extends BreakerSubsystem {
 		} //End of Switch/Case
 		
 		if (vBCubeEjected.get(currentState == SqueezyState.eject))
-			controller.rumbleHardFor(Math.abs(vWheelEjectSpeed), 0.1);
+			controller.rumbleHardFor(BreakerMath.clamp(Math.abs(vWheelEjectSpeed) * 3, 0, 1), 0.5);
 		
 		if (vBHasCube.get(arms.isPhysicallyStopped()))
-			controller.rumbleHardFor(0.1, 0.1);
+			controller.rumbleHardFor(0.4, 0.2);
 		
 		if (vBHitOut.get(arms.hitOutsideLimitSwitch()))
-			controller.rumbleSoftFor(0.1, 0.1);
+			controller.rumbleSoftFor(0.4, 0.2);
 	}
 	
 	protected void teleopInit() {

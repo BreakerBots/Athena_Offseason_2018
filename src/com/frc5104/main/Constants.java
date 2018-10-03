@@ -26,6 +26,8 @@ import jaci.pathfinder.Trajectory.FitMethod;
 public class Constants {
 	
 	//Robot Varibles (In Feet)
+	public static final double _robotLength = Units.inchesToFeet(32.0 + 4.0);
+	public static final double _robotWidth = Units.inchesToFeet(28.0 + 4.0);
 	public static final double _wheelDiameter = 0.5; 				  //(Feet) [Measure] The diameter of the wheels
 	public static final double _ticksPerRevolution = 2500; //(Encoder Tick) [Measure] Encoder Ticks Per Wheel Revolution
 	public static final double _wheelBaseWidth = 2.179;			  //(Feet) [Measure] The Distance from the Left and Right Wheels

@@ -62,6 +62,6 @@ public class Odometry {
 		lastPos = 0;
 		init();
 		
-		console.log("Finished Resetting Odometry");
+		console.log("Finished Resetting Odometry at " + getPosition().toString());
 	}
 }

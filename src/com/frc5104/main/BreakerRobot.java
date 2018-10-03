@@ -96,6 +96,9 @@ public abstract class BreakerRobot extends TimedRobot {
 		//Run Autonomous Path
 		BreakerPathScheduler.getInstance().update();
 		
+		//stupid rumble thing
+		controller.update();
+		
 		//Auto Update Subsystems
 		BreakerSubsystemManager.autoUpdate();
 	}
