@@ -121,10 +121,6 @@ public class Drive extends BreakerSubsystem {
 				break;
 			}
 			case feetPerSecond: {
-				console.log(
-					"L: " + signal.leftSpeed,
-					"R: " + signal.rightSpeed
-					);
 				L1.set(ControlMode.Velocity, Units.feetPerSecondToTalonVel(signal.leftSpeed));
 				R1.set(ControlMode.Velocity, Units.feetPerSecondToTalonVel(signal.rightSpeed));
 				break;

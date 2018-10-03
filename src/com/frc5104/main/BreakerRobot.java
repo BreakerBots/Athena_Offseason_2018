@@ -121,6 +121,8 @@ public abstract class BreakerRobot extends TimedRobot {
 		
 		//Teleop Update Subsystems
 		BreakerSubsystemManager.teleopUpdate();
+		
+		DriverStation.getInstance().waitForData(1000 / Constants.Loops._robotHz);
 	}
 	
 	

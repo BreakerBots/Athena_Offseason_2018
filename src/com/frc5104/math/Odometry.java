@@ -20,7 +20,7 @@ public class Odometry {
 			currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
 			dPos = Units.ticksToFeet(currentPos - lastPos);
 			lastPos = currentPos;
-			theta = Units.degreesToRadians(BreakerMath.bound180(Drive.Gyro.getAngle() * 0.6));
+			theta = Units.degreesToRadians(BreakerMath.bound180(Drive.Gyro.getAngle() * 1));
             position.set(
         		position.x + Math.cos(theta) * dPos, 
         		position.y + Math.sin(theta) * dPos, 
@@ -47,13 +47,21 @@ public class Odometry {
 	}
 	
 	public static void reset() {
+		console.log("Resetting Odometry");
+		
 		Drive.Gyro.reset();
 		Drive.encoders.reset(10);
+		
+		try { Thread.sleep(10); } catch (Exception e) {}
+		
 		lastPos = 0; 
 		currentPos = 0; 
 		dPos = 0; 
 		theta = 0;
 		position = new RobotPosition(0, 0, 0);
-		lastPos = currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
+		lastPos = 0;
+		init();
+		
+		console.log("Finished Resetting Odometry");
 	}
 }

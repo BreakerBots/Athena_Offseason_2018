@@ -27,7 +27,7 @@ public class Constants {
 	
 	//Robot Varibles (In Feet)
 	public static final double _wheelDiameter = 0.5; 				  //(Feet) [Measure] The diameter of the wheels
-	public static final double _ticksPerRevolution = 4820; //(Encoder Tick) [Measure] Encoder Ticks Per Wheel Revolution
+	public static final double _ticksPerRevolution = 2500; //(Encoder Tick) [Measure] Encoder Ticks Per Wheel Revolution
 	public static final double _wheelBaseWidth = 2.179;			  //(Feet) [Measure] The Distance from the Left and Right Wheels
 	
 	//Drive
@@ -37,7 +37,7 @@ public class Constants {
 		
 		public static final double _gyroAngle = 65;   //(Degrees) [Measure] Yaw Angle of Gyro (Athena is 65)
 		
-		public static final double _rampSeconds			= 0; //(Seconds) [Tune/Choose]
+		public static final double _rampSeconds			= 0.0; //(Seconds) [Tune/Choose]
 		public static final int _currentLimitPeak		= 80;  //(Current) [Tune/Choose]
 		public static final int _currentLimitPeakTime	= 10;  //(Milliseconds) [Tune/Choose]
 		public static final int _currentLimitSustained	= 36;  //(Current) [Tune/Choose]
@@ -69,14 +69,14 @@ public class Constants {
 	public static final class Autonomous {
 		//Trajectory Generation
 		public static final double _maxVelocity = 5.0; 			  //(Feet) [Tune] in ft/s
-		public static final double _maxAcceleration = 2.0; 		  //(Feet) [Tune] in ft/s/s
-		public static final double _maxJerk = 50; 				  //(Feet) [Tune] in ft/s/s/s
+		public static final double _maxAcceleration = 4.0; 		  //(Feet) [Tune] in ft/s/s
+		public static final double _maxJerk = 100; 				  //(Feet) [Tune] in ft/s/s/s
 		public static final FitMethod _fitMethod = Trajectory.FitMethod.HERMITE_CUBIC; //(Other) [Choose] What curve to Gen trajectory in (use Hermite Cubic)
 		public static final int 	  _samples	 = Trajectory.Config.SAMPLES_HIGH; //(Other) [Choose] Affects generation speed and quality of Trajectory Generation
 		public static final double 	  _dt 		 = Constants.Loops._robotHz; //(hz) delta time of Trajectory (time between each point)
 		
 		//Trajectory Folowing
-		public static final double _tfB    = 0.9; //(None) [Tune/Choose] (Range: Great Than Zero) Increases/Decreases Correction
+		public static final double _tfB    = 0.5; //(None) [Tune/Choose] (Range: Great Than Zero) Increases/Decreases Correction
 		public static final double _tfZeta = 0.4; //(None) [Tune/Choose] (Range: Zero to One) Increases/Decreases Dampening
 	}
 	
