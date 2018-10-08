@@ -18,7 +18,7 @@ public class Robot extends BreakerRobot {
 	}
 	
 	public void _robotPeriodic() {
-//		console.log("L:" + Drive.encoders.getLeft(), "R: " + Drive.encoders.getRight());
+
 	}
 	
 	public void _autonomousInit() {

@@ -105,7 +105,12 @@ public class BreakerTrajectoryGenerator {
 	    		t = (Trajectory) Pathfinder.generate(points, configWP);
 	    		writeFile(s, t);
 	    		console.log(c.AUTO, "Trajectory Generation Took " + console.sets.getTime("MPGEN") + "s");
+	    	
+	    		//BUGFIX: Get the new file, :D
+		    	console.log(c.AUTO, "Now Looking for Similar Cached Trajectory Under " + s);
+		    	t = readFile(s);
 	    	}
+	    	
 	    	return t;
 		}
 		catch (Exception e) {

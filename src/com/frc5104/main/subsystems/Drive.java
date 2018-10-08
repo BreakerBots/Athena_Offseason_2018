@@ -219,7 +219,13 @@ public class Drive extends BreakerSubsystem {
 				Deadband.get(HMI.Drive.driveY() + HMI.Drive.driveX(), HMI.Drive._deadband), //Right
 			DriveUnit.percentOutput)
 		);
-		
+//		
+//		console.log(
+//				"L: " + encoders.getLeft(),
+//				"R: " + encoders.getRight(),
+//				"Gyro: " + Gyro.getAngle()
+//		);
+//		
 //		set(
 //			new RobotDriveSignal(
 //				Deadband.get(HMI.Drive.driveY() - HMI.Drive.driveX(), HMI.Drive._deadband) * 5, //Left
