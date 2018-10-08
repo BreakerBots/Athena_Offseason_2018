@@ -11,6 +11,7 @@ import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console.c;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 /*Breakerbots Robotics Team 2018*/
@@ -161,7 +162,13 @@ public class Squeezy extends BreakerSubsystem {
 		}
 		
 		public static boolean isPhysicallyStopped() {
-			return getCurrent() > Constants.Squeezy._armsPhysicallyStoppedCurrent;
+			return 
+					getCurrent() > 
+					(NetworkTableInstance.
+					getDefault().
+					getTable("Autonomous").
+					getEntry("SqueezyCurrent").
+					getDouble(Constants.Squeezy._armsPhysicallyStoppedCurrent));
 		}
 	}
 	// <---- /Systems ---->
@@ -330,8 +337,10 @@ public class Squeezy extends BreakerSubsystem {
 		if (vBCubeEjected.get(currentState == SqueezyState.eject))
 			controller.rumbleHardFor(BreakerMath.clamp(Math.abs(vWheelEjectSpeed) * 3, 0, 1), 0.5);
 		
-		if (vBHasCube.get(arms.isPhysicallyStopped()))
+		if (vBHasCube.get(arms.isPhysicallyStopped())) { 
+			console.log(c.SQUEEZY, "Physically Stopped");
 			controller.rumbleHardFor(0.4, 0.2);
+		}
 		
 		if (vBHitOut.get(arms.hitOutsideLimitSwitch()))
 			controller.rumbleSoftFor(0.4, 0.2);
