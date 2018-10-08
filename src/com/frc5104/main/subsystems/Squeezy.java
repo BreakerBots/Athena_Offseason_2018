@@ -6,7 +6,7 @@ import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
 import com.frc5104.math.BreakerMath;
-import com.frc5104.utilities.BooleanChangeEvent;
+import com.frc5104.utilities.BooleanChangeListener;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console.c;
@@ -77,9 +77,9 @@ public class Squeezy extends BreakerSubsystem {
 	private static double vWheelEjectSpeed = SqueezyEjectSpeed.High.wheelSpeed;
 	private static double vArmsEjectSpeed = SqueezyEjectSpeed.High.armsSpeed;
 	private static double vEjectTime;
-	private static BooleanChangeEvent vBCubeEjected = new BooleanChangeEvent(true);
-	private static BooleanChangeEvent vBHitOut = new BooleanChangeEvent(true);
-	private static BooleanChangeEvent vBHasCube = new BooleanChangeEvent(true);
+	private static BooleanChangeListener vBCubeEjected = new BooleanChangeListener(true);
+	private static BooleanChangeListener vBHitOut = new BooleanChangeListener(true);
+	private static BooleanChangeListener vBHasCube = new BooleanChangeListener(true);
 	
 	//Eject Speeds
 	public static enum SqueezyEjectSpeed {

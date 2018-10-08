@@ -1,17 +1,18 @@
 package com.frc5104.utilities;
 
 /**
+ * <h1>Boolean Change Listener</h1>
  * Send a boolean every tick to this class, and if that boolean changes (true => false, false => true) it will return true, else false
  * Similar to a button pressed event in controller.java
  */
-public class BooleanChangeEvent {
+public class BooleanChangeListener {
 	private boolean lv = false;
 	private boolean ct;
 	
 	/**
 	 * Constructor... Call the get function every loop
 	 */
-	public BooleanChangeEvent() {
+	public BooleanChangeListener() {
 		ct = false;
 	}
 	
@@ -19,7 +20,7 @@ public class BooleanChangeEvent {
 	 * Constructor... Call the get function every loop
 	 * @param onlyToggleWhenChangeToTrue If it should only return true when values go (false => true) and not (true => false)
 	 */
-	public BooleanChangeEvent(boolean onlyToggleWhenChangeToTrue) {
+	public BooleanChangeListener(boolean onlyToggleWhenChangeToTrue) {
 		ct = onlyToggleWhenChangeToTrue;
 	}
 	

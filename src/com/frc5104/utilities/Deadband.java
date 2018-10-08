@@ -2,6 +2,7 @@ package com.frc5104.utilities;
 
 /*Breakerbots Robotics Team 2018*/
 /**
+ * <h1>Deadband</h1>
  * A deadband is a mathmatical process to stop input from the center of the joystick.
  * The xbox controller can get stuck slightly off of 0 causing the robot to move slowly on it's own
  * Most deadbands like WPI's and the TalonSRX's just clip off numbers < ~0.05.

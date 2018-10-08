@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.Joystick;
 
 /*Breakerbots Robotics Team 2018*/
 /**
+ * <h1>Controller</h1>
  * A much simpler to use version of WPI's Joystick (controller) class
  * There is also a bunch of added functional for rumble and click events
  * Every single control in the Control Enum is treated as a Button and Axis

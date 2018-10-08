@@ -8,6 +8,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * <h1>Console</h1>
+ * A class for handling logging/printing
+ */
 public class console {
 	
 	//  ----------------------------------------  Normal Logging  ----------------------------------------  \\

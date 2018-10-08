@@ -8,6 +8,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 /*Breakerbots Robotics Team 2018*/
 /**
+ * <h1>Talon Factory</h1>
  * Brewing fresh talons since 2017
  */
 public class TalonFactory {
