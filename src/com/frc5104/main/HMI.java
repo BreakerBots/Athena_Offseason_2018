@@ -1,5 +1,6 @@
 package com.frc5104.main;
 
+import com.frc5104.utilities.Curve;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.controller.Control;
 
@@ -22,7 +23,10 @@ public class HMI {
 		}
 		
 		public static final Control _shift = Control.LJ;
-		public static final double _deadband = 0.1;
+		
+		public static final double _deadbandX = 0.1;
+		public static final double _deadbandY = 0.1;
+		public static final Curve.BezierCurve _driveCurve = new Curve.BezierCurve(0.6, 0.3, 1, 0.2);
 	}
 	
 	//Elevator

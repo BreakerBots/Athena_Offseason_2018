@@ -213,26 +213,13 @@ public class Drive extends BreakerSubsystem {
 	}
 	
 	protected void teleopUpdate() {
-		set(
-			new RobotDriveSignal(
-				Deadband.get(HMI.Drive.driveY() - HMI.Drive.driveX(), HMI.Drive._deadband), //Left
-				Deadband.get(HMI.Drive.driveY() + HMI.Drive.driveX(), HMI.Drive._deadband), //Right
-			DriveUnit.percentOutput)
-		);
-//		
-//		console.log(
-//				"L: " + encoders.getLeft(),
-//				"R: " + encoders.getRight(),
-//				"Gyro: " + Gyro.getAngle()
-//		);
-//		
-//		set(
-//			new RobotDriveSignal(
-//				Deadband.get(HMI.Drive.driveY() - HMI.Drive.driveX(), HMI.Drive._deadband) * 5, //Left
-//				Deadband.get(HMI.Drive.driveY() + HMI.Drive.driveX(), HMI.Drive._deadband) * 5,  //Right
-//			DriveUnit.feetPerSecond)
-//		);
-	
+		//Driving + Controll Processing
+		double x = Deadband.get(HMI.Drive.driveX(), HMI.Drive._deadbandX);
+		x = HMI.Drive._driveCurve.getPoint(x);
+		double y = Deadband.get(HMI.Drive.driveY(), HMI.Drive._deadbandY);
+		set(new RobotDriveSignal(y - x, y + x, DriveUnit.percentOutput));
+
+		//Shifting
 		if (controller.getPressed(HMI.Drive._shift))
 			shifters.toggle();
 	}
