@@ -96,7 +96,7 @@ public class Drive extends BreakerSubsystem {
 		set(new RobotDriveSignal(0, 0, DriveUnit.percentOutput));
 		
 		//Reset Gyro
-		Gyro.reset();
+		gyro.reset();
 		
 		//Reset Encoder
 		encoders.reset(10);
@@ -184,7 +184,7 @@ public class Drive extends BreakerSubsystem {
 	}
 
 	//Gyro
-	public static class Gyro {
+	public static class gyro {
 		public static double getRawAngle() {
 			return Devices.Drive.Gyro.getAngle();
 		}
@@ -250,5 +250,18 @@ public class Drive extends BreakerSubsystem {
 
 	protected void init() {
 		configDevices();
+	}
+
+	public static void debug() {
+		console.log(
+				c.DRIVE,
+				"LE: " + String.format("%.2f", encoders.getLeft()) + "\t",
+				"RE: " + String.format("%.2f", encoders.getRight()) + "\t",
+				"An: " + String.format("%.2f", gyro.getAngle())
+		);
+	}
+
+	protected void robotDisabled() {
+		stop();
 	}
 }

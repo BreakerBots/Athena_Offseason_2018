@@ -44,4 +44,14 @@ public abstract class BreakerSubsystem {
 	 * CALLED at ~50hz while the robot is powered TO update the subsystems network table
 	 */
 	protected abstract void postToNetwork();
+	
+	/**
+	 * CALLED to debug (print) the subsystem
+	 */
+	public static void debug() {};
+	
+	/**
+	 * CALLED when the robot is disabled
+	 */
+	protected abstract void robotDisabled();
 }

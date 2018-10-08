@@ -41,7 +41,7 @@ public class DriveTrajectoryWP extends BreakerAction {
 		r = new EncoderFollower(m.getRightTrajectory());
     	
     	//Reset Devices
-    	Drive.Gyro.reset();
+    	Drive.gyro.reset();
 		Drive.encoders.reset(10);
 		
 		//Configure Tank Drive
@@ -68,7 +68,7 @@ public class DriveTrajectoryWP extends BreakerAction {
 		double rs = r.calculate(-re);
 
 		//Calculate Angle
-		double a = Pathfinder.boundHalfDegrees((-1.0/80.0) * (Pathfinder.boundHalfDegrees(Pathfinder.r2d(l.getHeading()) - Drive.Gyro.getAngle())) * Constants.AutonomousWP._angleMult);
+		double a = Pathfinder.boundHalfDegrees((-1.0/80.0) * (Pathfinder.boundHalfDegrees(Pathfinder.r2d(l.getHeading()) - Drive.gyro.getAngle())) * Constants.AutonomousWP._angleMult);
 		
 		//Clamp All Varibles
 		a = BreakerMath.clamp(a, -1, 1);

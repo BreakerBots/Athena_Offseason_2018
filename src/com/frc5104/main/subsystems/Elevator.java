@@ -8,7 +8,9 @@ import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
 import com.frc5104.utilities.controller;
+import com.frc5104.utilities.console.c;
 import com.frc5104.utilities.Deadband;
+import com.frc5104.utilities.console;
 
 /*Breakerbots Robotics Team 2018*/
 public class Elevator extends BreakerSubsystem {
@@ -24,10 +26,6 @@ public class Elevator extends BreakerSubsystem {
 	
 	
 	
-	
-	
-				// <---- Variables ---->	
-	
 	//State
 	public static enum ElevatorState {
 		calibrating, brake, //Auto States
@@ -38,13 +36,8 @@ public class Elevator extends BreakerSubsystem {
 	//References
 	private static final TalonSRX drivers = Devices.Elevator.a; /*Talon 31 + 32, 32 is a follower (see more in Devices.java)*/
 	
-				// <---- /Variables ---->
-	
-		
 	
 	
-	
-				// <---- Sensors ---->
 	public static class sensors {
 		public static class hardLimitSwitches {
 			public static boolean hitLower() {
@@ -98,25 +91,17 @@ public class Elevator extends BreakerSubsystem {
 			}
 		}
 	}
-				// <---- /Sensors ---->
-
 	
 	
 	
-	
-				// <---- Actions ---->
 	public static class actions {
 		public static void setSpeed(double speed) {
 			drivers.set(ControlMode.PercentOutput, speed);
 		}
 	}
-				// <---- /Actions ---->
 	
 	
 	
-	
-	
-				// <---- Subsystem Functions ---->
 	protected Elevator() {
 		
 	}
@@ -197,5 +182,17 @@ public class Elevator extends BreakerSubsystem {
 	protected void postToNetwork() {
 		
 	}
-				// <---- /Subsystem Functions ---->
+	
+	protected void robotDisabled() {
+		
+	}
+	
+	public static void debug() {
+		console.log(
+				c.ELEV,
+				"Encoder: " + sensors.encoders.getPosition() + "\t",
+				"HLimUp: " + sensors.hardLimitSwitches.hitUpper() + "\t",
+				"HLimLow: " + sensors.hardLimitSwitches.hitLower() + "\t"
+				);
+	}
 }

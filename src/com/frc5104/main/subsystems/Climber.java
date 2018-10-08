@@ -52,4 +52,12 @@ public class Climber extends BreakerSubsystem {
 	protected void autoInit() {
 		
 	}
+
+	public static void debug() {
+		
+	}
+
+	protected void robotDisabled() {
+		
+	}
 }

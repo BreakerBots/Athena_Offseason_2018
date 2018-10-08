@@ -52,8 +52,7 @@ public class Squeezy extends BreakerSubsystem {
 	
 	
 	
-				// <---- Variables ---->
-	
+	// <---- Variables ---->
 	//State
 	public static enum SqueezyState {
 				//  Fold  |  Arms  |  Wheels  
@@ -88,15 +87,13 @@ public class Squeezy extends BreakerSubsystem {
 		High(Constants.Squeezy._wheelEjectSpeedHigh, Constants.Squeezy._armsEjectSpeedHigh);
 		double wheelSpeed; double armsSpeed; SqueezyEjectSpeed (double wheelSpeed, double armsSpeed) { this.wheelSpeed = wheelSpeed; this.armsSpeed = armsSpeed; } 
 	}
-	
-				// <---- /Varibales ---->
-	
+	// <---- /Varibales ---->
 	
 	
 	
 	
-				// <---- Systems (Handle Devices Directly for the State Machine) ---->
 	
+	// <---- Systems (Handle Devices Directly for the State Machine) ---->
 	// - Wheels
 	private static class wheels {
 		private static void intake() {
@@ -167,15 +164,13 @@ public class Squeezy extends BreakerSubsystem {
 			return getCurrent() > Constants.Squeezy._armsPhysicallyStoppedCurrent;
 		}
 	}
-	
-				// <---- /Systems ---->
-	
+	// <---- /Systems ---->
 	
 	
 	
 	
-				// <---- Actions (Control Subsystems and State Machine) ---->
 	
+	// <---- Actions (Control Subsystems and State Machine) ---->
 	public static class actions {
 		public static void foldSet(boolean up) {
 			console.log(c.SQUEEZY, "Folding " + (up ? "Up" : "Down"));
@@ -230,14 +225,13 @@ public class Squeezy extends BreakerSubsystem {
 	public static SqueezyState getState() {
 		return currentState;
 	}
-	
-				// <---- /Actions ---->
-	
+	// <---- /Actions ---->
 	
 	
 	
 	
-				// <---- Management (Calls Actions and Handles State Machine) ---->
+	
+	// <---- Management (Calls Actions and Handles State Machine) ---->
 	protected Squeezy() {
 		
 	}
@@ -395,7 +389,7 @@ public class Squeezy extends BreakerSubsystem {
 	protected void autoInit() {
 		setState(SqueezyState.hold);
 		actions.foldSet(true);
-//		setState(SqueezyState.idle);
+		//setState(SqueezyState.idle);
 	}
 	
 	protected void autoUpdate() {
@@ -417,6 +411,18 @@ public class Squeezy extends BreakerSubsystem {
 	protected void init() {
 		
 	}
+
+	public static void debug() {
+		console.log(
+				c.SQUEEZY,
+				"State: " + currentState,
+				"ArmPhSt: " + arms.isPhysicallyStopped() + "\t",
+				"ArmCurr: " + arms.getCurrent() + "\t"
+				);
+	}
 	
-				// <---- /Management ---->
+	protected void robotDisabled() {
+		wheels.idle();
+		arms.set(0);
+	}
 }
