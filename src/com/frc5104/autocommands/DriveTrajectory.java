@@ -1,9 +1,9 @@
 package com.frc5104.autocommands;
 
 import com.frc5104.main.subsystems.Drive;
-import com.frc5104.math.BreakerTrajectoryFollower;
-import com.frc5104.math.BreakerTrajectoryGenerator;
-import com.frc5104.math.Odometry;
+import com.frc5104.traj.BreakerTrajectoryFollower;
+import com.frc5104.traj.BreakerTrajectoryGenerator;
+import com.frc5104.traj.Odometry;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 

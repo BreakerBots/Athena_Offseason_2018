@@ -3,7 +3,7 @@ package com.frc5104.main;
 import com.frc5104.autocommands.BreakerPathScheduler;
 import com.frc5104.main.subsystems.BreakerSubsystemManager;
 import com.frc5104.main.subsystems.Drive;
-import com.frc5104.math.Odometry;
+import com.frc5104.traj.Odometry;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console.c;

@@ -5,7 +5,7 @@ package com.frc5104.utilities;
  * <h1>Interpolating Curve</h1>
  * Iterates to a changing setpoint in a certain amount of time.
  */
-public class CurveInterpolating {
+public class CurveInterpolator {
 	private double sp;  //Setpoint
 	private double cp;  //Current Point
 	
@@ -23,7 +23,7 @@ public class CurveInterpolating {
 	 * @param min The min value being input for the Setpoint
 	 * @param max The max value being input for the Setpoint
 	 */
-	public CurveInterpolating(double dt, Curve.BezierCurve curve) {
+	public CurveInterpolator(double dt, Curve.BezierCurve curve) {
 		this.dt = dt;
 		this.curve = curve;
 		setSetpoint(0, true);

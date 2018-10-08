@@ -2,10 +2,10 @@ package com.frc5104.autocommands;
 
 import com.frc5104.main.Constants;
 import com.frc5104.main.subsystems.Drive;
-import com.frc5104.math.BreakerMath;
-import com.frc5104.math.BreakerTrajectoryGenerator;
-import com.frc5104.math.RobotDriveSignal;
-import com.frc5104.math.RobotDriveSignal.DriveUnit;
+import com.frc5104.traj.BreakerTrajectoryGenerator;
+import com.frc5104.traj.RobotDriveSignal;
+import com.frc5104.traj.RobotDriveSignal.DriveUnit;
+import com.frc5104.utilities.BreakerMath;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 import jaci.pathfinder.Pathfinder;

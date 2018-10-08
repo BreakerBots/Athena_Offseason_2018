@@ -1,4 +1,4 @@
-package com.frc5104.math;
+package com.frc5104.traj;
 
 /*Breakerbots Robotics Team 2018*/
 public class RobotPosition {
