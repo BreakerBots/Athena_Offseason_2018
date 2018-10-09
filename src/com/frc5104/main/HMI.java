@@ -24,9 +24,12 @@ public class HMI {
 		
 		public static final Control _shift = Control.LJ;
 		
-		public static final double _deadbandX = 0.1;
+		public static final double _deadbandX = -0.2;
 		public static final double _deadbandY = 0.1;
-		public static final Curve.BezierCurve _driveCurve = new Curve.BezierCurve(0.6, 0.3, 1, 0.2);
+		public static final Curve.BezierCurve _turnCurve = new Curve.BezierCurve(0.9, 0.15, 1, 0.2);
+		
+		public static final Curve.BezierCurve _driveCurve = new Curve.BezierCurve(.2, 0, .2, 1);
+		public static final double _driveCurveChange = 0.08;
 	}
 	
 	//Elevator

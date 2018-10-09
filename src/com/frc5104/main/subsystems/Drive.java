@@ -10,6 +10,7 @@ import com.frc5104.main.Units;
 import com.frc5104.traj.RobotDriveSignal;
 import com.frc5104.traj.RobotDriveSignal.DriveUnit;
 import com.frc5104.utilities.controller;
+import com.frc5104.utilities.CurveInterpolator;
 import com.frc5104.utilities.Deadband;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
@@ -23,6 +24,10 @@ public class Drive extends BreakerSubsystem {
 	private static TalonSRX L2 = Devices.Drive.L2;
 	private static TalonSRX R1 = Devices.Drive.R1;
 	private static TalonSRX R2 = Devices.Drive.R2;
+	
+	//Variables
+	public static final CurveInterpolator vTeleopLeftSpeed  = new CurveInterpolator(HMI.Drive._driveCurveChange, HMI.Drive._driveCurve);
+	public static final CurveInterpolator vTeleopRightSpeed = new CurveInterpolator(HMI.Drive._driveCurveChange, HMI.Drive._driveCurve);
 	
 	/**
 	 * Setup/Configure Devices
@@ -215,9 +220,17 @@ public class Drive extends BreakerSubsystem {
 	protected void teleopUpdate() {
 		//Driving + Controll Processing
 		double x = Deadband.get(HMI.Drive.driveX(), HMI.Drive._deadbandX);
-		x = HMI.Drive._driveCurve.getPoint(x);
+		boolean xn = x > 0;
+		x = HMI.Drive._turnCurve.getPoint(Math.abs(x));
+		if (!xn) x = -x;
+		console.log("from: " + HMI.Drive.driveX() + " to " + x);
+		
 		double y = Deadband.get(HMI.Drive.driveY(), HMI.Drive._deadbandY);
-		set(new RobotDriveSignal(y - x, y + x, DriveUnit.percentOutput));
+		
+		vTeleopLeftSpeed.setSetpoint(y - x);
+		vTeleopRightSpeed.setSetpoint(y + x);
+		
+		set(new RobotDriveSignal(vTeleopLeftSpeed.update(), vTeleopRightSpeed.update(), DriveUnit.percentOutput));
 
 		//Shifting
 		if (controller.getPressed(HMI.Drive._shift))
