@@ -1,6 +1,7 @@
 package com.frc5104.main;
 
 import com.frc5104.utilities.Curve;
+import com.frc5104.utilities.Deadband;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.controller.Control;
 
@@ -12,21 +13,21 @@ public class HMI {
 
 	//Drive
 	public static class Drive {
-		public static double driveX() {
-			return controller.getAxis(Control.LX);
+		public static double getTurn() {
+			return Deadband.get(controller.getAxis(Control.LX), -0.2);
+		}
+		public static double applyTurnCurve(double turn, double forward) {
+			double x1 = (1 - Math.abs(forward)) * (1 - 0.3) + 0.3 /*0 -> 1, 1 -> 0.3 (Linear Curve Through)*/;
+			double y1 = 0.4;
+			return Curve.getBezierCurve(turn, x1, y1, 1, 0.2);
 		}
 		
-		public static final boolean _usingTriggerDrive = true;
-		public static double driveY() {
-			if (_usingTriggerDrive) return controller.getAxis(Control.LT) - controller.getAxis(Control.RT);
-			else return controller.getAxis(Control.LY);
+		public static double getForward() {
+			return Deadband.get(controller.getAxis(Control.LT) - controller.getAxis(Control.RT), 0.1);
 		}
+		
 		
 		public static final Control _shift = Control.LJ;
-		
-		public static final double _deadbandX = -0.2;
-		public static final double _deadbandY = 0.1;
-		public static final Curve.BezierCurve _turnCurve = new Curve.BezierCurve(0.9, 0.15, 1, 0.2);
 		
 		public static final Curve.BezierCurve _driveCurve = new Curve.BezierCurve(.2, 0, .2, 1);
 		public static final double _driveCurveChange = 0.08;

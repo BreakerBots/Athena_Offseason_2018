@@ -11,7 +11,6 @@ import com.frc5104.traj.RobotDriveSignal;
 import com.frc5104.traj.RobotDriveSignal.DriveUnit;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.CurveInterpolator;
-import com.frc5104.utilities.Deadband;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.console.c;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -219,16 +218,14 @@ public class Drive extends BreakerSubsystem {
 	
 	protected void teleopUpdate() {
 		//Driving + Controll Processing
-		double x = Deadband.get(HMI.Drive.driveX(), HMI.Drive._deadbandX);
-		boolean xn = x > 0;
-		x = HMI.Drive._turnCurve.getPoint(Math.abs(x));
-		if (!xn) x = -x;
-		console.log("from: " + HMI.Drive.driveX() + " to " + x);
+		double turn = HMI.Drive.getTurn();
+		double forward = HMI.Drive.getForward();
+		turn = HMI.Drive.applyTurnCurve(turn, forward);
 		
-		double y = Deadband.get(HMI.Drive.driveY(), HMI.Drive._deadbandY);
 		
-		vTeleopLeftSpeed.setSetpoint(y - x);
-		vTeleopRightSpeed.setSetpoint(y + x);
+		
+		vTeleopLeftSpeed.setSetpoint(forward - turn);
+		vTeleopRightSpeed.setSetpoint(forward + turn);
 		
 		set(new RobotDriveSignal(vTeleopLeftSpeed.update(), vTeleopRightSpeed.update(), DriveUnit.percentOutput));
 
