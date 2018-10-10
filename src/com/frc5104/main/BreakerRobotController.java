@@ -13,17 +13,24 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 
-/*Breakerbots Robotics Team 2018*/
-/**
- * Just an Extension onto Interative Robot
- * Just misc function calls that (almost) never change
+/* Breakerbots Robotics Team 2018
+ *  ____                 _             _           _       
+ * | __ ) _ __ ___  __ _| | _____ _ __| |__   ___ | |_ ___ 
+ * |  _ \| '__/ _ \/ _` | |/ / _ \ '__| '_ \ / _ \| __/ __|
+ * | |_) | | |  __/ (_| |   <  __/ |  | |_) | (_) | |_\__ \
+ * |____/|_|  \___|\__,_|_|\_\___|_|  |_.__/ \___/ \__|___/ 
  */
-public abstract class BreakerRobot extends TimedRobot {
+/**
+ * <h1>Breaker Robot Controller</h1>
+ * An extension onto the Timed Robot
+ * Calls system manages, logs, and drops functions down to a BreakerRobot (Robot.java)
+ */
+public class BreakerRobotController extends TimedRobot {
 	private static boolean isEnabled = false;
 	private static boolean printedMatch = false;
+	private static BreakerRobot robot = new Robot();
 	
 	// -- Robot
-	public abstract void _robotInit();
 	public void robotInit() {
 		//Run the loops at 50hz
 		this.setPeriod(1.0 / Constants.Loops._robotHz);
@@ -32,7 +39,7 @@ public abstract class BreakerRobot extends TimedRobot {
 		console.log(c.MAIN, t.INFO, "Initializing Code");
 		
 		//Call fallthrough
-		_robotInit();
+		robot.robotInit();
 		
 		//Init Subsystems
 		BreakerSubsystemManager.init();
@@ -45,7 +52,6 @@ public abstract class BreakerRobot extends TimedRobot {
 		console.sets.log(c.MAIN, t.INFO, "RobotInit", "Initialization took ");
 	}
 	
-	public abstract void _robotPeriodic();
 	public void robotPeriodic() {
 		//Idle Update Subsystems
 		BreakerSubsystemManager.idleUpdate();
@@ -62,7 +68,8 @@ public abstract class BreakerRobot extends TimedRobot {
 			printedMatch = true;
 		} } catch (Exception err) { console.error(err); }
 		
-		_robotPeriodic();
+		//Call fallthrough
+		robot.robotPeriodic();
 		
 		if (RobotController.isBrownedOut())
 			console.error("Robot Browning Out! Battery Voltage: " + RobotController.getBatteryVoltage() + ", Input Current: " + RobotController.getInputCurrent() + ", Input Voltage: " + RobotController.getInputVoltage());
@@ -76,7 +83,6 @@ public abstract class BreakerRobot extends TimedRobot {
 	
 	
 	// -- Autonomous
-	public abstract void _autonomousInit();
 	public void autonomousInit() {
 		pitchEnabledStatus(true);
 		
@@ -90,7 +96,7 @@ public abstract class BreakerRobot extends TimedRobot {
 		BreakerSubsystemManager.autoInit();
 		
 		//Call fallthrough
-		_autonomousInit();
+		robot.autonomousInit();
 	}
 	public void autonomousPeriodic() {
 		//Run Autonomous Path
@@ -101,11 +107,13 @@ public abstract class BreakerRobot extends TimedRobot {
 		
 		//Auto Update Subsystems
 		BreakerSubsystemManager.autoUpdate();
+		
+		//Call fallthrough
+		robot.autonomousPeriodic();
 	}
 	
 	
 	// -- Teleoperation
-	public abstract void _teleopInit();
 	public void teleopInit() {
 		pitchEnabledStatus(true);
 		
@@ -116,7 +124,7 @@ public abstract class BreakerRobot extends TimedRobot {
 		BreakerSubsystemManager.teleopInit();
 		
 		//Call fallthrough
-		_teleopInit();
+		robot.teleopInit();
 	}
 	public void teleopPeriodic() {
 		//Update the Controll Handler Class
@@ -125,23 +133,24 @@ public abstract class BreakerRobot extends TimedRobot {
 		//Teleop Update Subsystems
 		BreakerSubsystemManager.teleopUpdate();
 		
+		//Call fallthrough
+		robot.teleopPeriodic();
+		
 		DriverStation.getInstance().waitForData(1000 / Constants.Loops._robotHz);
 	}
 	
 	
 	// -- Test Mode
-	public abstract void _testInit();
-	public abstract void _testPeriodic();
 	public void testInit() {
 		pitchEnabledStatus(true);
 		
 		//Call fallthrough
-		_testInit();
+		robot.testInit();
 	}
 	
 	public void testPeriodic() {
 		//Call fallthrough
-		_testPeriodic();
+		robot.testPeriodic();
 	}
 	
 	// -- Enabling
@@ -150,5 +159,29 @@ public abstract class BreakerRobot extends TimedRobot {
 			isEnabled = status;
 			console.log(c.MAIN, t.INFO, "Robot " + (isEnabled ? "Enabled" : "Disabled"));
 		}
+	}
+	
+	/**
+	 * <h1>Breaker Robot</h1>
+	 * A fallthrough from the <strong>Breaker Robot Controller</strong>
+	 * <br><strong>Functions:</strong>
+	 * <br> - robotInit
+	 * <br> - robotPeriodic
+	 * <br> - autonomousInit
+	 * <br> - autonomousPeriodic
+	 * <br> - teleopInit
+	 * <br> - teleopPeriodic
+	 * <br> - testInit
+	 * <br> - testPeriodic
+	 */
+	public interface BreakerRobot {
+		public default void robotInit() {};
+		public default void robotPeriodic() {};
+		public default void autonomousInit() {};
+		public default void autonomousPeriodic() {};
+		public default void teleopInit() {};
+		public default void teleopPeriodic() {};
+		public default void testInit() {};
+		public default void testPeriodic() {};
 	}
 }
