@@ -2,7 +2,6 @@ package com.frc5104.main;
 
 import com.frc5104.utilities.Curve;
 import com.frc5104.utilities.Deadband;
-import com.frc5104.utilities.controller;
 import com.frc5104.utilities.controller.Control;
 
 /*Breakerbots Robotics Team 2018*/
@@ -14,21 +13,17 @@ public class HMI {
 	//Drive
 	public static class Drive {
 		public static double getTurn() {
-			return Deadband.get(controller.getAxis(Control.LX), -0.2);
+			return Deadband.get(Control.LX.getAxis(), -0.2);
 		}
 		public static double applyTurnCurve(double turn, double forward) {
-			double x1 = (1 - Math.abs(forward)) * (1 - 0.3) + 0.3 /*0 -> 1, 1 -> 0.3 (Linear Curve Through)*/;
-			double y1 = 0.4;
-			return Curve.getBezierCurve(turn, x1, y1, 1, 0.2);
+			double x1 = (1 - Math.abs(forward)) * (1 - 0.3) + 0.3;
+			return Curve.getBezierCurve(turn, x1, 0.4, 1, 0.2);
 		}
 		
 		public static double getForward() {
-			return Deadband.get(controller.getAxis(Control.LT) - controller.getAxis(Control.RT), 0.1);
+			return Deadband.get(Control.LT.getAxis() - Control.RT.getAxis(), 0.1);
 		}
-		
-		
 		public static final Control _shift = Control.LJ;
-		
 		public static final Curve.BezierCurve _driveCurve = new Curve.BezierCurve(.2, 0, .2, 1);
 		public static final double _driveCurveChange = 0.08;
 	}

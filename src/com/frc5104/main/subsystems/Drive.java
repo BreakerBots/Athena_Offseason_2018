@@ -230,7 +230,7 @@ public class Drive extends BreakerSubsystem {
 		set(new RobotDriveSignal(vTeleopLeftSpeed.update(), vTeleopRightSpeed.update(), DriveUnit.percentOutput));
 
 		//Shifting
-		if (controller.getPressed(HMI.Drive._shift))
+		if (HMI.Drive._shift.getPressed())
 			shifters.toggle();
 	}
 

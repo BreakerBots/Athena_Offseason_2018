@@ -7,7 +7,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.frc5104.main.Constants;
 import com.frc5104.main.Devices;
 import com.frc5104.main.HMI;
-import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console.c;
 import com.frc5104.utilities.Deadband;
 import com.frc5104.utilities.console;
@@ -139,7 +138,7 @@ public class Elevator extends BreakerSubsystem {
 			
 			//Teleop State
 			case user: {
-				double s = controller.getAxis(HMI.Elevator._drive);
+				double s = HMI.Elevator._drive.getAxis();
 				s = -Deadband.getReverse(s, 0.1);
 				
 				//Moving Down

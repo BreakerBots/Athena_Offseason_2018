@@ -10,13 +10,19 @@ import com.frc5104.utilities.BreakerMath;
 import com.frc5104.utilities.console;
 import com.frc5104.utilities.controller;
 import com.frc5104.utilities.console.c;
-
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-/*Breakerbots Robotics Team 2018*/
+/* Breakerbots Robotics Team 2018
+ *  ____                 _             _           _       
+ * | __ ) _ __ ___  __ _| | _____ _ __| |__   ___ | |_ ___ 
+ * |  _ \| '__/ _ \/ _` | |/ / _ \ '__| '_ \ / _ \| __/ __|
+ * | |_) | | |  __/ (_| |   <  __/ |  | |_) | (_) | |_\__ \
+ * |____/|_|  \___|\__,_|_|\_\___|_|  |_.__/ \___/ \__|___/ 
+ */
 /**
- * Squeezy Sanchez (A Decent but also sucky intake mechanism, with new and improved code!!!)
+ * <h1>Squeezy Sanchez</h1>
+ * (A Decent but also sucky intake mechanism, with new and improved code!!!)
  */
 public class Squeezy extends BreakerSubsystem {
 	/*
@@ -368,28 +374,28 @@ public class Squeezy extends BreakerSubsystem {
 		 */
 		
 		//Fold Up
-		if (controller.getPressed(HMI.Squeezy._foldUp))
+		if (HMI.Squeezy._foldUp.getPressed())
 			actions.foldSet(true);
 		
 		//Fold Down
-		if (controller.getPressed(HMI.Squeezy._foldDown))
+		if (HMI.Squeezy._foldDown.getPressed())
 			actions.foldSet(false);
 		
 		// - State Switching
 		//Intake
-		if (controller.getPressed(HMI.Squeezy._intake))
+		if (HMI.Squeezy._intake.getPressed())
 			actions.intake();
 		
 		//Eject
-		if (controller.getPressed(HMI.Squeezy._eject))
+		if (HMI.Squeezy._eject.getPressed())
 			actions.eject();
 		
 		//Hold
-		if (controller.getPressed(HMI.Squeezy._hold))
+		if (HMI.Squeezy._hold.getPressed())
 			actions.hold();
 		
 		//Idle
-		if (controller.getPressed(HMI.Squeezy._idle))
+		if (HMI.Squeezy._idle.getPressed())
 			actions.idle();
 		
 		update();

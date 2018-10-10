@@ -9,6 +9,13 @@ import com.frc5104.main.Units;
 import edu.wpi.first.wpilibj.Notifier;
 
 /*Breakerbots Robotics Team 2018*/
+/**
+ * <h1>Odometry (Robot Position Estimator/Kinematics)</h1>
+ * Calculates the Robots x, y position according to encoder values.
+ * <br><strong>TODO:</strong>
+ * <br> - Account for wheel slipping
+ * <br> - Account for gyro angle
+ */
 public class Odometry {
 	private static Notifier m_notifier = null;
 		

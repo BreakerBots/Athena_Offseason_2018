@@ -23,27 +23,39 @@ public class controller {
 
 	//Normal Buttons (Control, Slots, and Type all line up in indexes)
 	public static enum Control { 
-		A, B, X, Y, LB, RB , MENU, LIST, LJ, RJ, /*Button*/
-		N, NE, E , SE , S  , SW , W  , NW ,		 /*Dpad*/
-		LX, LY, LT, RT, RX, RY					 /*Axis*/
+		/*Button*/	A(1, 1),	B(2, 1),	X(3, 1),	Y(4, 1),	LB(5, 1),	RB(6, 1),	MENU(7, 1),	LIST(8, 1),	LJ(9, 1),	RJ(10, 1),
+		/*Dpad*/	N(0, 3),	NE(45, 3),	E(90, 3),	SE(135, 3),	S(180, 3),	SW(225, 3), W(270, 3),	NW(315, 3),
+		/*Axis*/	LX(0, 2),	LY(1, 2),	LT(2, 2),	RT(3, 2),	RX(4, 2),	RY(5, 2);					 
+		
+		protected int slot, type;
+		protected double deadzone;
+		protected boolean val, lastVal, pressed, released;
+		protected long time;
+		Control(int slot, int type) {
+			this(slot, type, 0.6);
+		}
+		Control(int slot, int type, double deadzone) {
+			this.slot = slot;
+			this.type = type;
+			deadzone = 0.6;
+		}
+		
+		//Control Functions
+		/**Returns the percent of the axis, Just The Default Axis*/
+		public double getAxis() { return controller.getRawAxis(slot); }
+		/**Returns true if button is down, Just The Default Button State*/
+		public boolean getHeld() { return val; }
+		/**Returns how long the button has been held down for, if not held down returns 0*/
+		public double getHeldTime() { return val ? ((double)(System.currentTimeMillis() - time))/1000 : 0; }
+		/**Returns true for one tick if button goes from up to down*/
+		public boolean getPressed() { return pressed; }
+		/**Returns true for one tick if button goes from down to up*/
+		public boolean getReleased() { return released; }
+		/**Returns the time the click lasted for, for one tick when button goes from down to up*/
+		public double getClickTime() { return released ? ((double)(System.currentTimeMillis() - time))/1000 : 0; }
+		/**Returns true for one tick if the button has been held for the specified time*/
+		public boolean getHeldEvent(double time) { return Math.abs(getHeldTime() - time) <= 0.01; }
 	}
-	private static final int[] Slots = {
-		1, 2, 3, 4, 5 , 6 , 7    , 8   , 9 , 10, /*Button*/ 
-		0, 45, 90, 135, 180, 225, 270, 315,		 /*Dpad*/
-		0 , 1 , 2 , 3 , 4 , 5					 /*Axis*/
-	}; 
-	private static int[]     Type = {
-		1, 1, 1, 1, 1 , 1 , 1    , 1   , 1 , 1 , /*Button*/
-		3, 3 , 3 , 3  , 3  , 3  , 3  , 3  ,		 /*Dpad*/
-		2 , 2 , 2 , 2 , 2 , 2					 /*Axis*/
-	};
-	//Deadzones are for converting axises to buttons
-	private static double[]  Deadzones = { 0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6 };
-	private static boolean[] Val = new boolean[Slots.length];
-	private static boolean[] LastVal = new boolean[Slots.length];
-	private static boolean[] Pressed = new boolean[Slots.length];
-	private static boolean[] Released = new boolean[Slots.length];
-	private static    long[] Time = new long[Slots.length];
 		
 	//Rumble
 	private static long hardTarget; private static boolean hardTimer = false;
@@ -54,16 +66,16 @@ public class controller {
 		int buttons = DriverStation.getInstance().getStickButtons(0);
 		
 		//Normal Buttons
-		for (int i = 0; i < Slots.length; i++) {
-			Pressed[i] = false;
-			Released[i] = false;
+		for (Control c : Control.values()) {
+			c.pressed = false;
+			c.released = false;
 			
-			Val[i] = Type[i] == 1 ? ((buttons & 1 << (Slots[i]-1)) != 0) : (Type[i] == 2 ? (controller.getRawAxis(Slots[i]) <= Deadzones[i] ? false : true) : (controller.getPOV() == Slots[i]));
+			c.val = c.type == 1 ? ((buttons & 1 << (c.slot-1)) != 0) : (c.type == 2 ? (controller.getRawAxis(c.slot) <= c.deadzone ? false : true) : (controller.getPOV() == c.slot));
 			
-			if (Val[i] != LastVal[i]) {
-				LastVal[i] = Val[i];
-				if (Val[i] == true) { Pressed[i] = true; Time[i] = System.currentTimeMillis(); }
-				else { Released[i] = true; }
+			if (c.val != c.lastVal) {
+				c.lastVal = c.val;
+				if (c.val == true) { c.pressed = true; c.time = System.currentTimeMillis(); }
+				else { c.released = true; }
 			}
 		}
 		
@@ -74,22 +86,20 @@ public class controller {
 	
 	//Control Functions
 	/**Returns the percent of the axis, Just The Default Axis*/
-	public static double getAxis(Control control) { return controller.getRawAxis(Slots[control.ordinal()]); }
+	public static double getAxis(Control control) { return control.getAxis(); }
 	/**Returns true if button is down, Just The Default Button State*/
-	public static boolean getHeld(Control control) { return Val[control.ordinal()]; }
+	public static boolean getHeld(Control control) { return control.getHeld(); }
 	/**Returns how long the button has been held down for, if not held down returns 0*/
-	public static double getHeldTime(Control control) { return Val[control.ordinal()] ? ((double)(System.currentTimeMillis() - Time[control.ordinal()]))/1000 : 0; }
+	public static double getHeldTime(Control control) { return control.getHeldTime(); }
 	/**Returns true for one tick if button goes from up to down*/
-	public static boolean getPressed(Control control) { return Pressed[control.ordinal()]; }
+	public static boolean getPressed(Control control) { return control.getPressed(); }
 	/**Returns true for one tick if button goes from down to up*/
-	public static boolean getReleased(Control control) { return Released[control.ordinal()]; }
-	/** Sets the deadzone[ the desired point in which the axis is considered pressed ] for the desired axis. */
-	public static void setDeadzone(Control control, double deadzonePercent) { Deadzones[control.ordinal()] = deadzonePercent; }
+	public static boolean getReleased(Control control) { return control.getReleased(); }
 	/**Returns the time the click lasted for, for one tick when button goes from down to up*/
-	public static double getClickTime(Control control) { return Released[control.ordinal()] ? ((double)(System.currentTimeMillis() - Time[control.ordinal()]))/1000 : 0; }
+	public static double getClickTime(Control control) { return control.getClickTime(); }
 	/**Returns true for one tick if the button has been held for the specified time*/
-	public static boolean getHeldEvent(Control control, double time) { return Math.abs(getHeldTime(control) - time) <= 0.01; }
-
+	public static boolean getHeldEvent(Control control, double time) { return control.getHeldEvent(time); }
+	
 	//Rumble
 	/** Rumbles the controller hard[ hard rumble is a deep rumble and soft rumble is lighter rumble ] at (strength) until set again */
 	public static void rumbleHard(double strength) { controller.setRumble(RumbleType.kLeftRumble, strength); hardTimer = false; }
