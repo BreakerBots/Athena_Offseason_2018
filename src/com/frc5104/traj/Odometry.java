@@ -17,14 +17,14 @@ import edu.wpi.first.wpilibj.Notifier;
  * <br> - Account for gyro angle
  */
 public class Odometry {
-	private static Notifier m_notifier = null;
+	private static Notifier _thread = null;
 		
 	private volatile static double lastPos, currentPos, dPos, theta;
 	public volatile static RobotPosition position = new RobotPosition(0, 0, 0);
 	
 	private static void init() {
 		lastPos = currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
-		m_notifier = new Notifier(() -> {
+		_thread = new Notifier(() -> {
 			currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
 			dPos = Units.ticksToFeet(currentPos - lastPos);
 			lastPos = currentPos;
@@ -39,15 +39,15 @@ public class Odometry {
 	}
 	
 	public static void run() {
-		if (m_notifier == null)
+		if (_thread == null)
 			init();
 		
-		m_notifier.startPeriodic(1.0 / Constants.Loops._odometryHz);
+		_thread.startPeriodic(1.0 / Constants.Loops._odometryHz);
 	}
 	
 	public static void stop() {
-		if (m_notifier != null)
-			m_notifier.stop();
+		if (_thread != null)
+			_thread.stop();
 	}
 	
 	public static RobotPosition getPosition() {

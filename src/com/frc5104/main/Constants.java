@@ -104,8 +104,8 @@ public class Constants {
 	
 	// -- Elevator
 	public static final class Elevator {
-		public static final double _downScalar = 0.4;   //(TalSpeed) [Choose]
-		public static final double _upScalar   = 0.6; 	//(TalSpeed) [Choose]
+		public static final double _downScalar = 0.6;   //(TalSpeed) [Choose]
+		public static final double _upScalar = 1.0; 	//(TalSpeed) [Choose]
 		
 		public static final boolean _hardLimitSwitchesEnabled = true;  //Should use hard limit switches
 		public static final boolean _softLimitSwitchesEnabled = false; //Should use soft limit switches (encoder values)

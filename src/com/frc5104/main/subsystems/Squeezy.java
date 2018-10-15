@@ -305,23 +305,23 @@ public class Squeezy extends BreakerSubsystem {
 					setState(SqueezyState.idle);
 				
 				//shouldHoldCube = false;
-				if (vHasCube) {
+				//if (vHasCube) {
 					//Arms
 					arms.set(Constants.Squeezy._armsHoldSpeed);
 					
 					//Wheels
 					wheels.hold();
-				}
-				else {
-					//Arms
-					arms.set(Constants.Squeezy._armsInSpeed);
-					
-					//Wheels
-					wheels.intake();
-					
-					//Has Cube
-					vHasCube = arms.isPhysicallyStopped();
-				}
+//				}
+//				else {
+//					//Arms
+//					arms.set(Constants.Squeezy._armsInSpeed);
+//					
+//					//Wheels
+//					wheels.intake();
+//					
+//					//Has Cube
+//					vHasCube = arms.isPhysicallyStopped();
+//				}
 				
 				break;
 			}
