@@ -1,6 +1,6 @@
 package frc.team5104.util
 
-/* 
+/**
  * <h1>Spike Listener</h1>
  * Returns true if significant spike has occurred in the given interval
  */
