@@ -12,9 +12,6 @@ import edu.wpi.first.wpilibj.Notifier;
 /**
  * <h1>Odometry (Robot Position Estimator/Kinematics)</h1>
  * Calculates the Robots x, y position according to encoder values.
- * <br><strong>TODO:</strong>
- * <br> - Account for wheel slipping
- * <br> - Account for gyro angle
  */
 public class Odometry {
 	private static Notifier _thread = null;
@@ -28,13 +25,12 @@ public class Odometry {
 			currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
 			dPos = Units.ticksToFeet(currentPos - lastPos);
 			lastPos = currentPos;
-			theta = Units.degreesToRadians(BreakerMath.bound180(Drive.gyro.getAngle() * 1));
+			theta = Units.degreesToRadians(BreakerMath.bound180(Drive.gyro.getAngle()));
             position.set(
         		position.x + Math.cos(theta) * dPos, 
         		position.y + Math.sin(theta) * dPos, 
         		theta
             );
-            //console.log(position.toString());
         });
 	}
 	
