@@ -1,4 +1,4 @@
-package frc.team5104.util
+package frc.team5104.util;
 
 /**
  * <h1>Spike Listener</h1>
