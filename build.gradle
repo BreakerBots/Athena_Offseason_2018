@@ -3,7 +3,7 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2018.06.21"
 }
 
-def ROBOT_CLASS = "frc.team5104.robot.Robot"
+def ROBOT_CLASS = "frc.team5104.main.BreakerRobotController"
 
 deploy {
     targets {
