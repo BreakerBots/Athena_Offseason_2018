@@ -7,6 +7,7 @@ import frc.team5104.subsystem.BreakerSubsystemManager;
 import frc.team5104.subsystem.drive.DriveManager;
 import frc.team5104.subsystem.elevator.ElevatorManager;
 import frc.team5104.subsystem.squeezy.SqueezyManager;
+import frc.team5104.teleop.BreakerTeleopController;
 
 /* Breakerbots Robotics Team 2018
  *  ____                 _             _           _       
@@ -56,11 +57,7 @@ public class Robot extends BreakerRobotController.BreakerRobot {
 	}
 	
 	//Teleop
-	public void teleopEnabled() {
-		
-	}
-	
 	public void teleopLoop() {
-		
+		BreakerTeleopController.update();
 	}
 }
