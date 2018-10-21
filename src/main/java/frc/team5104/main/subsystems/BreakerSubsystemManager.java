@@ -80,4 +80,10 @@ public class BreakerSubsystemManager {
 			t.idleUpdate();
 		}
 	}
+	
+	public static void disabled() {
+		for (BreakerSubsystem t : targets) {
+			t.robotDisabled();
+		}
+	}
 }

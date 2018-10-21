@@ -20,9 +20,9 @@ public class Odometry {
 	public volatile static RobotPosition position = new RobotPosition(0, 0, 0);
 	
 	private static void init() {
-		lastPos = currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
+		lastPos = currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight()) / 2;
 		_thread = new Notifier(() -> {
-			currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight())/2;
+			currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight()) / 2;
 			dPos = Units.ticksToFeet(currentPos - lastPos);
 			lastPos = currentPos;
 			theta = Units.degreesToRadians(BreakerMath.bound180(Drive.gyro.getAngle()));

@@ -16,7 +16,7 @@ public class LL extends BreakerPath {
 	public LL() {
 		add(new DriveTrajectory(new Waypoint[] {
 				new Waypoint(0, 0, 0),
-				new Waypoint(10, 1, 45)
+				new Waypoint(10, 10, 90)
 			}));
 		add(new DriveStop());
 		add(new Delay(1000));

@@ -76,6 +76,8 @@ public class BreakerRobotController extends TimedRobot {
 	public void disabledInit() {
 		pitchEnabledStatus(false);
 		
+		BreakerSubsystemManager.disabled();
+		
 		//End the log file
 		console.logFile.end();
 	}

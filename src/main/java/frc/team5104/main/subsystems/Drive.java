@@ -9,10 +9,12 @@ import frc.team5104.main.HMI;
 import frc.team5104.main.Units;
 import frc.team5104.traj.RobotDriveSignal;
 import frc.team5104.traj.RobotDriveSignal.DriveUnit;
+import frc.team5104.util.CSV;
 import frc.team5104.util.CurveInterpolator;
 import frc.team5104.util.console;
 import frc.team5104.util.controller;
 import frc.team5104.util.console.c;
+import frc.team5104.util.controller.Control;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 
@@ -48,17 +50,11 @@ public class Drive extends BreakerSubsystem {
 		L1.configClosedloopRamp(Constants.Drive._rampSeconds, 10);
         L2.configClosedloopRamp(Constants.Drive._rampSeconds, 10);
 		
-        L1.configAllowableClosedloopError(0, Constants.Drive._highPidId, 10);
-        L1.config_kF(Constants.Drive._highPidId, Constants.Drive.highDrivePidF, 10);
-        L1.config_kP(Constants.Drive._highPidId, Constants.Drive.highDrivePidP, 10);
-        L1.config_kI(Constants.Drive._highPidId, Constants.Drive.highDrivePidI, 10);
-        L1.config_kD(Constants.Drive._highPidId, Constants.Drive.highDrivePidD, 10);
-        
-        L1.configAllowableClosedloopError(0, Constants.Drive._lowPidId, 10);
-        L1.config_kF(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidF, 10);
-        L1.config_kP(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidP, 10);
-        L1.config_kI(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidI, 10);
-        L1.config_kD(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidD, 10);
+        L1.configAllowableClosedloopError(0, Constants.Drive._pidId, 10);
+        L1.config_kF(Constants.Drive._pidId, Constants.Drive._pidF, 10);
+        L1.config_kP(Constants.Drive._pidId, Constants.Drive._pidP, 10);
+        L1.config_kI(Constants.Drive._pidId, Constants.Drive._pidI, 10);
+        L1.config_kD(Constants.Drive._pidId, Constants.Drive._pidD, 10);
         
         //L1.configPeakCurrentLimit(Constants.Drive._currentLimitPeak, 10);
         //L1.configPeakCurrentDuration(Constants.Drive._currentLimitPeakTime, 10);
@@ -78,17 +74,11 @@ public class Drive extends BreakerSubsystem {
 		R1.configClosedloopRamp(Constants.Drive._rampSeconds, 10);
         R2.configClosedloopRamp(Constants.Drive._rampSeconds, 10);
 		
-        R1.configAllowableClosedloopError(0, Constants.Drive._highPidId, 10);
-        R1.config_kF(Constants.Drive._highPidId, Constants.Drive.highDrivePidF, 10);
-        R1.config_kP(Constants.Drive._highPidId, Constants.Drive.highDrivePidP, 10);
-        R1.config_kI(Constants.Drive._highPidId, Constants.Drive.highDrivePidI, 10);
-        R1.config_kD(Constants.Drive._highPidId, Constants.Drive.highDrivePidD, 10);
-        
-        R1.configAllowableClosedloopError(0, Constants.Drive._lowPidId, 10);
-        R1.config_kF(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidF, 10);
-        R1.config_kP(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidP, 10);
-        R1.config_kI(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidI, 10);
-        R1.config_kD(Constants.Drive._lowPidId, Constants.Drive.lowDrivePidD, 10);
+        R1.configAllowableClosedloopError(0, Constants.Drive._pidId, 10);
+        R1.config_kF(Constants.Drive._pidId, Constants.Drive._pidF, 10);
+        R1.config_kP(Constants.Drive._pidId, Constants.Drive._pidP, 10);
+        R1.config_kI(Constants.Drive._pidId, Constants.Drive._pidI, 10);
+        R1.config_kD(Constants.Drive._pidId, Constants.Drive._pidD, 10);
         
         //R1.configPeakCurrentLimit(Constants.Drive._currentLimitPeak, 10);
         //R1.configPeakCurrentDuration(Constants.Drive._currentLimitPeakTime, 10);
@@ -97,7 +87,7 @@ public class Drive extends BreakerSubsystem {
         //R1.enableCurrentLimit(true);
 		
 		//Stop the motors
-		set(new RobotDriveSignal(0, 0, DriveUnit.percentOutput));
+		set(new RobotDriveSignal(0, 0, DriveUnit.percentOutput), false);
 		
 		//Reset Gyro
 		gyro.reset();
@@ -115,9 +105,11 @@ public class Drive extends BreakerSubsystem {
 	 * Sets the speed of the drive motors to the corresponding speeds specified in the Drive Signal
 	 * @param signal
 	 */
-	public static void set(RobotDriveSignal signal) {
-		signal.leftSpeed = signal.leftSpeed * Constants.Drive._leftAccount;
-		signal.rightSpeed = signal.rightSpeed * Constants.Drive._rightAccount;
+	public static void set(RobotDriveSignal signal, boolean account) {
+		if (account) {
+			signal.leftSpeed = signal.leftSpeed * Constants.Drive._leftAccount;
+			signal.rightSpeed = signal.rightSpeed * Constants.Drive._rightAccount;
+		}
 		switch (signal.unit) {
 			case percentOutput: {
 				L1.set(ControlMode.PercentOutput, signal.leftSpeed);
@@ -136,7 +128,7 @@ public class Drive extends BreakerSubsystem {
 	 * Stops the drive motors
 	 */
 	public static void stop() {
-		set(new RobotDriveSignal(0, 0, DriveUnit.percentOutput));
+		set(new RobotDriveSignal(0, 0, DriveUnit.percentOutput), false);
 	}
 	
 	//Encoders
@@ -216,19 +208,31 @@ public class Drive extends BreakerSubsystem {
 		
 	}
 	
+	CSV csv = new CSV(new String[] { "TarL", "AcL", "TarR", "AcR" });
 	protected void teleopUpdate() {
 		//Driving + Controll Processing
-		double turn = HMI.Drive.getTurn();
+		double turn = Control.LX.getAxis();
 		double forward = HMI.Drive.getForward();
 		turn = HMI.Drive.applyTurnCurve(turn, forward);
-		
-		
 		
 		vTeleopLeftSpeed.setSetpoint(forward - turn);
 		vTeleopRightSpeed.setSetpoint(forward + turn);
 		
-		set(new RobotDriveSignal(vTeleopLeftSpeed.update(), vTeleopRightSpeed.update(), DriveUnit.percentOutput));
+		if (Control.MENU.getHeld()) {
+			set(new RobotDriveSignal(5, 5, DriveUnit.feetPerSecond), false);
+			
+			csv.update(new String [] { 
+					""+5, 
+					""+(-Units.talonVelToFeetPerSecond(L1.getSelectedSensorVelocity(0))),
+					""+5,
+					""+(-Units.talonVelToFeetPerSecond(R1.getSelectedSensorVelocity(0)))
+					});
+		}
+		else
+			set(new RobotDriveSignal(vTeleopLeftSpeed.update(), vTeleopRightSpeed.update(), DriveUnit.percentOutput), true);
 
+		
+		
 		//Shifting
 		if (HMI.Drive._shift.getPressed())
 			shifters.toggle();
@@ -273,5 +277,6 @@ public class Drive extends BreakerSubsystem {
 
 	protected void robotDisabled() {
 		stop();
+		csv.writeFile("talpid", "talpid" + System.currentTimeMillis());
 	}
 }

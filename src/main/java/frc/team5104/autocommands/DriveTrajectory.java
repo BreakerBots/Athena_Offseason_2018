@@ -35,13 +35,13 @@ public class DriveTrajectory extends BreakerAction {
     }
 
     public boolean update() {
-        Drive.set(f.getNextDriveSignal(Odometry.getPosition()));
+        Drive.set(f.getNextDriveSignal(Odometry.getPosition()), false);
     	
 		return f.isFinished();
     }
 
     public void end() {
     	Drive.stop();
-    	console.log(c.AUTO, "Trajectory Finished in " + console.sets.getTime("RunTrajectoryTime") + "s");
+    	console.log(c.AUTO, "Trajectory Finished in " + console.sets.getTime("RunTrajectoryTime") + "s at position " + Odometry.getPosition().toString());
     }
 }

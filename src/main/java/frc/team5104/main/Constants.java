@@ -29,7 +29,7 @@ public class Constants {
 	public static final double _robotLength = Units.inchesToFeet(32.0 + 4.0);
 	public static final double _robotWidth = Units.inchesToFeet(28.0 + 4.0);
 	public static final double _wheelDiameter = 0.5; 				  //(Feet) [Measure] The diameter of the wheels
-	public static final double _ticksPerRevolution = /*2500*//*4300*/4600; //(Encoder Tick) [Measure] Encoder Ticks Per Wheel Revolution
+	public static final double _ticksPerRevolution = 4922; //(Encoder Tick) [Measure] Encoder Ticks Per Wheel Revolution
 	public static final double _wheelBaseWidth = 2.179;			  //(Feet) [Measure] The Distance from the Left and Right Wheels
 	
 	//Drive
@@ -40,39 +40,23 @@ public class Constants {
 		public static final double _gyroAngle = 65;   //(Degrees) [Measure] Yaw Angle of Gyro (Athena is 65)
 		
 		public static final double _rampSeconds			= 0.0; //(Seconds) [Tune/Choose]
-		public static final int _currentLimitPeak		= 80;  //(Current) [Tune/Choose]
-		public static final int _currentLimitPeakTime	= 10;  //(Milliseconds) [Tune/Choose]
-		public static final int _currentLimitSustained	= 36;  //(Current) [Tune/Choose]
+		//public static final int _currentLimitPeak		= 80;  //(Current) [Tune/Choose]
+		//public static final int _currentLimitPeakTime	= 10;  //(Milliseconds) [Tune/Choose]
+		//public static final int _currentLimitSustained	= 36;  //(Current) [Tune/Choose]
 		
-		public static final int _highPidId = 0;
-		public static final double highDrivePidF = 1.00;
-		public static final double highDrivePidP = 0.00;
-		public static final double highDrivePidI = 0.00;
-		public static final double highDrivePidD = 0.00;
-		
-		public static final int _lowPidId = 1;
-		public static final double lowDrivePidF = 1.00;
-		public static final double lowDrivePidP = 0.00;
-		public static final double lowDrivePidI = 0.00;
-		public static final double lowDrivePidD = 0.00;
-	}
-	
-	// -- AutonomousWP (! Deprication Notice)
-	public static final class AutonomousWP {
-		public static final double _PIDA[] = { 1.0, 0.0, 0.0, 0 };//(None) [Tune] Speed
-		public static final double _maxVelocity = 8.0; 			  //(Feet) [Tune] in ft/s
-		public static final double _maxAcceleration = 4.0; 		  //(Feet) [Tune] in ft/s/s
-		public static final double _maxJerk = 50; 				  //(Feet) [Tune] in ft/s/s/s
-		public static final double _angleMult = 0.8;			  //(None) [None] Multiply the gyro angle value by this, keep from 0.6 - 0.8
-		public static final double _xAngleMult = 4.0;			  //(None) [Tune] Multiple the x cordinate of this in each trajectory
+		public static final int _pidId = 0;
+		public static final double _pidF = 0.59;
+		public static final double _pidP = 0.00;
+		public static final double _pidI = 0.00;
+		public static final double _pidD = 0.00;
 	}
 	
 	// -- Autonomous
 	public static final class Autonomous {
 		//Trajectory Generation
-		public static final double _maxVelocity = 5.0; 			  //(Feet) [Tune] in ft/s
-		public static final double _maxAcceleration = 4.0; 		  //(Feet) [Tune] in ft/s/s
-		public static final double _maxJerk = 100; 				  //(Feet) [Tune] in ft/s/s/s
+		public static final double _maxVelocity = 5.1; 			  //(Feet) [Tune] in ft/s
+		public static final double _maxAcceleration = 5.5; 		  //(Feet) [Tune] in ft/s/s
+		public static final double _maxJerk = 60; 				  //(Feet) [Tune] in ft/s/s/s
 		public static final FitMethod _fitMethod = Trajectory.FitMethod.HERMITE_CUBIC; //(Other) [Choose] What curve to Gen trajectory in (use Hermite Cubic)
 		public static final int 	  _samples	 = Trajectory.Config.SAMPLES_HIGH; //(Other) [Choose] Affects generation speed and quality of Trajectory Generation
 		public static final double 	  _dt 		 = Constants.Loops._robotHz; //(hz) delta time of Trajectory (time between each point)
@@ -95,9 +79,9 @@ public class Constants {
 		public static final double _ejectTime = 500;			//(Milliseconds) [Choose]
 		
 		public static final double _armsOutSpeed      =  0.6;	//(TalSpeed) [Choose]
-		public static final double _wheelIntakeSpeed  =  0.4;	//(TalSpeed) [Choose]
+		public static final double _wheelIntakeSpeed  =  0.3;	//(TalSpeed) [Choose]
 		
-		public static final double _armsHoldSpeed     = -0.25;//(TalSpeed) [Choose]
+		public static final double _armsHoldSpeed     = -0.3;//(TalSpeed) [Choose]
 		public static final double _wheelHoldSpeed    =  0.3;	//(TalSpeed) [Choose]
 		public static final double _armsPhysicallyStoppedCurrent = 7; //(TalCurrent) [Tune]
 	}

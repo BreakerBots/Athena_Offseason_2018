@@ -3,7 +3,8 @@ package frc.team5104.main;
 import frc.team5104.autocommands.BreakerPathScheduler;
 import frc.team5104.autopaths.AutoSelector;
 import frc.team5104.main.subsystems.*;
-
+import frc.team5104.traj.*;
+import frc.team5104.util.*;
 import edu.wpi.first.wpilibj.CameraServer;
 
 /* Breakerbots Robotics Team 2018
@@ -27,10 +28,14 @@ public class Robot implements BreakerRobotController.BreakerRobot {
 		CameraServer.getInstance().startAutomaticCapture();
 	}
 	
+	public void robotPeriodic() {
+		console.log(Odometry.getPosition().toString());
+	}
+	
 	public void autonomousInit() {
 		BreakerPathScheduler.getInstance().set(
-			AutoSelector.getAuto()
- 			//AutoSelector.Paths.CL.getPath()
+			//AutoSelector.getAuto()
+ 			AutoSelector.Paths.LL.getPath()
 		);
 	}
 }
