@@ -36,7 +36,6 @@ public class BreakerRobotController extends RobotBase {
 		
 		//Initialize Robot
 		robot = new Robot();
-		robot.mainEnabled();
 		
 		//Run Odometry
 		Odometry.run();
