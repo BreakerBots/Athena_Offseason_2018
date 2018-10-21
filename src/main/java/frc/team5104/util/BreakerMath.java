@@ -17,11 +17,12 @@ public class BreakerMath {
 		return value > max ? max : value;
 	}
 	
-	public static double bound180(double a) {
-		boolean b = a < 0;
-		a = ((Math.abs(a) + 180) % 360) - 180;
-		if (b && a != -180)
-			a = -a;
-        return a;
+	public static double boundAngle180(double angle) {
+		angle = angle % 360; 
+		angle = (angle + 360) % 360;
+		if (angle > 180)  
+		    angle -= 360; 
+		
+		return angle;
     }
 }

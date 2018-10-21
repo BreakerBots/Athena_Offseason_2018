@@ -95,7 +95,7 @@ public class BreakerTrajectoryFollower {
 	private double calcVel(double x_d, double y_d, double theta_d, double v_d, double w_d) {
 		double k = calcK(v_d, w_d);
 		double thetaError = theta_d - robotPosition.getTheta();
-		thetaError = Units.degreesToRadians(BreakerMath.bound180(Units.radiansToDegress(thetaError)));
+		thetaError = Units.degreesToRadians(BreakerMath.boundAngle180(Units.radiansToDegress(thetaError)));
 	   
 		return 
 				v_d * Math.cos(thetaError) 

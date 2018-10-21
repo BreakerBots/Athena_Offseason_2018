@@ -25,12 +25,10 @@ public class Odometry {
 			currentPos = (Drive.encoders.getLeft() + Drive.encoders.getRight()) / 2;
 			dPos = Units.ticksToFeet(currentPos - lastPos);
 			lastPos = currentPos;
-			theta = Units.degreesToRadians(BreakerMath.bound180(Drive.gyro.getAngle()));
-            position.set(
-        		position.x + Math.cos(theta) * dPos, 
-        		position.y + Math.sin(theta) * dPos, 
-        		theta
-            );
+			theta = Units.degreesToRadians(BreakerMath.boundAngle180(Drive.gyro.getAngle()));
+            position.addX(Math.cos(theta) * dPos);
+            position.addY(Math.sin(theta) * dPos);
+            position.setTheta(theta);
         });
 	}
 	

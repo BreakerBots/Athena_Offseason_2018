@@ -17,9 +17,21 @@ public class RobotPosition {
 	}
 	
     public double getTheta() {
-        return t % (Math.PI * 2.0);
+        return t/* % (Math.PI * 2.0)*/;
     }
 	
+    public void setTheta(double value) {
+    	this.t = value;
+    }
+    
+    public void addX(double by) {
+    	this.x += by;
+    }
+    
+    public void addY(double by) {
+    	this.y += by;
+    }
+    
 	public String toString() {
 		return  "x: " + x + ", " +
 				"y: " + y + ", " +
