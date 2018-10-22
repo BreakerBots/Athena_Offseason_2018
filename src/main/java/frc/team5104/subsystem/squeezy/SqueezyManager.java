@@ -23,9 +23,9 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 	private static SqueezyState currentState = /*SqueezyMainState.hold*/SqueezyState.idle;
 	
 	public static enum SqueezyEjectSpeed {
-		Low(SqueezyConstants._wheelEjectSpeedLow, SqueezyConstants._armsEjectSpeedLow),
-		Med(SqueezyConstants._wheelEjectSpeedMed, SqueezyConstants._armsEjectSpeedMed),
-		High(SqueezyConstants._wheelEjectSpeedHigh, SqueezyConstants._armsEjectSpeedHigh);
+		Low(_SqueezyConstants._wheelEjectSpeedLow, _SqueezyConstants._armsEjectSpeedLow),
+		Med(_SqueezyConstants._wheelEjectSpeedMed, _SqueezyConstants._armsEjectSpeedMed),
+		High(_SqueezyConstants._wheelEjectSpeedHigh, _SqueezyConstants._armsEjectSpeedHigh);
 		double wheelSpeed; double armsSpeed; SqueezyEjectSpeed (double wheelSpeed, double armsSpeed) { this.wheelSpeed = wheelSpeed; this.armsSpeed = armsSpeed; } 
 	}
 
@@ -49,7 +49,7 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 				
 				//Arms
 				if (!arms.hitOutsideLimitSwitch()) {
-					arms.set(SqueezyConstants._armsOutSpeed);
+					arms.set(_SqueezyConstants._armsOutSpeed);
 				}
 				else {
 					arms.set(0);
@@ -64,7 +64,7 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 				// Fold
 				fold.down();
 				
-				boolean time = ((double)(System.currentTimeMillis()) - vEjectTime) < SqueezyConstants._ejectTime;
+				boolean time = ((double)(System.currentTimeMillis()) - vEjectTime) < _SqueezyConstants._ejectTime;
 				if (!arms.hitOutsideLimitSwitch() && time) {
 					//Arms
 					arms.set(vArmsEjectSpeed);
@@ -82,7 +82,7 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 				if (arms.hitInsideLimitSwitch())
 					setState(SqueezyState.idle);
 				
-				arms.set(SqueezyConstants._armsHoldSpeed);
+				arms.set(_SqueezyConstants._armsHoldSpeed);
 				wheels.hold();
 				
 //				shouldHoldCube = false;

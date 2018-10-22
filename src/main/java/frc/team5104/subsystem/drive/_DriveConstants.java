@@ -2,7 +2,7 @@ package frc.team5104.subsystem.drive;
 
 import frc.team5104.subsystem.BreakerSubsystem;
 
-public class DriveConstants extends BreakerSubsystem.Constants {
+public class _DriveConstants extends BreakerSubsystem.Constants {
 	//Measurements
 	public static final double _wheelDiameter = 0.5; 	   //(Feet) [Measure] The diameter of the wheels
 	public static final double _ticksPerRevolution = 4922; //(Encoder Tick) [Measure] Encoder Ticks Per Wheel Revolution

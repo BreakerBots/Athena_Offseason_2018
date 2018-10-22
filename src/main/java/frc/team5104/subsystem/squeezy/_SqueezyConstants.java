@@ -2,7 +2,7 @@ package frc.team5104.subsystem.squeezy;
 
 import frc.team5104.subsystem.BreakerSubsystem;
 
-class SqueezyConstants extends BreakerSubsystem.Constants {
+class _SqueezyConstants extends BreakerSubsystem.Constants {
 	public static final double _armsInSpeed = -0.6;	//(TalSpeed) [Choose/Tune]
 	
 	public static final double _wheelEjectSpeedLow = -0.3;	//(TalSpeed) [Choose]

@@ -45,11 +45,11 @@ public class ElevatorManager extends BreakerSubsystem.Manager {
 			case controlled: {
 				//Moving Down
 				if (speed > 0 && !ElevatorSystems.hardLimitSwitches.hitLower())
-					ElevatorSystems.drivers.set(ControlMode.PercentOutput, speed * ElevatorConstants._downScalar);
+					ElevatorSystems.drivers.set(ControlMode.PercentOutput, speed * _ElevatorConstants._downScalar);
 				
 				//Moving Up
 				else if (speed < 0 && !ElevatorSystems.hardLimitSwitches.hitUpper())
-					ElevatorSystems.drivers.set(ControlMode.PercentOutput, speed * ElevatorConstants._upScalar);
+					ElevatorSystems.drivers.set(ControlMode.PercentOutput, speed * _ElevatorConstants._upScalar);
 				
 				// Not Moving
 				else
@@ -64,13 +64,13 @@ public class ElevatorManager extends BreakerSubsystem.Manager {
 	
 	public ElevatorManager() {
 		//Soft Limit Switches
-		if (ElevatorConstants._softLimitSwitchesEnabled)
+		if (_ElevatorConstants._softLimitSwitchesEnabled)
 			ElevatorSystems.softLimitSwitches.enable();
 		else
 			ElevatorSystems.softLimitSwitches.disable();
 		
 		//Hard Limit Switches (HAL Sensors)
-		if (ElevatorConstants._hardLimitSwitchesEnabled)
+		if (_ElevatorConstants._hardLimitSwitchesEnabled)
 			ElevatorSystems.hardLimitSwitches.enable();
 		else
 			ElevatorSystems.hardLimitSwitches.disable();

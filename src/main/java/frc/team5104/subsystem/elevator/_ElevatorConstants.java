@@ -2,7 +2,7 @@ package frc.team5104.subsystem.elevator;
 
 import frc.team5104.subsystem.BreakerSubsystem;
 
-class ElevatorConstants extends BreakerSubsystem.Constants {
+class _ElevatorConstants extends BreakerSubsystem.Constants {
 	public static final double _downScalar = 0.6;   //(TalSpeed) [Choose]
 	public static final double _upScalar = 1.0; 	//(TalSpeed) [Choose]
 	

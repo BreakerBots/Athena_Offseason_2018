@@ -16,8 +16,8 @@ class SqueezySystems extends BreakerSubsystem.Systems {
 	
 	static class wheels {
 		static void intake() {
-			dLWheel.set(ControlMode.PercentOutput, -SqueezyConstants._wheelIntakeSpeed);
-			dRWheel.set(ControlMode.PercentOutput,  SqueezyConstants._wheelIntakeSpeed);
+			dLWheel.set(ControlMode.PercentOutput, -_SqueezyConstants._wheelIntakeSpeed);
+			dRWheel.set(ControlMode.PercentOutput,  _SqueezyConstants._wheelIntakeSpeed);
 		}
 		
 		static void eject(double speed) {
@@ -31,8 +31,8 @@ class SqueezySystems extends BreakerSubsystem.Systems {
 		}
 		
 		static void hold() {
-			dLWheel.set(ControlMode.PercentOutput, -SqueezyConstants._wheelHoldSpeed);
-			dRWheel.set(ControlMode.PercentOutput,  SqueezyConstants._wheelHoldSpeed);
+			dLWheel.set(ControlMode.PercentOutput, -_SqueezyConstants._wheelHoldSpeed);
+			dRWheel.set(ControlMode.PercentOutput,  _SqueezyConstants._wheelHoldSpeed);
 		}
 	}
 	
@@ -66,7 +66,7 @@ class SqueezySystems extends BreakerSubsystem.Systems {
 					getDefault().
 					getTable("Autonomous").
 					getEntry("SqueezyCurrent").
-					getDouble(SqueezyConstants._armsPhysicallyStoppedCurrent));
+					getDouble(_SqueezyConstants._armsPhysicallyStoppedCurrent));
 		}
 	}
 }

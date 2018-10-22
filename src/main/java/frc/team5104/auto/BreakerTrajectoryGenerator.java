@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 
 import frc.team5104.util.console;
 import frc.team5104.util.console.c;
-import frc.team5104.main.RobotConstants;
 import jaci.pathfinder.Pathfinder;
 import jaci.pathfinder.Trajectory;
 import jaci.pathfinder.Waypoint;
@@ -22,12 +21,12 @@ import jaci.pathfinder.Waypoint;
 public class BreakerTrajectoryGenerator {
 	//Pathfinder Config
 	private static Trajectory.Config config = new Trajectory.Config(
-			RobotConstants.Autonomous._fitMethod, 
-			RobotConstants.Autonomous._samples, 
-			1.0 / RobotConstants.Autonomous._dt, 
-			RobotConstants.Autonomous._maxVelocity, 
-			RobotConstants.Autonomous._maxAcceleration, 
-			RobotConstants.Autonomous._maxJerk
+			_AutoConstants._fitMethod, 
+			_AutoConstants._samples, 
+			1.0 / _AutoConstants._dt, 
+			_AutoConstants._maxVelocity, 
+			_AutoConstants._maxAcceleration, 
+			_AutoConstants._maxJerk
 	);
 	
 	/**

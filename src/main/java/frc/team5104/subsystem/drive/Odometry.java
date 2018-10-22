@@ -1,6 +1,6 @@
 package frc.team5104.subsystem.drive;
 
-import frc.team5104.main.RobotConstants;
+import frc.team5104.main._RobotConstants;
 import frc.team5104.util.BreakerMath;
 import frc.team5104.util.Units;
 import frc.team5104.util.console;
@@ -22,7 +22,7 @@ public class Odometry {
 		lastPos = currentPos = (DriveSystems.encoders.getLeft() + DriveSystems.encoders.getRight()) / 2;
 		_thread = new Notifier(() -> {
 			currentPos = (DriveSystems.encoders.getLeft() + DriveSystems.encoders.getRight()) / 2;
-			dPos = Units.ticksToFeet(currentPos - lastPos, DriveConstants._ticksPerRevolution, DriveConstants._wheelDiameter);
+			dPos = Units.ticksToFeet(currentPos - lastPos, _DriveConstants._ticksPerRevolution, _DriveConstants._wheelDiameter);
 			lastPos = currentPos;
 			theta = Units.degreesToRadians(BreakerMath.boundAngle180(DriveSystems.gyro.getAngle()));
             position.addX(Math.cos(theta) * dPos);
@@ -35,7 +35,7 @@ public class Odometry {
 		if (_thread == null)
 			init();
 		
-		_thread.startPeriodic(1.0 / RobotConstants.Loops._odometryHz);
+		_thread.startPeriodic(1.0 / _RobotConstants.Loops._odometryHz);
 	}
 	
 	public static void stop() {

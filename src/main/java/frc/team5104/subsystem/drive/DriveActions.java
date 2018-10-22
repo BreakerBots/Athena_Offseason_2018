@@ -13,8 +13,8 @@ public class DriveActions extends BreakerSubsystem.Actions {
 	 */
 	public static void set(RobotDriveSignal signal, boolean account) {
 		if (account) {
-			signal.leftSpeed = signal.leftSpeed * DriveConstants._leftAccount;
-			signal.rightSpeed = signal.rightSpeed * DriveConstants._rightAccount;
+			signal.leftSpeed = signal.leftSpeed * _DriveConstants._leftAccount;
+			signal.rightSpeed = signal.rightSpeed * _DriveConstants._rightAccount;
 		}
 		switch (signal.unit) {
 			case percentOutput: {
@@ -27,8 +27,8 @@ public class DriveActions extends BreakerSubsystem.Actions {
 			}
 			case feetPerSecond: {
 				DriveSystems.motors.set(
-						Units.feetPerSecondToTalonVel(signal.leftSpeed, DriveConstants._ticksPerRevolution, DriveConstants._wheelDiameter), 
-						Units.feetPerSecondToTalonVel(signal.rightSpeed, DriveConstants._ticksPerRevolution, DriveConstants._wheelDiameter), 
+						Units.feetPerSecondToTalonVel(signal.leftSpeed, _DriveConstants._ticksPerRevolution, _DriveConstants._wheelDiameter), 
+						Units.feetPerSecondToTalonVel(signal.rightSpeed, _DriveConstants._ticksPerRevolution, _DriveConstants._wheelDiameter), 
 						ControlMode.Velocity
 					);
 				break;

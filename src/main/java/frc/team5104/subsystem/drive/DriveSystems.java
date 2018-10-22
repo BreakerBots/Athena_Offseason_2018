@@ -83,7 +83,7 @@ public class DriveSystems extends BreakerSubsystem.Systems {
 		
 		public static double getAngle() {
 			double a = -Devices.Drive.Gyro.getAngle();
-			a /= Math.cos(Units.degreesToRadians(DriveConstants._gyroAngle));
+			a /= Math.cos(Units.degreesToRadians(_DriveConstants._gyroAngle));
 			return a;
 		}
 		
@@ -111,14 +111,14 @@ public class DriveSystems extends BreakerSubsystem.Systems {
 		L1.setNeutralMode(NeutralMode.Brake);
 		L2.setNeutralMode(NeutralMode.Brake);
 		
-		L1.configClosedloopRamp(DriveConstants._rampSeconds, 10);
-        L2.configClosedloopRamp(DriveConstants._rampSeconds, 10);
+		L1.configClosedloopRamp(_DriveConstants._rampSeconds, 10);
+        L2.configClosedloopRamp(_DriveConstants._rampSeconds, 10);
 		
-        L1.configAllowableClosedloopError(0, DriveConstants._pidId, 10);
-        L1.config_kF(DriveConstants._pidId, DriveConstants._pidF, 10);
-        L1.config_kP(DriveConstants._pidId, DriveConstants._pidP, 10);
-        L1.config_kI(DriveConstants._pidId, DriveConstants._pidI, 10);
-        L1.config_kD(DriveConstants._pidId, DriveConstants._pidD, 10);
+        L1.configAllowableClosedloopError(0, _DriveConstants._pidId, 10);
+        L1.config_kF(_DriveConstants._pidId, _DriveConstants._pidF, 10);
+        L1.config_kP(_DriveConstants._pidId, _DriveConstants._pidP, 10);
+        L1.config_kI(_DriveConstants._pidId, _DriveConstants._pidI, 10);
+        L1.config_kD(_DriveConstants._pidId, _DriveConstants._pidD, 10);
         
         //L1.configPeakCurrentLimit(DriveConstants._currentLimitPeak, 10);
         //L1.configPeakCurrentDuration(DriveConstants._currentLimitPeakTime, 10);
@@ -135,14 +135,14 @@ public class DriveSystems extends BreakerSubsystem.Systems {
 		R1.setNeutralMode(NeutralMode.Brake);
 		R2.setNeutralMode(NeutralMode.Brake);
 		
-		R1.configClosedloopRamp(DriveConstants._rampSeconds, 10);
-        R2.configClosedloopRamp(DriveConstants._rampSeconds, 10);
+		R1.configClosedloopRamp(_DriveConstants._rampSeconds, 10);
+        R2.configClosedloopRamp(_DriveConstants._rampSeconds, 10);
 		
-        R1.configAllowableClosedloopError(0, DriveConstants._pidId, 10);
-        R1.config_kF(DriveConstants._pidId, DriveConstants._pidF, 10);
-        R1.config_kP(DriveConstants._pidId, DriveConstants._pidP, 10);
-        R1.config_kI(DriveConstants._pidId, DriveConstants._pidI, 10);
-        R1.config_kD(DriveConstants._pidId, DriveConstants._pidD, 10);
+        R1.configAllowableClosedloopError(0, _DriveConstants._pidId, 10);
+        R1.config_kF(_DriveConstants._pidId, _DriveConstants._pidF, 10);
+        R1.config_kP(_DriveConstants._pidId, _DriveConstants._pidP, 10);
+        R1.config_kI(_DriveConstants._pidId, _DriveConstants._pidI, 10);
+        R1.config_kD(_DriveConstants._pidId, _DriveConstants._pidD, 10);
         
         //R1.configPeakCurrentLimit(DriveConstants._currentLimitPeak, 10);
         //R1.configPeakCurrentDuration(DriveConstants._currentLimitPeakTime, 10);

@@ -1,7 +1,6 @@
 package frc.team5104.auto;
 
-import frc.team5104.main.RobotConstants;
-import frc.team5104.subsystem.drive.DriveConstants;
+import frc.team5104.subsystem.drive._DriveConstants;
 import frc.team5104.subsystem.drive.RobotDriveSignal;
 import frc.team5104.subsystem.drive.RobotDriveSignal.DriveUnit;
 import frc.team5104.subsystem.drive.RobotPosition;
@@ -20,8 +19,8 @@ import jaci.pathfinder.Trajectory.Segment;
  */
 public class BreakerTrajectoryFollower {
 
-	private static final double b    = RobotConstants.Autonomous._tfB;
-	private static final double zeta = RobotConstants.Autonomous._tfZeta;
+	private static final double b    = _AutoConstants._tfB;
+	private static final double zeta = _AutoConstants._tfZeta;
 	
 	private int i;
 	
@@ -63,8 +62,8 @@ public class BreakerTrajectoryFollower {
 		//w = clamp(w, Math.PI * -2.0, Math.PI * 2.0);
 
 		//Convert Angular and Linear Velocities to into wheel speeds 
-		left  = -((+DriveConstants._wheelBaseWidth * w) / 2 + v);
-		right = -((-DriveConstants._wheelBaseWidth * w) / 2 + v);
+		left  = -((+_DriveConstants._wheelBaseWidth * w) / 2 + v);
+		right = -((-_DriveConstants._wheelBaseWidth * w) / 2 + v);
 
 		//Go to the next index
 		i += 1;

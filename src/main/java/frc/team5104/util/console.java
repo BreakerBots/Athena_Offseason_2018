@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import frc.team5104.main.RobotConstants;
+import frc.team5104.main._RobotConstants;
 
 /*Breakerbots Robotics Team 2018*/
 /**
@@ -209,7 +209,7 @@ public class console {
 					
 					//File Path
 					boolean hasFMS = DriverStation.getInstance().isFMSAttached();
-					if (hasFMS ? RobotConstants.Logging._SaveMatchLogs : RobotConstants.Logging._SaveNonMatchLogs) {
+					if (hasFMS ? _RobotConstants.Logging._SaveMatchLogs : _RobotConstants.Logging._SaveNonMatchLogs) {
 						String filePath = "/home/lvuser/" + (hasFMS ? "MatchLog/" : "GeneralLog/");
 						
 						//File Name

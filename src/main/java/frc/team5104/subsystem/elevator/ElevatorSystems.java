@@ -33,18 +33,18 @@ class ElevatorSystems extends BreakerSubsystem.Systems {
 	public static class softLimitSwitches {
 		public static void enable() {
 			drivers.configReverseSoftLimitEnable(true, 10);
-			drivers.configReverseSoftLimitThreshold(ElevatorConstants._softStopTop, 10);
+			drivers.configReverseSoftLimitThreshold(_ElevatorConstants._softStopTop, 10);
 
 			drivers.configForwardSoftLimitEnable(true, 10);
-			drivers.configForwardSoftLimitThreshold(ElevatorConstants._softStopBottom, 10);
+			drivers.configForwardSoftLimitThreshold(_ElevatorConstants._softStopBottom, 10);
 		}
 		
 		public static void disable() {
 			drivers.configReverseSoftLimitEnable(false, 10);
-			drivers.configReverseSoftLimitThreshold(ElevatorConstants._softStopTop, 10);
+			drivers.configReverseSoftLimitThreshold(_ElevatorConstants._softStopTop, 10);
 
 			drivers.configForwardSoftLimitEnable(false, 10);
-			drivers.configForwardSoftLimitThreshold(ElevatorConstants._softStopBottom, 10);
+			drivers.configForwardSoftLimitThreshold(_ElevatorConstants._softStopBottom, 10);
 		}
 	}
 	
