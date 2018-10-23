@@ -106,14 +106,14 @@ public class BreakerRobotController extends RobotBase {
 		if (lastMode != currentMode) {
 			if (currentMode == RobotMode.Disabled) {
 				robot.mainDisabled();
-				robot.enabled = false;
+				BreakerRobot.enabled = false;
 			}
 			else if (lastMode == RobotMode.Disabled) {
 				robot.mainEnabled();
-				robot.enabled = true;
+				BreakerRobot.enabled = true;
 			}
 			LiveWindow.setEnabled(currentMode == RobotMode.Disabled);
-			robot.mode = currentMode;
+			BreakerRobot.mode = currentMode;
 			lastMode = currentMode;
 		}
 		
@@ -129,8 +129,8 @@ public class BreakerRobotController extends RobotBase {
 	 * <br> - Main Functions are called last (teleop, test, auto are before)
 	 */
 	public static abstract class BreakerRobot {
-		boolean enabled;
-		RobotMode mode;
+		public static boolean enabled;
+		public static RobotMode mode;
 		
 		public void mainLoop() { }
 		public void mainEnabled() { }

@@ -1,5 +1,6 @@
 package frc.team5104.subsystem.squeezy;
 
+import frc.team5104.main.BreakerRobotController.BreakerRobot;
 import frc.team5104.main.BreakerRobotController.RobotMode;
 import frc.team5104.subsystem.BreakerSubsystem;
 import frc.team5104.subsystem.squeezy.SqueezySystems.arms;
@@ -7,8 +8,6 @@ import frc.team5104.subsystem.squeezy.SqueezySystems.fold;
 import frc.team5104.subsystem.squeezy.SqueezySystems.wheels;
 import frc.team5104.util.BooleanChangeListener;
 import frc.team5104.util.BreakerMath;
-import frc.team5104.util.console;
-import frc.team5104.util.console.c;
 import frc.team5104.util.controller;
 
 public class SqueezyManager extends BreakerSubsystem.Manager {
@@ -117,16 +116,18 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 			}
 		} //End of Switch/Case
 		
-		if (vBCubeEjected.get(currentState == SqueezyState.eject))
-			controller.rumbleHardFor(BreakerMath.clamp(Math.abs(vWheelEjectSpeed) * 3, 0, 1), 0.5);
-		
-		if (vBHasCube.get(arms.isPhysicallyStopped())) { 
-			console.log(c.SQUEEZY, "Physically Stopped");
-			controller.rumbleHardFor(0.4, 0.2);
+		if (BreakerRobot.mode == RobotMode.Teleop) {
+			if (vBCubeEjected.get(currentState == SqueezyState.eject))
+				controller.rumbleHardFor(BreakerMath.clamp(Math.abs(vWheelEjectSpeed) * 3, 0, 1), 0.5);
+			
+			//if (vBHasCube.get(arms.isPhysicallyStopped())) { 
+			//	console.log(c.SQUEEZY, "Physically Stopped");
+			//	controller.rumbleHardFor(0.4, 0.2);
+			//}
+			
+			if (vBHitOut.get(arms.hitOutsideLimitSwitch()))
+				controller.rumbleSoftFor(0.4, 0.2);
 		}
-		
-		if (vBHitOut.get(arms.hitOutsideLimitSwitch()))
-			controller.rumbleSoftFor(0.4, 0.2);
 	}
 	
 	public void disabled() {

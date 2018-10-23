@@ -8,6 +8,7 @@ import frc.team5104.subsystem.elevator.ElevatorActions;
 import frc.team5104.subsystem.squeezy.SqueezyActions;
 import frc.team5104.util.CurveInterpolator;
 import frc.team5104.util.Deadband;
+import frc.team5104.util.controller;
 import frc.team5104.util.controller.Control;
 
 public class BreakerTeleopController {
@@ -59,5 +60,8 @@ public class BreakerTeleopController {
 						HMI.Elevator._drive.getAxis(), 
 				0.1)
 		);
+		
+		//Updates
+		controller.update();
 	}
 }

@@ -8,6 +8,8 @@ import frc.team5104.subsystem.drive.DriveManager;
 import frc.team5104.subsystem.elevator.ElevatorManager;
 import frc.team5104.subsystem.squeezy.SqueezyManager;
 import frc.team5104.teleop.BreakerTeleopController;
+import frc.team5104.util.console;
+import frc.team5104.util.controller;
 
 /* Breakerbots Robotics Team 2018
  *  ____                 _             _           _       
@@ -33,10 +35,12 @@ public class Robot extends BreakerRobotController.BreakerRobot {
 	//Main
 	public void mainEnabled() {
 		BreakerSubsystemManager.enabled(mode);
+		console.logFile.start();
 	}
 	
 	public void mainDisabled() {
 		BreakerSubsystemManager.disabled();
+		console.logFile.end();
 	}
 	
 	public void mainLoop() {
