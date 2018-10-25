@@ -44,10 +44,10 @@ public class Units {
 	
 	// feet/second and talon velocity (ticks/100ms)
 	public static double talonVelToFeetPerSecond(double talonVel, double tpr, double wheelDiameter) {
-		return ticksToFeet(talonVel, tpr, wheelDiameter) * 10;
+		return ticksToFeet(talonVel, tpr, wheelDiameter) * 10.0;
 	}
 	public static double feetPerSecondToTalonVel(double feetPerSecond, double tpr, double wheelDiameter) {
-		return feetToTicks(feetPerSecond, tpr, wheelDiameter) / 10;
+		return feetToTicks(feetPerSecond, tpr, wheelDiameter) / 10.0;
 	}
 	
 	// Feet and Inches

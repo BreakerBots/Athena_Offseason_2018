@@ -31,14 +31,14 @@ public class BreakerRobotController extends RobotBase {
 		console.sets.create("RobotInit");
 		console.log(c.MAIN, t.INFO, "Initializing Code");
 		
-		//Update HAL
-		HAL.observeUserProgramStarting();
-		
 		//Initialize Robot
 		robot = new Robot();
 		
 		//Run Odometry
 		Odometry.run();
+		
+		//Update HAL
+		HAL.observeUserProgramStarting();
 		
 		console.log(c.MAIN, "Devices Created and Seth Proofed");
 		console.sets.log(c.MAIN, t.INFO, "RobotInit", "Initialization took ");

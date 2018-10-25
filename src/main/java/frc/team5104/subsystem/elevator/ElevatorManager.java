@@ -15,16 +15,11 @@ public class ElevatorManager extends BreakerSubsystem.Manager {
 	static double speed = 0;
 	
 	public void enabled(RobotMode mode) {
-		switch (mode) {
-			case Teleop: {
-				currentState = ElevatorState.controlled;
-				break;
-			}
-			case Auto: {
-				currentState = /*ElevatorState.calibrating*/ElevatorState.brake;
-				break;
-			}
-			default: break;
+		if (mode == RobotMode.Teleop) {
+			currentState = ElevatorState.controlled;
+		}
+		if (mode == RobotMode.Auto) {
+			currentState = /*ElevatorState.calibrating*/ElevatorState.brake;
 		}
 	}
 	

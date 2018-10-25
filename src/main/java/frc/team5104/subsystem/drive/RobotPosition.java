@@ -33,8 +33,7 @@ public class RobotPosition {
     }
     
 	public String toString() {
-		return  "x: " + x + ", " +
-				"y: " + y + ", " +
-				"t: " + t;
+		return  "x: " + String.format("%.2f", x) + ", " +
+				"y: " + String.format("%.2f", y);
 	}
 }

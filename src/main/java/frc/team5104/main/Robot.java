@@ -5,11 +5,12 @@ import frc.team5104.auto.AutoSelector;
 import frc.team5104.auto.BreakerPathScheduler;
 import frc.team5104.subsystem.BreakerSubsystemManager;
 import frc.team5104.subsystem.drive.DriveManager;
+import frc.team5104.subsystem.drive.DriveSystems;
+import frc.team5104.subsystem.drive.Odometry;
 import frc.team5104.subsystem.elevator.ElevatorManager;
 import frc.team5104.subsystem.squeezy.SqueezyManager;
 import frc.team5104.teleop.BreakerTeleopController;
 import frc.team5104.util.console;
-import frc.team5104.util.controller;
 
 /* Breakerbots Robotics Team 2018
  *  ____                 _             _           _       
@@ -36,6 +37,7 @@ public class Robot extends BreakerRobotController.BreakerRobot {
 	public void mainEnabled() {
 		BreakerSubsystemManager.enabled(mode);
 		console.logFile.start();
+		Odometry.reset();
 	}
 	
 	public void mainDisabled() {
@@ -44,8 +46,10 @@ public class Robot extends BreakerRobotController.BreakerRobot {
 	}
 	
 	public void mainLoop() {
-		if (enabled)
+		if (enabled) {
 			BreakerSubsystemManager.update();
+			console.log(Odometry.getPosition().toString());
+		}
 	}
 
 	//Auto

@@ -50,6 +50,13 @@ public class DriveSystems extends BreakerSubsystem.Systems {
 		public static int getRight() {
 			return R1.getSelectedSensorPosition(0);
 		}
+		
+		public static String getString() {
+			try {
+				return "L: " + getLeft() + 
+						", R: " + getRight();
+			} catch (Exception e) { e.printStackTrace(); return ""; }
+		}
 	}
 	
 	//Shifters

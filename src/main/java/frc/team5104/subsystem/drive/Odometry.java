@@ -26,7 +26,7 @@ public class Odometry {
 			lastPos = currentPos;
 			theta = Units.degreesToRadians(BreakerMath.boundAngle180(DriveSystems.gyro.getAngle()));
             position.addX(Math.cos(theta) * dPos);
-            position.addY(Math.sin(theta) * dPos);
+            position.addY(Math.sin(theta) * dPos * 0.8);
             position.setTheta(theta);
         });
 	}
@@ -50,6 +50,8 @@ public class Odometry {
 	public static void reset() {
 		console.log("Resetting Odometry");
 		
+		stop();
+		
 		DriveSystems.gyro.reset();
 		DriveSystems.encoders.reset(10);
 		
@@ -62,6 +64,8 @@ public class Odometry {
 		position = new RobotPosition(0, 0, 0);
 		lastPos = 0;
 		init();
+		
+		run();
 		
 		console.log("Finished Resetting Odometry at " + getPosition().toString());
 	}
