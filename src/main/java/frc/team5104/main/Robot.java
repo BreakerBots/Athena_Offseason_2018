@@ -1,11 +1,16 @@
 package frc.team5104.main;
 
-import frc.team5104.autocommands.BreakerPathScheduler;
-import frc.team5104.autopaths.AutoSelector;
-import frc.team5104.main.subsystems.*;
-import frc.team5104.traj.*;
-import frc.team5104.util.*;
 import edu.wpi.first.wpilibj.CameraServer;
+import frc.team5104.auto.AutoSelector;
+import frc.team5104.auto.BreakerPathScheduler;
+import frc.team5104.subsystem.BreakerSubsystemManager;
+import frc.team5104.subsystem.drive.DriveManager;
+import frc.team5104.subsystem.drive.DriveSystems;
+import frc.team5104.subsystem.drive.Odometry;
+import frc.team5104.subsystem.elevator.ElevatorManager;
+import frc.team5104.subsystem.squeezy.SqueezyManager;
+import frc.team5104.teleop.BreakerTeleopController;
+import frc.team5104.util.console;
 
 /* Breakerbots Robotics Team 2018
  *  ____                 _             _           _       
@@ -17,25 +22,50 @@ import edu.wpi.first.wpilibj.CameraServer;
 /**
  * Fallthrough from <strong>Breaker Robot Controller</strong>
  */
-public class Robot implements BreakerRobotController.BreakerRobot {
-	public void robotInit() {
+public class Robot extends BreakerRobotController.BreakerRobot {
+	public Robot() {
 		BreakerSubsystemManager.throwSubsystems(
-			Squeezy.class,
-			Elevator.class,
-			Drive.class
+			new SqueezyManager(),
+			new ElevatorManager(),
+			new DriveManager()
 		);
 		
 		CameraServer.getInstance().startAutomaticCapture();
 	}
 	
-	public void robotPeriodic() {
-		console.log(Odometry.getPosition().toString());
+	//Main
+	public void mainEnabled() {
+		BreakerSubsystemManager.enabled(mode);
+		console.logFile.start();
+		Odometry.reset();
 	}
 	
-	public void autonomousInit() {
-		BreakerPathScheduler.getInstance().set(
+	public void mainDisabled() {
+		BreakerSubsystemManager.disabled();
+		console.logFile.end();
+	}
+	
+	public void mainLoop() {
+		if (enabled) {
+			BreakerSubsystemManager.update();
+			console.log(Odometry.getPosition().toString());
+		}
+	}
+
+	//Auto
+	public void autoEnabled() {
+		BreakerPathScheduler.set(
 			//AutoSelector.getAuto()
  			AutoSelector.Paths.LL.getPath()
 		);
+	}
+	
+	public void autoLoop() {
+		BreakerPathScheduler.update();
+	}
+	
+	//Teleop
+	public void teleopLoop() {
+		BreakerTeleopController.update();
 	}
 }
