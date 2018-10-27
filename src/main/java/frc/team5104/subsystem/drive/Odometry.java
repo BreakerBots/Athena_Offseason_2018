@@ -26,7 +26,7 @@ public class Odometry {
 			lastPos = currentPos;
 			theta = Units.degreesToRadians(BreakerMath.boundAngle180(DriveSystems.gyro.getAngle()));
             position.addX(Math.cos(theta) * dPos);
-            position.addY(Math.sin(theta) * dPos * 0.8);
+            position.addY(Math.sin(theta) * dPos);
             position.setTheta(theta);
         });
 	}
