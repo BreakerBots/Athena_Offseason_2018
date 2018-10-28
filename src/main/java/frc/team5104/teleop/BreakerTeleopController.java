@@ -6,6 +6,7 @@ import frc.team5104.subsystem.drive.RobotDriveSignal;
 import frc.team5104.subsystem.drive.RobotDriveSignal.DriveUnit;
 import frc.team5104.subsystem.elevator.ElevatorActions;
 import frc.team5104.subsystem.squeezy.SqueezyActions;
+import frc.team5104.util.Curve;
 import frc.team5104.util.CurveInterpolator;
 import frc.team5104.util.Deadband;
 import frc.team5104.util.controller;
@@ -17,10 +18,10 @@ public class BreakerTeleopController {
 	
 	public static void update() {
 		//Squeezy
-		if (HMI.Squeezy._foldUp.getPressed())
+		if (HMI.Squeezy._foldUp.getPressed() || HMI.Squeezy._foldUpAlt.getPressed())
 			SqueezyActions.foldSet(true);
 		
-		if (HMI.Squeezy._foldDown.getPressed())
+		if (HMI.Squeezy._foldDown.getPressed() || HMI.Squeezy._foldDownAlt.getPressed())
 			SqueezyActions.foldSet(false);
 		
 		if (HMI.Squeezy._intake.getPressed())
@@ -37,9 +38,11 @@ public class BreakerTeleopController {
 		
 		
 		//Driving
-		double turn = Control.LX.getAxis();
-		double forward = HMI.Drive.getForward();
-		turn = HMI.Drive.applyTurnCurve(turn, forward);
+		double turn = Deadband.get(HMI.Drive._turn.getAxis(), -0.2);
+		double forward = Deadband.get(HMI.Drive._forward.getAxis() - HMI.Drive._reverse.getAxis(), 0.1);
+		
+		double x1 = (1 - Math.abs(forward)) * (1 - 0.3) + 0.3;
+		turn = Curve.getBezierCurve(turn, x1, 0.4, 1, 0.2);
 		
 		vTeleopLeftSpeed.setSetpoint(forward - turn);
 		vTeleopRightSpeed.setSetpoint(forward + turn);

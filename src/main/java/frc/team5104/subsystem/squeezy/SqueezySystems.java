@@ -44,6 +44,10 @@ class SqueezySystems extends BreakerSubsystem.Systems {
 		static void down() {
 			dFold.set(DoubleSolenoid.Value.kForward);
 		}
+		
+		static boolean isUp() {
+			return dFold.get() == DoubleSolenoid.Value.kReverse;
+		}
 	}
 	
 	static class arms {	

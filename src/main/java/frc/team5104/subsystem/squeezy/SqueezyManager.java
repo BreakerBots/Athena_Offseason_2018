@@ -28,13 +28,16 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 		double wheelSpeed; double armsSpeed; SqueezyEjectSpeed (double wheelSpeed, double armsSpeed) { this.wheelSpeed = wheelSpeed; this.armsSpeed = armsSpeed; } 
 	}
 
-	//private static boolean vHasCube = false;
+	private static boolean vHasCube = false;
 	static double vWheelEjectSpeed = SqueezyEjectSpeed.High.wheelSpeed;
 	static double vArmsEjectSpeed = SqueezyEjectSpeed.High.armsSpeed;
 	static double vEjectTime;
 	static BooleanChangeListener vBCubeEjected = new BooleanChangeListener(true);
 	static BooleanChangeListener vBHitOut = new BooleanChangeListener(true);
 	static BooleanChangeListener vBHasCube = new BooleanChangeListener(true);
+	
+	private static SqueezyState delayedState = null;
+	private static long delayedStateSetpoint = 0;
 	
 	public void enabled(RobotMode mode) {
 		
@@ -128,7 +131,13 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 			if (vBHitOut.get(arms.hitOutsideLimitSwitch()))
 				controller.rumbleSoftFor(0.4, 0.2);
 		}
-	}
+		
+		if (delayedState != null && System.currentTimeMillis() > delayedStateSetpoint) {
+			setState(delayedState);
+			delayedState = null;
+			delayedStateSetpoint = 0;
+		}
+	} 
 	
 	public void disabled() {
 		
@@ -136,6 +145,11 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 	
 	static void setState(SqueezyState state) {
 		currentState = state;
+	}
+	
+	static void setStateDelayed(SqueezyState state, long delayMs) {
+		delayedState = state;
+		delayedStateSetpoint = System.currentTimeMillis() + delayMs;
 	}
 	
 	public static SqueezyState getState() {
