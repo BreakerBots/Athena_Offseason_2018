@@ -62,6 +62,7 @@ public class BreakerTrajectoryFollower {
 		//w = clamp(w, Math.PI * -2.0, Math.PI * 2.0);
 
 		//Convert Angular and Linear Velocities to into wheel speeds 
+		// CHECK THIS - why is it being multiplied by the angular velocity and does this work
 		left  = -((+_DriveConstants._wheelBaseWidth * w) / 2 + v);
 		right = -((-_DriveConstants._wheelBaseWidth * w) / 2 + v);
 
@@ -76,7 +77,7 @@ public class BreakerTrajectoryFollower {
 	 * Get the starting robot position in a trajectory (should be 0, 0, 0)
 	 */
 	public RobotPosition getInitRobotPosition() {
-		return new RobotPosition(trajectory.get(0).x,trajectory.get(0).y, trajectory.get(0).heading);
+		return new RobotPosition(trajectory.get(0).x, trajectory.get(0).y, trajectory.get(0).heading);
 	}
 
 	public boolean isFinished() {
@@ -87,13 +88,14 @@ public class BreakerTrajectoryFollower {
 	private double calcW_d() {
 		if (i < trajectory.length()-1) {
 			double lastTheta = trajectory.get(i).heading;
-			double nextTheta = trajectory.get(i + 1).heading;
+			double nextTheta = trajectory.get(i + 1).heading; //CHECK THIS - i + 1 could equal trajectory.length()
 			return (nextTheta - lastTheta) / trajectory.get(i).dt;
 		} 
 		else {
 			return 0;
 		}
 	}
+	//hwoo CHECK THIS
 	private double calcVel(double x_d, double y_d, double theta_d, double v_d, double w_d) {
 		double k = calcK(v_d, w_d);
 		double thetaError = theta_d - robotPosition.getTheta();
@@ -104,6 +106,7 @@ public class BreakerTrajectoryFollower {
 				+ k * (Math.cos(robotPosition.getTheta()) * (x_d - robotPosition.x) 
 				+ Math.sin(robotPosition.getTheta()) * (y_d - robotPosition.y));
 	}
+	
 	private double calcAngleVel(double x_d, double y_d, double theta_d, double v_d, double w_d) {
 		double k = calcK(v_d, w_d);
 		double thetaError = theta_d - robotPosition.getTheta();
@@ -117,6 +120,7 @@ public class BreakerTrajectoryFollower {
 		
 		return w_d + b * v_d * (sinThetaErrOverThetaErr) * (Math.cos(robotPosition.getTheta()) * (y_d - robotPosition.y) - Math.sin(robotPosition.getTheta()) * (x_d - robotPosition.x)) + k * (thetaError); //from eq. 5.12
 	}
+	
 	private double calcK(double v_d, double w_d) {
 		return 2 * zeta * Math.sqrt(Math.pow(w_d, 2) + b * Math.pow(v_d, 2));
 	}
