@@ -15,7 +15,6 @@ public class SqueezyFold extends BreakerPathAction {
 	}
 	
     public void init() {
-    	console.log(c.SQUEEZY, up ? "Folding Up" : "Folding Down");
     	SqueezyActions.foldSet(up);
     }
 

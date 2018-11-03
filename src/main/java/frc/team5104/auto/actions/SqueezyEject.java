@@ -21,7 +21,6 @@ public class SqueezyEject extends BreakerPathAction {
 	}
 	
     public void init() {
-    	console.log(c.SQUEEZY, "Ejecting");
     	SqueezyActions.eject(this.speed);
     }
 

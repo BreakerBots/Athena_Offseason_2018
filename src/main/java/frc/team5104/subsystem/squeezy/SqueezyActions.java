@@ -23,23 +23,11 @@ public class SqueezyActions extends BreakerSubsystem.Actions {
 	}
 	
 	public static void eject() {
-		console.log(c.SQUEEZY, "Ejecting at High speed");
-		SqueezyManager.vWheelEjectSpeed = SqueezyEjectSpeed.High.wheelSpeed;
-		SqueezyManager.vArmsEjectSpeed = SqueezyEjectSpeed.High.armsSpeed;
-		
-		if (fold.isUp()) {
-			fold.down();
-			SqueezyManager.vEjectTime = System.currentTimeMillis() + _SqueezyConstants._foldUpEjectDelay;
-			SqueezyManager.setStateDelayed(SqueezyState.eject, _SqueezyConstants._foldUpEjectDelay);
-		}
-		else {
-			SqueezyManager.vEjectTime = System.currentTimeMillis();
-			SqueezyManager.setState(SqueezyState.eject);
-		}
+		eject(SqueezyEjectSpeed.High);
 	}
 	
 	public static void eject(SqueezyEjectSpeed speed) {
-		console.log(c.SQUEEZY, "Ejecting at " + speed.name() + " speed");
+		console.log(c.SQUEEZY, "Ejecting at " + speed.name() + " speed with " + (fold.isUp() ? _SqueezyConstants._foldUpEjectDelay : 0) + "ms delay");
 		SqueezyManager.vWheelEjectSpeed = speed.wheelSpeed;
 		SqueezyManager.vArmsEjectSpeed = speed.armsSpeed;
 		

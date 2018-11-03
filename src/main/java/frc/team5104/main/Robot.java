@@ -6,7 +6,6 @@ import frc.team5104.auto.BreakerPathScheduler;
 import frc.team5104.subsystem.BreakerSubsystemManager;
 import frc.team5104.subsystem.climber.ClimberManager;
 import frc.team5104.subsystem.drive.DriveManager;
-import frc.team5104.subsystem.drive.DriveSystems;
 import frc.team5104.subsystem.drive.Odometry;
 import frc.team5104.subsystem.elevator.ElevatorManager;
 import frc.team5104.subsystem.squeezy.SqueezyManager;
@@ -50,15 +49,15 @@ public class Robot extends BreakerRobotController.BreakerRobot {
 	public void mainLoop() {
 		if (enabled) {
 			BreakerSubsystemManager.update();
-			console.log(Odometry.getPosition().toString());
 		}
+		//console.log(Odometry.getPosition().toString(), "A: " + DriveSystems.gyro.getAngle());
 	}
 
 	//Auto
 	public void autoEnabled() {
 		BreakerPathScheduler.set(
-			//AutoSelector.getAuto()
- 			AutoSelector.Paths.LL.getPath()
+			AutoSelector.getAuto()
+// 			AutoSelector.Paths.CR.getPath()
 		);
 	}
 	

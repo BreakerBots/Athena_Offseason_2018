@@ -14,7 +14,7 @@ public class Delay extends BreakerPathAction {
     }
 
     public void init() {
-    	console.log(c.AUTO, "Delaying + " + delay + "ms");
+    	console.log(c.AUTO, "Delaying " + delay + "ms");
     	startTime = System.currentTimeMillis();
     }
 

@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import frc.team5104.subsystem.BreakerSubsystem;
 import frc.team5104.subsystem.drive.RobotDriveSignal.DriveUnit;
 import frc.team5104.util.Units;
+import frc.team5104.util.console;
 
 public class DriveActions extends BreakerSubsystem.Actions {
 	/**
@@ -13,8 +14,16 @@ public class DriveActions extends BreakerSubsystem.Actions {
 	 */
 	public static void set(RobotDriveSignal signal, boolean account) {
 		if (account) {
-			signal.leftSpeed = signal.leftSpeed * _DriveConstants._leftAccount;
-			signal.rightSpeed = signal.rightSpeed * _DriveConstants._rightAccount;
+			double leftMult = (signal.leftSpeed > 0 ? 
+					_DriveConstants._leftAccountReverse : 
+					_DriveConstants._leftAccountForward
+				);
+			double rightMult = (signal.rightSpeed > 0 ? 
+					_DriveConstants._rightAccountReverse : 
+					_DriveConstants._rightAccountForward
+				);
+			signal.leftSpeed = signal.leftSpeed * leftMult;
+			signal.rightSpeed = signal.rightSpeed * rightMult;
 		}
 		switch (signal.unit) {
 			case percentOutput: {

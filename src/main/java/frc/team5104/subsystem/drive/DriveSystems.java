@@ -89,7 +89,7 @@ public class DriveSystems extends BreakerSubsystem.Systems {
 		}
 		
 		public static double getAngle() {
-			double a = Devices.Drive.Gyro.getAngle();
+			double a = -Devices.Drive.Gyro.getAngle();
 			a /= Math.cos(Units.degreesToRadians(_DriveConstants._gyroAngle));
 			return a;
 		}

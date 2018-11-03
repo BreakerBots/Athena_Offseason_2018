@@ -19,9 +19,9 @@ public class Odometry {
 	public volatile static RobotPosition position = new RobotPosition(0, 0, 0);
 	
 	private static void init() {
-		lastPos = currentPos = (DriveSystems.encoders.getLeft() + DriveSystems.encoders.getRight()) / 2;
+		lastPos = currentPos = (DriveSystems.encoders.getLeft() + DriveSystems.encoders.getRight()) / 2.0;
 		_thread = new Notifier(() -> {
-			currentPos = (DriveSystems.encoders.getLeft() + DriveSystems.encoders.getRight()) / 2;
+			currentPos = (DriveSystems.encoders.getLeft() + DriveSystems.encoders.getRight()) / 2.0;
 			dPos = Units.ticksToFeet(currentPos - lastPos, _DriveConstants._ticksPerRevolution, _DriveConstants._wheelDiameter);
 			lastPos = currentPos;
 			theta = Units.degreesToRadians(BreakerMath.boundAngle180(DriveSystems.gyro.getAngle()));

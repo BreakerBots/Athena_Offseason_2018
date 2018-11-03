@@ -8,6 +8,7 @@ import frc.team5104.subsystem.squeezy.SqueezySystems.fold;
 import frc.team5104.subsystem.squeezy.SqueezySystems.wheels;
 import frc.team5104.util.BooleanChangeListener;
 import frc.team5104.util.BreakerMath;
+import frc.team5104.util.console;
 import frc.team5104.util.controller;
 
 public class SqueezyManager extends BreakerSubsystem.Manager {
