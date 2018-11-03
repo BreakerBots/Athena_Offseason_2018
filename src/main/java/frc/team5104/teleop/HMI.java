@@ -26,7 +26,8 @@ public class HMI {
 	
 	//Climbing
 	public static class Climbing {
-		public static final Control _ptoShift = Control.Y;
+		public static final Control _ptoShift = Control.MENU;
+		public static final Control _climb = Control.RT;
 	}
 	
 	//Squeezy
