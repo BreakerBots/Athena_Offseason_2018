@@ -18,13 +18,16 @@ public class LR extends BreakerPath {
 	public LR() {
 		add(new DriveTrajectory(new Waypoint[] {
 				new Waypoint(0, 0, 0),
-				new Waypoint(50/6.0, 0, 0),
-				new Waypoint(150/6.0, 0, 0),
-				new Waypoint(200/6.0, 226/12.0, 90),
-				//new Waypoint(241/12.0, 250/12.0, 90),
+				new Waypoint(180/12.0, 0, 0),
+				new Waypoint(190/12.0, 0, 0),
+				new Waypoint(225/12.0, 57/12.0, 90),
+				new Waypoint(225/12.0, 145/12.0, 90),
 			}));
+		add(new DriveTrajectory(new Waypoint[] {
+				new Waypoint(0, 0, 0),
+				new Waypoint(12/12.0, 12.0/12.0, 70),
+		}));
 		add(new DriveStop());
-		add(new Delay(1000));
 		add(new SqueezyFold(false));
 		add(new Delay(100));
 		add(new SqueezyEject());

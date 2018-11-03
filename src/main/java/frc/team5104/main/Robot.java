@@ -56,8 +56,8 @@ public class Robot extends BreakerRobotController.BreakerRobot {
 	//Auto
 	public void autoEnabled() {
 		BreakerPathScheduler.set(
-			AutoSelector.getAuto()
-// 			AutoSelector.Paths.CR.getPath()
+//			AutoSelector.getAuto()
+ 			AutoSelector.Paths.RL.getPath()
 		);
 	}
 	
