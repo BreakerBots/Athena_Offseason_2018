@@ -19,4 +19,6 @@ class _SqueezyConstants extends BreakerSubsystem.Constants {
 	public static final double _armsHoldSpeed     = -0.3;//(TalSpeed) [Choose]
 	public static final double _wheelHoldSpeed    =  0.3;	//(TalSpeed) [Choose]
 	public static final double _armsPhysicallyStoppedCurrent = 7; //(TalCurrent) [Tune]
+	
+	public static int _foldUpEjectDelay = 300;
 }

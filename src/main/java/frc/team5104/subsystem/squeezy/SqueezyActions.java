@@ -29,8 +29,8 @@ public class SqueezyActions extends BreakerSubsystem.Actions {
 		
 		if (fold.isUp()) {
 			fold.down();
-			SqueezyManager.vEjectTime = System.currentTimeMillis() + HMI.Squeezy._foldUpEjectDelay;
-			SqueezyManager.setStateDelayed(SqueezyState.eject, HMI.Squeezy._foldUpEjectDelay);
+			SqueezyManager.vEjectTime = System.currentTimeMillis() + _SqueezyConstants._foldUpEjectDelay;
+			SqueezyManager.setStateDelayed(SqueezyState.eject, _SqueezyConstants._foldUpEjectDelay);
 		}
 		else {
 			SqueezyManager.vEjectTime = System.currentTimeMillis();
@@ -45,8 +45,8 @@ public class SqueezyActions extends BreakerSubsystem.Actions {
 		
 		if (fold.isUp()) {
 			fold.down();
-			SqueezyManager.vEjectTime = System.currentTimeMillis() + HMI.Squeezy._foldUpEjectDelay;
-			SqueezyManager.setStateDelayed(SqueezyState.eject, HMI.Squeezy._foldUpEjectDelay);
+			SqueezyManager.vEjectTime = System.currentTimeMillis() + _SqueezyConstants._foldUpEjectDelay;
+			SqueezyManager.setStateDelayed(SqueezyState.eject, _SqueezyConstants._foldUpEjectDelay);
 		}
 		else {
 			SqueezyManager.vEjectTime = System.currentTimeMillis();

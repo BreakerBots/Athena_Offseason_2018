@@ -39,8 +39,5 @@ public class HMI {
 		public static final Control _foldUp   = Control.A;
 		public static final Control _foldDown = Control.Y;
 		public static final Control _foldUpAlt   = Control.S;
-		public static final Control _foldDownAlt = Control.N;
-		
-		public static int _foldUpEjectDelay = 100;
-	}
+		public static final Control _foldDownAlt = Control.N;	}
 }

@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj.CameraServer;
 import frc.team5104.auto.AutoSelector;
 import frc.team5104.auto.BreakerPathScheduler;
 import frc.team5104.subsystem.BreakerSubsystemManager;
+import frc.team5104.subsystem.climber.ClimberManager;
 import frc.team5104.subsystem.drive.DriveManager;
 import frc.team5104.subsystem.drive.DriveSystems;
 import frc.team5104.subsystem.drive.Odometry;
@@ -27,7 +28,8 @@ public class Robot extends BreakerRobotController.BreakerRobot {
 		BreakerSubsystemManager.throwSubsystems(
 			new SqueezyManager(),
 			new ElevatorManager(),
-			new DriveManager()
+			new DriveManager(), 
+			new ClimberManager()
 		);
 		
 		CameraServer.getInstance().startAutomaticCapture();
