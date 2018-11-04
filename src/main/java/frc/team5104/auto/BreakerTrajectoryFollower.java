@@ -62,7 +62,6 @@ public class BreakerTrajectoryFollower {
 		//w = clamp(w, Math.PI * -2.0, Math.PI * 2.0);
 
 		//Convert Angular and Linear Velocities to into wheel speeds 
-		// CHECK THIS - why is it being multiplied by the angular velocity and does this work
 		left  = -((+_DriveConstants._wheelBaseWidth * w) / 2 + v);
 		right = -((-_DriveConstants._wheelBaseWidth * w) / 2 + v);
 
@@ -88,14 +87,14 @@ public class BreakerTrajectoryFollower {
 	private double calcW_d() {
 		if (i < trajectory.length()-1) {
 			double lastTheta = trajectory.get(i).heading;
-			double nextTheta = trajectory.get(i + 1).heading; //CHECK THIS - i + 1 could equal trajectory.length()
+			double nextTheta = trajectory.get(i + 1).heading; 
 			return (nextTheta - lastTheta) / trajectory.get(i).dt;
 		} 
 		else {
 			return 0;
 		}
 	}
-	//hwoo CHECK THIS
+
 	private double calcVel(double x_d, double y_d, double theta_d, double v_d, double w_d) {
 		double k = calcK(v_d, w_d);
 		double thetaError = theta_d - robotPosition.getTheta();

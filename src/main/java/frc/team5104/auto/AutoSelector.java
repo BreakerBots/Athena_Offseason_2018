@@ -90,15 +90,15 @@ public class AutoSelector {
 				switch (position) {
 					case "L":
 						auto = (gameData.charAt(0) == 'L') ? Paths.LL.getPath() : 
-							/* Paths.LR.getPath() */ Paths.Baseline.getPath();
+							Paths.LR.getPath(); // Paths.Baseline.getPath();
 						break;
 					case "C":
 						auto = (gameData.charAt(0) == 'L') ? Paths.CL.getPath() : Paths.CR.getPath();
 	
 						break;
 					case "R":
-						auto = (gameData.charAt(0) == 'L') ? Paths.Baseline.getPath() 
-								/* Paths.RL.getPath() */ : Paths.RR.getPath();
+						auto = (gameData.charAt(0) == 'L') ? // Paths.Baseline.getPath() 
+								Paths.RL.getPath()  : Paths.RR.getPath();
 						break;
 					default:
 						//Let it just flow through to default at baselines
