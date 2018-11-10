@@ -1,8 +1,6 @@
 package frc.team5104.main;
 
 import frc.team5104.util.Units;
-import jaci.pathfinder.Trajectory;
-import jaci.pathfinder.Trajectory.FitMethod;
 
 public class _RobotConstants {
 	public static final double _robotLength = Units.inchesToFeet(32.0 + 4.0);

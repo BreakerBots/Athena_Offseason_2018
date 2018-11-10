@@ -5,7 +5,7 @@ import frc.team5104.subsystem.BreakerSubsystem;
 public class _DriveConstants extends BreakerSubsystem.Constants {
 	//Measurements
 	public static final double _wheelDiameter = 0.5; 	   //(Feet) [Measure] The diameter of the wheels
-	public static final double _ticksPerRevolution = 4907.5; //(Encoder Tick) [Measure] Encoder Ticks Per Wheel Revolution
+	public static final double _ticksPerRevolution = 4800; // 4907.5; //(Encoder Tick) [Measure] Encoder Ticks Per Wheel Revolution
 	public static final double _wheelBaseWidth = 2.179;	   //(Feet) [Measure] The Distance from the Left and Right Wheels
 	
 	//Speed Adjustments

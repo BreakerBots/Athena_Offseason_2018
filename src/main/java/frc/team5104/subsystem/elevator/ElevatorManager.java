@@ -68,9 +68,9 @@ public class ElevatorManager extends BreakerSubsystem.Manager {
 			ElevatorSystems.softLimitSwitches.disable();
 
 		// Hard Limit Switches (HAL Sensors)
-		if (_ElevatorConstants._hardLimitSwitchesEnabled)
-			ElevatorSystems.hardLimitSwitches.enable();
-		else
+		///if (_ElevatorConstants._hardLimitSwitchesEnabled)
+		//	ElevatorSystems.hardLimitSwitches.enable();
+		//else
 			ElevatorSystems.hardLimitSwitches.disable();
 	}
 }

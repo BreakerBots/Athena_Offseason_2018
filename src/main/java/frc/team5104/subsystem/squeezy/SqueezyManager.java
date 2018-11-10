@@ -8,7 +8,6 @@ import frc.team5104.subsystem.squeezy.SqueezySystems.fold;
 import frc.team5104.subsystem.squeezy.SqueezySystems.wheels;
 import frc.team5104.util.BooleanChangeListener;
 import frc.team5104.util.BreakerMath;
-import frc.team5104.util.console;
 import frc.team5104.util.controller;
 
 public class SqueezyManager extends BreakerSubsystem.Manager {
@@ -29,7 +28,7 @@ public class SqueezyManager extends BreakerSubsystem.Manager {
 		double wheelSpeed; double armsSpeed; SqueezyEjectSpeed (double wheelSpeed, double armsSpeed) { this.wheelSpeed = wheelSpeed; this.armsSpeed = armsSpeed; } 
 	}
 
-	private static boolean vHasCube = false;
+	//private static boolean vHasCube = false;
 	static double vWheelEjectSpeed = SqueezyEjectSpeed.High.wheelSpeed;
 	static double vArmsEjectSpeed = SqueezyEjectSpeed.High.armsSpeed;
 	static double vEjectTime;

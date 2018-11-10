@@ -4,7 +4,6 @@ import frc.team5104.subsystem.BreakerSubsystem;
 import frc.team5104.subsystem.squeezy.SqueezyManager.SqueezyEjectSpeed;
 import frc.team5104.subsystem.squeezy.SqueezyManager.SqueezyState;
 import frc.team5104.subsystem.squeezy.SqueezySystems.fold;
-import frc.team5104.teleop.HMI;
 import frc.team5104.util.console;
 import frc.team5104.util.console.c;
 

@@ -1,7 +1,5 @@
 package frc.team5104.subsystem.climber;
 
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-
 import edu.wpi.first.wpilibj.Solenoid;
 import frc.team5104.main.Devices;
 import frc.team5104.subsystem.BreakerSubsystem;
