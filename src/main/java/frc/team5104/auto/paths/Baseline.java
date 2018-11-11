@@ -11,7 +11,7 @@ public class Baseline extends BreakerPath {
 	public Baseline() {
 		add(new DriveTrajectory(new Waypoint[] {
 				new Waypoint(0, 0, 0),
-				new Waypoint(6.5, 0, 0)
+				new Waypoint(7.5, 0, 0)
 			}));
 		add(new DriveStop());
 	}
