@@ -27,7 +27,7 @@ public class RL extends BreakerPath {
 		add(new DriveTrajectory(new Waypoint[] {
 				new Waypoint(0, 0, 0),
 				new Waypoint(12/12.0, -12.0/12.0, -70),
-		}));
+			}));
 		add(new DriveStop());
 		add(new SqueezyFold(false));
 		add(new Delay(_AutoConstants._ejectDelay));
