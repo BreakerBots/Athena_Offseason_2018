@@ -16,4 +16,6 @@ public class _AutoConstants {
 	//Trajectory Folowing
 	public static final double _tfB    = 0.5; //(None) [Tune/Choose] (Range: Great Than Zero) Increases/Decreases Correction
 	public static final double _tfZeta = 0.4; //(None) [Tune/Choose] (Range: Zero to One) Increases/Decreases Dampening
+
+	public static final int _ejectDelay = 300;
 }

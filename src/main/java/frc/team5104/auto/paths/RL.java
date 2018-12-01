@@ -1,6 +1,7 @@
 package frc.team5104.auto.paths;
 
 import frc.team5104.auto.BreakerPath;
+import frc.team5104.auto._AutoConstants;
 import frc.team5104.auto.actions.*;
 import jaci.pathfinder.Waypoint;
 
@@ -29,7 +30,7 @@ public class RL extends BreakerPath {
 		}));
 		add(new DriveStop());
 		add(new SqueezyFold(false));
-		add(new Delay(100));
+		add(new Delay(_AutoConstants._ejectDelay));
 		add(new SqueezyEject());
 	}
 }

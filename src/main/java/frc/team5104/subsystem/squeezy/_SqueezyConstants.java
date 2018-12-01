@@ -9,8 +9,8 @@ class _SqueezyConstants extends BreakerSubsystem.Constants {
 	public static final double _wheelEjectSpeedMed = -0.6;	//(TalSpeed) [Choose]
 	public static final double _wheelEjectSpeedHigh = -0.9;	//(TalSpeed) [Choose]
 	public static final double _armsEjectSpeedLow = 0.6;	//(TalSpeed) [Choose]
-	public static final double _armsEjectSpeedMed = 0.4;	//(TalSpeed) [Choose]
-	public static final double _armsEjectSpeedHigh = 0.3;	//(TalSpeed) [Choose]
+	public static final double _armsEjectSpeedMed = 0.6;	//(TalSpeed) [Choose]
+	public static final double _armsEjectSpeedHigh = 0.6;	//(TalSpeed) [Choose]
 	public static final double _ejectTime = 500;			//(Milliseconds) [Choose]
 	
 	public static final double _armsOutSpeed      =  0.6;	//(TalSpeed) [Choose]

@@ -18,7 +18,7 @@ public class BreakerTeleopController {
 	public static final CurveInterpolator vTeleopRightSpeed = new CurveInterpolator(HMI.Drive._driveCurveChange, HMI.Drive._driveCurve);
 	
 	public static void update() {
-		if (HMI.Climbing._ptoShift.getHeldEvent(0.6)) {
+		if (HMI.Climbing._ptoShift.getPressed()) {
 			ClimberActions.switchPto();
 			controller.rumbleHardFor(1, .3);
 			SqueezyActions.foldSet(true);

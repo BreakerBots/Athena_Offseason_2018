@@ -6,8 +6,10 @@ import frc.team5104.auto.BreakerPathScheduler;
 import frc.team5104.subsystem.BreakerSubsystemManager;
 import frc.team5104.subsystem.climber.ClimberManager;
 import frc.team5104.subsystem.drive.DriveManager;
+import frc.team5104.subsystem.drive.DriveSystems;
 import frc.team5104.subsystem.drive.Odometry;
 import frc.team5104.subsystem.elevator.ElevatorManager;
+import frc.team5104.subsystem.squeezy.SqueezyActions;
 import frc.team5104.subsystem.squeezy.SqueezyManager;
 import frc.team5104.teleop.BreakerTeleopController;
 import frc.team5104.util.console;
@@ -55,9 +57,11 @@ public class Robot extends BreakerRobotController.BreakerRobot {
 
 	//Auto
 	public void autoEnabled() {
+		SqueezyActions.hold();
+		SqueezyActions.foldSet(true);
 		BreakerPathScheduler.set(
 			AutoSelector.getAuto()
-// 			AutoSelector.Paths.RL.getPath()
+// 			AutoSelector.Paths.Baseline.getPath()
 		);
 	}
 	
