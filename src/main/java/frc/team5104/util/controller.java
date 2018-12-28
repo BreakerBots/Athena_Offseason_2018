@@ -62,20 +62,34 @@ public class controller {
 	private static long softTarget; private static boolean softTimer = false;
 	
 	public static void update() {
-		//A single binary number representing the on/off state of each button
-		int buttons = DriverStation.getInstance().getStickButtons(0);
-		
 		//Normal Buttons
 		for (Control c : Control.values()) {
 			c.pressed = false;
 			c.released = false;
 			
-			c.val = c.type == 1 ? ((buttons & 1 << (c.slot-1)) != 0) : (c.type == 2 ? (controller.getRawAxis(c.slot) <= c.deadzone ? false : true) : (controller.getPOV() == c.slot));
+			switch (c.type) {
+				//Button	
+				case 1:
+					c.val = controller.getRawButton(c.slot);
+					break;
+				//Axis
+				case 2:
+					c.val = controller.getRawAxis(c.slot) <= c.deadzone ? false : true;
+					break;
+				//D-pad
+				case 3:
+					c.val = controller.getPOV() == c.slot;
+					break;
+			}
 			
 			if (c.val != c.lastVal) {
 				c.lastVal = c.val;
-				if (c.val == true) { c.pressed = true; c.time = System.currentTimeMillis(); }
-				else { c.released = true; }
+				if (c.val == true) { 
+					c.pressed = true; 
+					c.time = System.currentTimeMillis(); 
+				}
+				else 
+					c.released = true;
 			}
 		}
 		
